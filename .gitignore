@@ -1,0 +1,8 @@
+# library
+node_modules
+# backend output
+backend/dist
+# frontend output
+frontend/build
+# Keep environment variables out of version control
+.env

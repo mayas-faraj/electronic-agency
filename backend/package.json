@@ -1,0 +1,32 @@
+{
+  "name": "electronic-agency",
+  "version": "0.1.0",
+  "description": "backend system for electronic agency for creative offer packages and maintenece service",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayas-faraj/electronic-agency.git"
+  },
+  "author": "Mayas Faraj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mayas-faraj/electronic-agency/issues"
+  },
+  "homepage": "https://github.com/mayas-faraj/electronic-agency#readme",
+  "dependencies": {
+    "@apollo/server": "^4.6.0",
+    "dotenv": "^16.0.3",
+    "graphql": "^16.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "prisma": "^4.12.0",
+    "typescript": "^5.0.4"
+  }
+}

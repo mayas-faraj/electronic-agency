@@ -21,6 +21,7 @@
   "homepage": "https://github.com/mayas-faraj/electronic-agency#readme",
   "dependencies": {
     "@apollo/server": "^4.6.0",
+    "@prisma/client": "^4.12.0",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0"
   },

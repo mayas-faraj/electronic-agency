@@ -9,3 +9,117 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Client {
+  id          Int       @id @default(autoincrement())
+  user        String    @unique @db.VarChar(20)
+  password    String    @db.VarChar(20)
+  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  lastLoginAt DateTime? @map("last_login_at")
+  orders      Order[]
+  Ticket      Ticket[]
+
+  @@map("client")
+}
+
+model Admin {
+  id          Int       @id @default(autoincrement())
+  user        String    @unique @db.VarChar(20)
+  password    String    @db.VarChar(20)
+  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  lastLoginAt DateTime? @map("last_login_at")
+  role        Role      @default(CLIENT)
+  Offer       Offer[]
+  Repair      Repair[]
+
+  @@map("admin")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(20)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  products  Product[]
+
+  @@map("category")
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  sn          String    @unique @db.VarChar(50)
+  name        String    @db.VarChar(20)
+  image       String?   @db.VarChar(250)
+  description String?   @db.LongText
+  categoryId  Int       @map("category_id")
+  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  category    Category  @relation(fields: [categoryId], references: [id])
+  orders      Order[]
+  Ticket      Ticket[]
+
+  @@map("product")
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  clientId  Int      @map("client_id")
+  productId Int      @map("product_id")
+  count     Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+  client    Client   @relation(fields: [clientId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  offer     Offer?
+
+  @@map("order")
+}
+
+model Offer {
+  id        Int      @id @default(autoincrement())
+  adminId   Int      @map("admin_id")
+  orderId   Int      @unique @map("order_id")
+  price     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  order     Order    @relation(fields: [orderId], references: [id])
+  admin     Admin    @relation(fields: [adminId], references: [id])
+
+  @@map("offer")
+}
+
+model Ticket {
+  id          Int      @id @default(autoincrement())
+  clientId    Int      @map("client_id")
+  productId   Int      @map("product_id")
+  description String   @db.LongText
+  createdAt   DateTime @default(now()) @map("created_at")
+  client      Client   @relation(fields: [clientId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
+  repair      Repair?
+
+  @@map("ticket")
+}
+
+model Repair {
+  id          Int      @id @default(autoincrement())
+  adminId     Int      @map("admin_id")
+  ticketId    Int      @unique @map("ticket_id")
+  price       Int
+  description String   @db.LongText
+  createdAt   DateTime @default(now()) @map("created_at")
+  admin       Admin    @relation(fields: [adminId], references: [id])
+  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+
+  @@map("repair")
+}
+
+enum Role {
+  CLIENT
+  SALES_MAN
+  PRODUCT_MANAGER
+  ADMIN
+}

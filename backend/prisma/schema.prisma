@@ -10,16 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// name, phone 20
+// sn, email, password 50
+// link 255
+// address, note, comment  500
+
 model Client {
-  id          Int       @id @default(autoincrement())
-  user        String    @unique @db.VarChar(20)
-  password    String    @db.VarChar(20)
-  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  lastLoginAt DateTime? @map("last_login_at")
+  id          Int                     @id @default(autoincrement())
+  user        String                  @unique @db.VarChar(20)
+  phone       String                  @unique @db.VarChar(20)
+  email       String?                 @unique @db.VarChar(50)
+  avatar      String?                 @db.VarChar(255)
+  namePerfix  String                  @default("Mr.") @map("name_prefix") @db.Char(3)
+  firstName   String                  @map("first_name") @db.VarChar(20)
+  lastName    String?                 @map("last_name") @db.VarChar(20)
+  birthDate   DateTime?               @map("birth_date")
+  isMale      Boolean                 @default(true) @map("is_male") @db.TinyInt
+  isDisabled  Boolean                 @default(false) @map("is_disabled") @db.TinyInt
+  code        String?                 @db.Char(4)
+  codeDate    DateTime?               @map("code_date")
+  createdAt   DateTime                @default(now()) @map("created_at")
+  updatedAt   DateTime?               @updatedAt @map("updated_at")
+  lastLoginAt DateTime?               @map("last_login_at")
   orders      Order[]
-  Ticket      Ticket[]
+  reviews     ProductReview[]
+  products    ProductItemsOnClients[]
 
   @@map("client")
 }
@@ -32,9 +47,9 @@ model Admin {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   lastLoginAt DateTime? @map("last_login_at")
-  role        Role      @default(CLIENT)
-  Offer       Offer[]
-  Repair      Repair[]
+  role        Role      @default(SALES_MAN)
+  offers      Offer[]
+  repairs     Repair[]
 
   @@map("admin")
 }
@@ -42,6 +57,7 @@ model Admin {
 model Category {
   id        Int       @id @default(autoincrement())
   name      String    @unique @db.VarChar(20)
+  image     String?   @db.VarChar(255)
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   products  Product[]
@@ -50,76 +66,144 @@ model Category {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
-  sn          String    @unique @db.VarChar(50)
-  name        String    @db.VarChar(20)
-  image       String?   @db.VarChar(250)
-  description String?   @db.LongText
-  categoryId  Int       @map("category_id")
-  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  category    Category  @relation(fields: [categoryId], references: [id])
+  id          Int             @id @default(autoincrement())
+  categoryId  Int             @map("category_id")
+  name        String          @db.VarChar(20)
+  model       String?         @db.VarChar(20)
+  image       String?         @db.VarChar(255)
+  description String?         @db.LongText
+  price       Float           @default(0)
+  isDisabled  Boolean         @default(false) @map("is_disabled") @db.TinyInt
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime?       @updatedAt @map("updated_at")
+  category    Category        @relation(fields: [categoryId], references: [id])
+  items       ProductItem[]
   orders      Order[]
-  Ticket      Ticket[]
+  reviews     ProductReview[]
 
+  @@unique([name, model])
   @@map("product")
 }
 
-model Order {
+model ProductItem {
+  sn           String                 @id
+  productId    Int                    @map("product_id")
+  product      Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+  client       ProductItemsOnClients?
+  maintenances Maintenance[]
+
+  @@map("product_item")
+}
+
+model ProductItemsOnClients {
+  productSn   String      @id
+  clientId    Int
+  createdAt   DateTime    @default(now()) @map("created_at")
+  productItem ProductItem @relation(fields: [productSn], references: [sn], onDelete: Cascade)
+  client      Client      @relation(fields: [clientId], references: [id])
+
+  @@map("product_items_on_clients")
+}
+
+model ProductReview {
   id        Int      @id @default(autoincrement())
-  clientId  Int      @map("client_id")
   productId Int      @map("product_id")
-  count     Int      @default(1)
+  clientId  Int      @map("client_id")
+  rating    Int
+  commnet   String?  @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   client    Client   @relation(fields: [clientId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
-  offer     Offer?
+
+  @@map("product_review")
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  clientId   Int         @map("client_id")
+  productId  Int         @map("product_id")
+  count      Int         @default(1)
+  totalPrice Float       @map("total_price")
+  address    String      @db.VarChar(500)
+  note       String?     @db.VarChar(500)
+  status     OrderStatus @default(PENDING)
+  isDraft    Boolean     @default(false) @map("is_draft") @db.TinyInt
+  createdAt  DateTime    @default(now()) @map("created_at")
+  client     Client      @relation(fields: [clientId], references: [id])
+  product    Product     @relation(fields: [productId], references: [id])
+  offer      Offer?
 
   @@map("order")
 }
 
 model Offer {
-  id        Int      @id @default(autoincrement())
-  adminId   Int      @map("admin_id")
-  orderId   Int      @unique @map("order_id")
-  price     Int
-  createdAt DateTime @default(now()) @map("created_at")
-  order     Order    @relation(fields: [orderId], references: [id])
-  admin     Admin    @relation(fields: [adminId], references: [id])
+  id            Int      @id @default(autoincrement())
+  adminId       Int      @map("admin_id")
+  orderId       Int      @unique @map("order_id")
+  price         Int
+  vadiationDays Int?     @map("validation_days")
+  createdAt     DateTime @default(now()) @map("created_at")
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  admin         Admin    @relation(fields: [adminId], references: [id])
 
   @@map("offer")
 }
 
-model Ticket {
-  id          Int      @id @default(autoincrement())
-  clientId    Int      @map("client_id")
-  productId   Int      @map("product_id")
-  description String   @db.LongText
-  createdAt   DateTime @default(now()) @map("created_at")
-  client      Client   @relation(fields: [clientId], references: [id])
-  product     Product  @relation(fields: [productId], references: [id])
-  repair      Repair?
+model Maintenance {
+  id           Int               @id @default(autoincrement())
+  productSn    String            @map("product_sn")
+  description  String            @db.LongText
+  propertyType PropertyType      @default(HOME) @map("property_type")
+  address      String?           @db.VarChar(500)
+  longitude    Float?
+  latitude     Float?
+  createdAt    DateTime          @default(now()) @map("created_at")
+  bookedAt     DateTime          @map("booked_at")
+  status       MaintenanceStatus @default(PENDING)
+  isDraft      Boolean           @default(false) @map("is_draft") @db.TinyInt
+  repair       Repair?
+  productItem  ProductItem       @relation(fields: [productSn], references: [sn], onDelete: Cascade)
 
-  @@map("ticket")
+  @@map("maintenance")
 }
 
 model Repair {
-  id          Int      @id @default(autoincrement())
-  adminId     Int      @map("admin_id")
-  ticketId    Int      @unique @map("ticket_id")
-  price       Int
-  description String   @db.LongText
-  createdAt   DateTime @default(now()) @map("created_at")
-  admin       Admin    @relation(fields: [adminId], references: [id])
-  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+  id            Int         @id @default(autoincrement())
+  adminId       Int         @map("admin_id")
+  maintenanceId Int         @unique @map("maintenance_id")
+  price         Int         @default(0)
+  description   String      @db.LongText
+  createdAt     DateTime    @default(now()) @map("created_at")
+  admin         Admin       @relation(fields: [adminId], references: [id])
+  maintenance   Maintenance @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
 
   @@map("repair")
 }
 
 enum Role {
-  CLIENT
-  SALES_MAN
-  PRODUCT_MANAGER
   ADMIN
+  PRODUCT_MANAGER
+  SALES_MAN
+  TECHNICAL
+}
+
+enum OrderStatus {
+  PENDING
+  REJECTED
+  ACCEPTED
+  CANCELED
+  CLOSED
+}
+
+enum MaintenanceStatus {
+  PENDING
+  CANCELED
+  FIXED
+  NOTFIXED
+}
+
+enum PropertyType {
+  HOME
+  OFFICE
+  OTHER
 }

@@ -392,29 +392,108 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createCategory(input: {name: \"test cat\", image: \"cat.png\"}) { id name image createdAt }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "createCategory": {
+      "id": 3,
+      "name": "test cat",
+      "image": "cat.png",
+      "createdAt": "1683560564271"
+    }
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.category.create()` invocation:\n\n\nUnique constraint failed on the constraint: `category_name_key`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createCategory"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "createCategory": null
+  }
+}
 ```
 
 ---
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateCategory(id: 3, input: {name: \"test cat2\", image: \"cat2.png\"}) { id name image createdAt }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "updateCategory": {
+      "id": 3,
+      "name": "test cat2",
+      "image": "cat2.png",
+      "createdAt": "1683560564271"
+    }
+  }
 ```
 
 ---
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteCategory(id: 3) { id name }}"}' http://localhost:4000 
 ```
 
 ```json
+{
+  "data": {
+    "deleteCategory": {
+      "id": 3,
+      "name": "test cat2",
+    }
+  }
+}
 ```
 
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.category.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "deleteCategory"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "deleteCategory": null
+  }
+}
+```
 ---
 
 

@@ -203,3 +203,32 @@ and the result:
   }
 }
 ```
+
+## categories
+each cateroy contains id, name and image, and then you can find products by category, to display all categories, you can use this api:
+
+
+```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { categories { id name image }}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "categories": [
+      {
+        "id": 1,
+        "name": "Residential",
+        "image": "/imgs/categories/c1.jpg"
+      },
+      {
+        "id": 2,
+        "name": "Bussiness",
+        "image": "/imgs/categories/c2.jpg"
+      }
+    ]
+  }
+}
+```
+
+---

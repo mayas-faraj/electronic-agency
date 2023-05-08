@@ -9,12 +9,12 @@ const typeDefs = `#graphql
         createProduct(input: ProductInput!): ProductBasic
 		updateProduct(id: Int!, input: ProductInput!): ProductBasic
 		deleteProduct(id: Int!): ProductBasic
-		createProductItem(productId: Int!, sn: String!): ProductItemBasic
-		updateProductItem(sn: String!, newSn: String!): ProductItemBasic
-		deleteProductItem(sn: String!): ProductItemBasic
-		createProductItemClientByAuth(sn: String!): ProductItemBasic
-		deleteProductItemClientByAuth(sn: String!): ProductItemBasic
-		createProductReviewByAuth(input: ProductReviewInput!): ProductReviewBasic
+		createProductItem(productId: Int!, sn: String!): ProductItem
+		updateProductItem(sn: String!, newSn: String!): ProductItem
+		deleteProductItem(sn: String!): ProductItem
+		createProductItemClientByAuth(sn: String!): ProductItem
+		deleteProductItemClientByAuth(sn: String!): ProductItem
+		createProductReviewByAuth(productId: Int!, input: ProductReviewInput!): ProductReviewBasic
 		deleteProductReview(id: Int!): ProductReviewBasic
     }
 
@@ -53,12 +53,6 @@ const typeDefs = `#graphql
 	}
 
 	type ProductItem {
-		sn: String
-		createdAt: String
-		product: [ProductBasic]
-	}
-
-	type ProductItemBasic {
 		sn: String
 		createdAt: String
 	}

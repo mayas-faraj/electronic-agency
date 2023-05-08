@@ -26,6 +26,10 @@ const typeDefs = `#graphql
 		fromDate: String
 		toDate: String
 	}
+
+	type UserJwt {
+		jwt: String!
+	}
 `;
 
 export default [typeDefs, clientTypeDefs, adminTypeDefs, categoryTypeDefs, productTypeDefs, maintenanceTypeDefs, orderTypeDefs];

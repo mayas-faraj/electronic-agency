@@ -3,11 +3,13 @@ const typeDefs = `#graphql
         admins(filter: SearchFilter): [AdminBasic]
 		admin(id: Int!): Admin
 		adminByAuth: Admin
+		verifyAdmin(user: String!, password: String!): UserJwt
     }
 
     extend type Mutation {
         createAdmin(input: AdminInput!): AdminBasic
 		updateAdmin(id: Int!, input: AdminInput!): AdminBasic
+		updateAdminByAuth(input: AdminInput!): AdminBasic
 		deleteAdmin(id: Int!): AdminBasic
     }
 
@@ -19,8 +21,8 @@ const typeDefs = `#graphql
 		updatedAt: String
 		lastLoginAt: String
 		role: String
-		offers: [Offer]
-		repairs: [Repair]
+		offers: [OfferBasic]
+		repairs: [RepairBasic]
 	}
 
 	type AdminBasic {
@@ -33,6 +35,7 @@ const typeDefs = `#graphql
 	input AdminInput {
 		user: String!
 		password: String
+		role: String
 		isDisabled: Boolean
 	}
 `;

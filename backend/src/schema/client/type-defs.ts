@@ -62,10 +62,6 @@ const typeDefs = `#graphql
 		text: String
 		createdAt: String
 	}
-
-	type UserJwt {
-		jwt: String!
-	}
 `;
 
 export default typeDefs;

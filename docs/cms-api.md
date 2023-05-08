@@ -166,20 +166,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
         "deleteClient"
       ],
       "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-        "stacktrace": [
-          "Error: ",
-          "Invalid `prisma.client.delete()` invocation:",
-          "",
-          "",
-          "An operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
-          "    at fn.handleRequestError (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:174:6477)",
-          "    at fn.handleAndLogRequestError (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:174:5907)",
-          "    at fn.request (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:174:5786)",
-          "    at async t._request (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:177:10477)",
-          "    at async Object.deleteClient (file:///home/mayas/Documents/web-apps/electronic-agency/backend/dist/schema/client/resolvers.js:163:28)"
-        ]
-      }
+        "code": "INTERNAL_SERVER_ERROR"
     }
   ],
   "data": {
@@ -191,10 +178,252 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 ---
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admins(filter: {onlyEnabled: true, fromDate: \"2023-05-07\"}) {id user role isDisabled }}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "admins": [
+      {
+        "id": 1,
+        "user": "admin",
+        "role": "ADMIN",
+        "isDisabled": false
+      },
+      {
+        "id": 2,
+        "user": "ali",
+        "role": "PRODUCT_MANAGER",
+        "isDisabled": false
+      },
+      {
+        "id": 3,
+        "user": "alaa",
+        "role": "SALES_MAN",
+        "isDisabled": false
+      },
+      {
+        "id": 4,
+        "user": "feras",
+        "role": "TECHNICAL",
+        "isDisabled": false
+      }
+    ]
+  }
+}
+```
+
+---
+
+```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admin(id: 1) {id user role isDisabled createdAt offers { id price validationDays} repairs {id price description createdAt}}} "}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "admin": {
+      "id": 1,
+      "user": "admin",
+      "role": "ADMIN",
+      "isDisabled": false,
+      "createdAt": "1683553150612",
+      "offers": [
+        {
+          "id": 5,
+          "price": 350,
+          "validationDays": 3
+        }
+      ],
+      "repairs": [
+        {
+          "id": 5,
+          "price": 20,
+          "description": "the power supply circuit has been replaced",
+          "createdAt": "1683553150855"
+        }
+      ]
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "admin": null
+  }
+}
+```
+
+---
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { verifyAdmin(user: \"admin\", password: \"Zxasqw12\") { jwt }}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "verifyAdmin": {
+      "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtIjoiYWRtaW4iLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY4MzU1NDA5OH0.wlXiKaDJeeM1qBRlHNkkCXRViVVZdBeWp1-wav0ST5o"
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "verifyAdmin": {
+      "jwt": ""
+    }
+  }
+}
+
+```
+
+---
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createAdmin(input: {user: \"master_tech\", password: \"xxx\", role: \"TECHNICAL\"}) {id user role}}"}' http://localhost:4000 | jq
+```
+
+```json
+{
+  "data": {
+    "createAdmin": {
+      "id": 10,
+      "user": "master_tech",
+      "role": "TECHNICAL"
+    }
+  }
+}
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.admin.create()` invocation:\n\n\nUnique constraint failed on the constraint: `admin_user_key`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createAdmin"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ]
+```
+
+---
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateAdmin(id: 10,input: {user: \"mastert2\", password: \"vvv\"}) {id user role}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "updateAdmin": {
+      "id": 10,
+      "user": "mastert2",
+      "role": "TECHNICAL"
+    }
+  }
+}
+```
+
+```json
+"errors":[{"message":"Cannot query field \"createdAt\" on type \"AdminBasic\".","locations":[{"line":1,"column":90}],"extensions":{"code":"GRAPHQL_VALIDATION_FAILED",}}]}
+```
+
+---
+
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteAdmin(id: 10) { id user role }}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "deleteAdmin": {
+      "id": 10,
+      "user": "mastert2",
+      "role": null
+    }
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.admin.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "deleteAdmin"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "deleteAdmin": null
+  }
+}
+```
+
+---
+
+
+```bash
 ```
 
 ```json
 ```
+
+---
+
+
+```bash
+```
+
+```json
+```
+
+---
+
+
+```bash
+```
+
+```json
+```
+
+---
+
+
+```bash
+```
+
+```json
+```
+
 
 ---
 
@@ -206,13 +435,6 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 
 ---
 
-```bash
-```
-
-```json
-```
-
----
 
 ```bash
 ```

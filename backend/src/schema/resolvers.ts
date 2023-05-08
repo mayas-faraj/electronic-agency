@@ -1,10 +1,13 @@
-import resolvers from './client/resolvers.js';
+import clientResolvers from "./client/resolvers.js";
+import adminResolvers from "./admin/resolvers.js";
 
 export default {
-    Query: {
-        ...resolvers.Query
-    },
-    Mutation: {
-        ...resolvers.Mutation
-    }
+  Query: {
+    ...adminResolvers.Query,
+    ...clientResolvers.Query,
+  },
+  Mutation: {
+    ...adminResolvers.Mutation,
+    ...clientResolvers.Mutation,
+  },
 };

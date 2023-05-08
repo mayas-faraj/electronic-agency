@@ -7,7 +7,7 @@ import typeDefs from "./schema/type-defs.js";
 import resolvers from "./schema/resolvers.js";
 
 // prisma client
-const prismaClient = new PrismaClient({ log: ["query"] });
+const prismaClient = new PrismaClient({ log: ["query"] , errorFormat: "minimal"});
 
 // read configuration
 dotenv.config();

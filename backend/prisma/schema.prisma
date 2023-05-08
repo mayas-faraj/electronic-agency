@@ -43,7 +43,7 @@ model Code {
   clientId  Int      @id
   text      String?  @db.Char(4)
   createdAt DateTime @default(now()) @map("created_at")
-  client    Client   @relation(fields: [clientId], references: [id])
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@map("code")
 }
@@ -151,7 +151,7 @@ model Offer {
   adminId       Int      @map("admin_id")
   orderId       Int      @unique @map("order_id")
   price         Int
-  vadiationDays Int?     @map("validation_days")
+  validationDays Int?     @map("validation_days")
   createdAt     DateTime @default(now()) @map("created_at")
   order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   admin         Admin    @relation(fields: [adminId], references: [id])

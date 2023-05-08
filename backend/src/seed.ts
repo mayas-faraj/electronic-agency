@@ -60,13 +60,13 @@ result = await prismaClient.admin.createMany({
     {
       id: 1,
       user: "admin",
-      password: "123",
+      password: "Zxasqw12",
       role: "ADMIN",
     },
     {
       id: 2,
       user: "ali",
-      password: "123",
+      password: "12345",
       role: "PRODUCT_MANAGER",
     },
     {
@@ -78,7 +78,7 @@ result = await prismaClient.admin.createMany({
     {
       id: 4,
       user: "feras",
-      password: "123",
+      password: "9999",
       role: "TECHNICAL",
     },
   ],
@@ -431,7 +431,7 @@ result = await prismaClient.order.create({
       create: {
         adminId: 1,
         price: 350,
-        vadiationDays: 3,
+        validationDays: 3,
       },
     },
   },

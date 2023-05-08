@@ -27,6 +27,29 @@ if the operation success, the result is:
 }
 ```
 
+if the client already exists (same phone, email) the server return this value
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.client.create()` invocation:\n\n\nUnique constraint failed on the constraint: `client_phone_key`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createAdmin"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ]
+```
+
 ## user profile
 after login, you can use this quest to get the profile info.
 ```bash
@@ -114,18 +137,6 @@ for testing purpose, the code is constant, 1988, if the id doesn't belong to any
       ],
       "extensions": {
         "code": "INTERNAL_SERVER_ERROR",
-        "stacktrace": [
-          "Error: ",
-          "Invalid `prisma.code.upsert()` invocation:",
-          "",
-          "",
-          "Foreign key constraint failed on the field: `clientId`",
-          "    at fn.handleRequestError (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:174:6477)",
-          "    at fn.handleAndLogRequestError (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:174:5907)",
-          "    at fn.request (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:174:5786)",
-          "    at async t._request (/home/mayas/Documents/web-apps/electronic-agency/backend/node_modules/@prisma/client/runtime/library.js:177:10477)",
-          "    at async Object.upsertCode (file:///home/mayas/Documents/web-apps/electronic-agency/backend/dist/schema/client/resolvers.js:185:28)"
-        ]
       }
     }
   ],

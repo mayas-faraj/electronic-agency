@@ -17,7 +17,7 @@ result = await prismaClient.client.createMany({
     {
       id: 1,
       user: "lord.mayas",
-      namePerfix: "Mr.",
+      namePrefix: "Mr.",
       firstName: "Mayas",
       lastName: "Faraj",
       phone: "0960009710",
@@ -29,7 +29,7 @@ result = await prismaClient.client.createMany({
     {
       id: 2,
       user: "zaherati",
-      namePerfix: "Mr.",
+      namePrefix: "Mr.",
       firstName: "Zaher",
       lastName: "Zaher",
       phone: "0911223344",
@@ -41,7 +41,7 @@ result = await prismaClient.client.createMany({
     {
       id: 3,
       user: "zainab",
-      namePerfix: "Ms.",
+      namePrefix: "Ms.",
       firstName: "Zainab",
       phone: "0955666777",
       avatar: "/imgs/avatar/zainab.jpg",
@@ -140,17 +140,17 @@ result = await prismaClient.product.create({
           {
             clientId: 1,
             rating: 5,
-            commnet: "best device",
+            comment: "best device",
           },
           {
             clientId: 2,
             rating: 4,
-            commnet: "good air condition",
+            comment: "good air condition",
           },
           {
             clientId: 3,
             rating: 5,
-            commnet: "high quality",
+            comment: "high quality",
           },
         ],
       },
@@ -194,12 +194,12 @@ result = await prismaClient.product.create({
           {
             clientId: 1,
             rating: 4,
-            commnet: "good device",
+            comment: "good device",
           },
           {
             clientId: 3,
             rating: 5,
-            commnet: "long live air condition",
+            comment: "long live air condition",
           },
         ],
       },
@@ -240,7 +240,7 @@ result = await prismaClient.product.create({
           {
             clientId: 2,
             rating: 3,
-            commnet: "better thant older one",
+            comment: "better thant older one",
           },
           {
             clientId: 3,

@@ -21,22 +21,31 @@ model Client {
   phone       String                  @unique @db.VarChar(20)
   email       String?                 @unique @db.VarChar(50)
   avatar      String?                 @db.VarChar(255)
-  namePerfix  String                  @default("Mr.") @map("name_prefix") @db.Char(3)
+  namePrefix  String                  @default("Mr.") @map("name_prefix") @db.Char(3)
   firstName   String                  @map("first_name") @db.VarChar(20)
   lastName    String?                 @map("last_name") @db.VarChar(20)
   birthDate   DateTime?               @map("birth_date")
   isMale      Boolean                 @default(true) @map("is_male") @db.TinyInt
   isDisabled  Boolean                 @default(false) @map("is_disabled") @db.TinyInt
-  code        String?                 @db.Char(4)
-  codeDate    DateTime?               @map("code_date")
+  isVerified  Boolean                 @default(false) @map("is_verified") @db.TinyInt
   createdAt   DateTime                @default(now()) @map("created_at")
   updatedAt   DateTime?               @updatedAt @map("updated_at")
   lastLoginAt DateTime?               @map("last_login_at")
   orders      Order[]
   reviews     ProductReview[]
   products    ProductItemsOnClients[]
+  code        Code?
 
   @@map("client")
+}
+
+model Code {
+  clientId  Int      @id
+  text      String?  @db.Char(4)
+  createdAt DateTime @default(now()) @map("created_at")
+  client    Client   @relation(fields: [clientId], references: [id])
+
+  @@map("code")
 }
 
 model Admin {
@@ -88,6 +97,7 @@ model Product {
 model ProductItem {
   sn           String                 @id
   productId    Int                    @map("product_id")
+  createdAt    DateTime               @default(now()) @map("created_at")
   product      Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
   client       ProductItemsOnClients?
   maintenances Maintenance[]
@@ -99,7 +109,7 @@ model ProductItemsOnClients {
   productSn   String      @id
   clientId    Int
   createdAt   DateTime    @default(now()) @map("created_at")
-  productItem ProductItem @relation(fields: [productSn], references: [sn], onDelete: Cascade)
+  productItem ProductItem @relation(fields: [productSn], references: [sn], onDelete: Cascade, onUpdate: Cascade)
   client      Client      @relation(fields: [clientId], references: [id])
 
   @@map("product_items_on_clients")
@@ -110,7 +120,7 @@ model ProductReview {
   productId Int      @map("product_id")
   clientId  Int      @map("client_id")
   rating    Int
-  commnet   String?  @db.VarChar(500)
+  comment   String?  @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   client    Client   @relation(fields: [clientId], references: [id])
@@ -152,7 +162,7 @@ model Offer {
 model Maintenance {
   id           Int               @id @default(autoincrement())
   productSn    String            @map("product_sn")
-  description  String            @db.LongText
+  description  String?           @db.LongText
   propertyType PropertyType      @default(HOME) @map("property_type")
   address      String?           @db.VarChar(500)
   longitude    Float?
@@ -162,7 +172,7 @@ model Maintenance {
   status       MaintenanceStatus @default(PENDING)
   isDraft      Boolean           @default(false) @map("is_draft") @db.TinyInt
   repair       Repair?
-  productItem  ProductItem       @relation(fields: [productSn], references: [sn], onDelete: Cascade)
+  productItem  ProductItem       @relation(fields: [productSn], references: [sn], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("maintenance")
 }

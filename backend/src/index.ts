@@ -12,7 +12,7 @@ const prismaClient = new PrismaClient({ log: ["query"] , errorFormat: "minimal"}
 // read configuration
 dotenv.config();
 const port = parseInt(process.env.PORT ?? "4000");
-const isDevelopment = process.env.ENV === "development";
+const isDevelopment = process.env.NODE_ENV === "development";
 
 // create apollo server
 const apolloServer = new ApolloServer<AppContext>({

@@ -39,14 +39,12 @@ export const decodeUser = (user: AuthUser) => {
 
 // verify user
 export const getUserFromJwt = (authorizationToken: string): AuthUser => {
+  const emptyUser = { id: 0, nam: "", rol: ""};
+  if (authorizationToken == null || authorizationToken === "") return emptyUser;
   try {
     const result = jwt.verify(authorizationToken, secret);
     return result as AuthUser;
   } catch (ex) {
-    return {
-      id: 0,
-      nam: "",
-      rol: "",
-    };
+    return emptyUser;
   }
 };

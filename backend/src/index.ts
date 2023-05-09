@@ -28,7 +28,7 @@ const { url } = await startStandaloneServer(apolloServer, {
     let jwtToken = req.headers.authorization || "";
     if (jwtToken.indexOf(" ") > 0) jwtToken = jwtToken.split(" ")[1];
     return {
-      user: {nam: 'mayas', rol: 'ADMIN', id: 10},// getUserFromJwt(jwtToken),
+      user: getUserFromJwt(jwtToken),
       prismaClient: prismaClient,
     };
   },

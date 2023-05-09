@@ -160,7 +160,7 @@ const resolvers = {
   
       return result;
     },
-    deleteroductItem: async (parent: any, args: any, app: AppContext) => {
+    deleteProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
       checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
   

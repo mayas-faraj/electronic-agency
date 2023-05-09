@@ -116,8 +116,17 @@ const resolvers = {
         }
       });
 
-      if (result != null)  return { jwt: decodeUser({ id: result.id, nam: result.user, rol: ""}) };
-      else return { jwt: ""};
+      if (result != null)  {
+        await app.prismaClient.client.update({
+          where: {
+            id: args.clientId
+          },
+          data: {
+            isVerified: true
+          }
+        })
+        return { jwt: decodeUser({ id: result.id, nam: result.user, rol: ""}) };
+      }  else return { jwt: ""};
     }
   },
   Mutation: {

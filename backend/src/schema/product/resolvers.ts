@@ -64,6 +64,56 @@ const resolvers = {
 
       return result;
     },
+    productItem: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.productItem.findUnique({
+        where: {
+          sn: args.sn
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              model: true,
+              image: true,
+              description: true,
+              price: true,
+              isDisabled: true
+            }
+          }
+        },
+      });
+
+      return result;
+    },
+    productItemsByAuth: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.productItem.findMany({
+        where: {
+          client: {
+            clientId: app.user.id
+          }
+        },
+        select: {
+          sn: true,
+          createdAt: true,
+          product: {
+            select: {
+              id: true,
+              name: true,
+              model: true,
+              image: true,
+              description: true,
+              price: true,
+              isDisabled: true
+            }
+          }
+        }
+      });
+
+      return result;
+    },
   },
   Mutation: {
     createProduct: async (parent: any, args: any, app: AppContext) => {
@@ -100,6 +150,7 @@ const resolvers = {
           image: args.input.image,
           description: args.input.description,
           price: args.input.price,
+          isDisabled: args.input.isDisabled
         }
       });
 
@@ -115,6 +166,7 @@ const resolvers = {
           id: args.id
         },
         select: {
+          id: true,
           name: true,
           model: true
         }
@@ -177,7 +229,7 @@ const resolvers = {
   
       return result;
     },
-    createProductItemClientByAuth: async (parent: any, args: any, app: AppContext) => {
+    createProductItemOnClientByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.productItemsOnClients.create({
         data: {
@@ -185,6 +237,7 @@ const resolvers = {
           productSn: args.sn
         },
         select: {
+          clientId: true,
           productSn: true,
           createdAt: true
         }
@@ -192,7 +245,7 @@ const resolvers = {
   
       return result;
     },
-    deleteProductItemClientByAuth: async (parent: any, args: any, app: AppContext) => {
+    deleteProductItemOnClientByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.productItemsOnClients.delete({
         where: {
@@ -221,7 +274,9 @@ const resolvers = {
           comment: true,
           createdAt: true
         }
-      })
+      });
+
+      return result;
     },
     deleteProductReview: async (parent: any, args: any, app: AppContext) => {
       // result result
@@ -235,7 +290,9 @@ const resolvers = {
           comment: true,
           createdAt: true
         }
-      })
+      });
+
+      return result;
     },
   },
 };

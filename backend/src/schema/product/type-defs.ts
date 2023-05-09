@@ -2,18 +2,19 @@ const typeDefs = `#graphql
 	extend type Query {
         products(categoryId: Int!, filter: SearchFilter): [ProductBasic]
 		product(id: Int!): Product
-		productBySn(sn: String!): Product
+		productItem(sn: String!): ProductItem
+		productItemsByAuth: [ProductItem]
     }
 
     extend type Mutation {
         createProduct(input: ProductInput!): ProductBasic
-		updateProduct(id: Int!, input: ProductInput!): ProductBasic
+		updateProduct(id: Int!, input: ProductUpdate!): ProductBasic
 		deleteProduct(id: Int!): ProductBasic
-		createProductItem(productId: Int!, sn: String!): ProductItem
-		updateProductItem(sn: String!, newSn: String!): ProductItem
-		deleteProductItem(sn: String!): ProductItem
-		createProductItemClientByAuth(sn: String!): ProductItem
-		deleteProductItemClientByAuth(sn: String!): ProductItem
+		createProductItem(productId: Int!, sn: String!): ProductItemBasic
+		updateProductItem(sn: String!, newSn: String!): ProductItemBasic
+		deleteProductItem(sn: String!): ProductItemBasic
+		createProductItemOnClientByAuth(sn: String!): ProductItemOnClient
+		deleteProductItemOnClientByAuth(sn: String!): ProductItemOnClient
 		createProductReviewByAuth(productId: Int!, input: ProductReviewInput!): ProductReviewBasic
 		deleteProductReview(id: Int!): ProductReviewBasic
     }
@@ -30,7 +31,7 @@ const typeDefs = `#graphql
 		updatedAt: String
 		category: Category
 		reviews: [ProductReviewBasic]
-		items: [ProductItem]
+		items: [ProductItemBasic]
 	}
 
 	type ProductBasic {
@@ -52,10 +53,33 @@ const typeDefs = `#graphql
 		price: Float!
 	}
 
-	type ProductItem {
+	input ProductUpdate {
+		categoryId: Int
+		name: String
+		model: String
+		image: String
+		description: String
+		price: Float
+		isDisabled: Boolean
+	}
+
+	type ProductItemBasic {
 		sn: String
 		createdAt: String
 	}
+
+	type ProductItem {
+		sn: String
+		createdAt: String
+		product: ProductBasic
+	}
+
+	type ProductItemOnClient {
+		productSn: String
+		clientId: Int
+		createdAt: String
+	}
+
 
 	type ProductReview {
 		id: Int!

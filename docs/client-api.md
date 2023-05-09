@@ -232,3 +232,308 @@ each cateroy contains id, name and image, and then you can find products by cate
 ```
 
 ---
+
+## products
+to display all product, we should use this graphql request:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { products(categoryId: 1) { id name model image description price isDisabled }}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "products": [
+      {
+        "id": 1,
+        "name": "LG",
+        "model": "z-12889",
+        "image": "/imgs/products/p1.jpg",
+        "description": "Self Cleaning Technology",
+        "price": 150.5,
+        "isDisabled": false
+      },
+      {
+        "id": 2,
+        "name": "Samsung",
+        "model": "ab-23895-s",
+        "image": "/imgs/products/p2.jpg",
+        "description": "Dual Inveter",
+        "price": 210,
+        "isDisabled": false
+      },
+      {
+        "id": 3,
+        "name": "Haier",
+        "model": "a28394dj",
+        "image": "/imgs/products/p3.jpg",
+        "description": "Smart Geofencing",
+        "price": 88.5,
+        "isDisabled": false
+      },
+      {
+        "id": 4,
+        "name": "General",
+        "model": "ge-283927",
+        "image": "/imgs/products/p4.jpg",
+        "description": "12 year warranty on compressor\n        ",
+        "price": 250,
+        "isDisabled": false
+      },
+      {
+        "id": 5,
+        "name": "Mitsubishi",
+        "model": "z-12889",
+        "image": "/imgs/products/p5.jpg",
+        "description": "20 year warranty on compressor\n        ",
+        "price": 773.5,
+        "isDisabled": false
+      }
+    ]
+  }
+}
+```
+
+you can use filter parameters to select special set of products, the full list of filters displayed in this api:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { products(categoryId: 1, filter: {fromDate: \"2023-5-1\", toDate: \"2023-5-10\", keyword: \"Gen\"}) { id name model image description price }}"}' http://localhost:4000
+```
+
+keyword is used to search within the name, model or description of products.
+
+```json
+{
+  "data": {
+    "products": [
+      {
+        "id": 4,
+        "name": "General",
+        "model": "ge-283927",
+        "image": "/imgs/products/p4.jpg",
+        "description": "Smart Geofencing",
+        "price": 250,
+        "isDisabled": false
+      }
+    ]
+  }
+}
+```
+
+to display a full information of a product, we should use this schema:
+
+```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(id: 1) { id name model image description price createdAt category {name } }}"}' http://localhost:4000
+```
+
+the result json like this:
+```json
+{
+  "data": {
+    "product": {
+      "id": 1,
+      "name": "LG",
+      "model": "z-12889",
+      "image": "/imgs/products/p1.jpg",
+      "description": "TruSmart Sensors",
+      "price": 150.5,
+      "createdAt": "1683578700640",
+      "category": {
+        "name": "Residential"
+      }
+    }
+  }
+}
+```
+
+the user can search for products by serial number to add them, this graphql query is used for searching
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { productItem(sn: \"241784198\") { createdAt product {id name model image description price}}}"}' http://localhost:4000
+```
+
+if the serial number was already exists in the database, the server returns the related product info:
+
+```json
+{
+  "data": {
+    "productItem": {
+      "createdAt": "1683553150642",
+      "product": {
+        "id": 1,
+        "name": "LG",
+        "model": "z-12889",
+        "image": "/imgs/products/p1.jpg",
+        "description": "10 year warranty on compressor",
+        "price": 150.5
+      }
+    }
+  }
+}
+```
+
+the createdAt field that returned from result is the date of created this serial number to system, you can omit it from the request schema.
+if the serial number that entered is not related to any product, the server will return this response.
+
+```json
+{
+  "data": {
+    "productItem": null
+  }
+}
+```
+---
+
+## product item
+user can add products items by serial number, the system detect the loged-in user automatically by authorization token and the product id, so you should only send the serial number to add the product.
+
+```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductItemOnClientByAuth(sn: \"241784197\")  {clientId productSn createdAt}}"}' http://localhost:4000
+ ```
+
+if the operation success, the server return this result
+```json
+{
+  "data": {
+    "createProductItemOnClientByAuth": {
+      "clientId": 1,
+      "productSn": "241784197",
+      "createdAt": "1683652790988"
+    }
+  }
+}
+
+if you add the item before, the system will display this error
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.productItemsOnClients.create()` invocation:\n\n\nUnique constraint failed on the constraint: `PRIMARY`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createProductItemOnClientByAuth"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "createProductItemOnClientByAuth": null
+  }
+```
+if the serial number not found, the server is return this message:
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.productItemsOnClients.create()` invocation:\n\n\nForeign key constraint failed on the field: `productSn`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createProductItemOnClientByAuth"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "createProductItemOnClientByAuth": null
+  }
+}
+```
+
+to display all your added products, you can use this api:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { productItemsByAuth {sn createdAt product{ id name model image}}}"}' http://localhost:4000
+```
+
+the result for this user by authorization token is:
+
+```json
+{
+  "data": {
+    "productItemsByAuth": [
+      {
+        "sn": "241784197",
+        "createdAt": "1683553150642",
+        "product": {
+          "id": 1,
+          "name": "LG",
+          "model": "z-12889",
+          "image": "/imgs/products/p1.jpg"
+        }
+      },
+      {
+        "sn": "82780005",
+        "createdAt": "1683553150667",
+        "product": {
+          "id": 2,
+          "name": "Samsung",
+          "model": "ab-23895-s",
+          "image": "/imgs/products/p2.jpg"
+        }
+      }
+    ]
+  }
+}
+```
+
+to delete on of this added products, you can use this schema:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProductItemOnClientByAuth(sn: \"241784196\")  {productSn createdAt}}"}' http://localhost:4000
+```
+
+if the operation success, the server returns info about deleted item:
+```json
+{
+  "data": {
+    "deleteProductItemOnClientByAuth": {
+      "productSn": "241784195",
+      "createdAt": "1683652611848"
+    }
+  }
+}
+```
+
+you can't delete item that related with maintenance issue, so ther server will return error:
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.productItemsOnClients.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "deleteProductItemOnClientByAuth"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "deleteProductItemOnClientByAuth": null
+  }
+}
+```
+```

@@ -498,13 +498,345 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(id: 1) { id name model image description price createdAt category {name } items { sn createdAt} reviews {rating comment } }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "product": {
+      "id": 1,
+      "name": "LG",
+      "model": "z-12889",
+      "image": "/imgs/products/p1.jpg",
+      "description": "10 year warranty on compressor",
+      "price": 150.5,
+      "createdAt": "1683578700640",
+      "category": {
+        "name": "Residential"
+      },
+      "items": [
+        {
+          "sn": "241784194",
+          "createdAt": "1683578700640"
+        },
+        {
+          "sn": "241784195",
+          "createdAt": "1683578700640"
+        },
+        {
+          "sn": "241784196",
+          "createdAt": "1683578700640"
+        },
+        {
+          "sn": "241784197",
+          "createdAt": "1683578700640"
+        },
+        {
+          "sn": "241784198",
+          "createdAt": "1683578700640"
+        }
+      ],
+      "reviews": [
+        {
+          "rating": 5,
+          "comment": "best device"
+        },
+        {
+          "rating": 4,
+          "comment": "good air condition"
+        },
+        {
+          "rating": 5,
+          "comment": "high quality"
+        }
+      ]
+    }
+  }
+}
 ```
 
 
 ---
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProduct(input: {categoryId: 1, name: \"freshair\", model: \"s11\", image: \"fa.jpg\", description: \"and desc\", price: 120})  {id name model image description price}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "createProduct": {
+      "id": 8,
+      "name": "freshair",
+      "model": "s11",
+      "image": "fa.jpg",
+      "description": "and desc",
+      "price": 120
+    }
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.product.create()` invocation:\n\n\nUnique constraint failed on the constraint: `product_name_model_key`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createProduct"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "createProduct": null
+  }
+}
+```
+
+---
+
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateProduct(id: 8, input: {name: \"freshair2\", model: \"s12\", image: \"fa2.jpg\", description: \"and desc2\", price: 125})  {id name model image description price}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "updateProduct": {
+      "id": 8,
+      "name": "freshair2",
+      "model": "s12",
+      "image": "fa2.jpg",
+      "description": "and desc2",
+      "price": 125
+    }
+  }
+}
+```
+
+---
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProduct(id: 11)  {id name model}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "deleteProduct": {
+      "id": 11,
+      "name": "freshair",
+      "model": "s11"
+    }
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.product.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "deleteProduct"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "deleteProduct": null
+  }
+}
+```
+
+---
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductItem(productId: 1, sn: \"1111111\")  {sn createdAt}}"}' http://localhost:4000 
+```
+
+```json
+{
+  "data": {
+    "createProductItem": {
+      "sn": "1111111",
+      "createdAt": "1683651933467"
+    }
+  }
+}
+```
+
+```json
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.productItem.create()` invocation:\n\n\nUnique constraint failed on the constraint: `PRIMARY`",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "createProductItem"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "createProductItem": null
+  }
+}
+```
+
+---
+
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateProductItem(sn: \"1111111\", newSn: \"22222222222\")  {sn createdAt}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "updateProductItem": {
+      "sn": "22222222222",
+      "createdAt": "1683651933467"
+    }
+  }
+}
+```
+
+---
+
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProductItem(sn: \"22222222222\")  {sn createdAt}}"}' http://localhost:4000 
+```
+
+```json
+{
+  "data": {
+    "deleteProductItem": {
+      "sn": "22222222222",
+      "createdAt": "1683651933467"
+    }
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.productItem.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "deleteProductItem"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "deleteProductItem": null
+  }
+}
+```
+
+---
+
+
+```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductReviewByAuth(productId: 5, input: {rating: 5, comment: \"five stars\"}) {id rating comment createdAt}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "createProductReviewByAuth": {
+      "id": 57,
+      "rating": 5,
+      "comment": "five stars",
+      "createdAt": "1683655120288"
+    }
+  }
+}
+```
+
+---
+
+
+```bash
+curl -H 'Content-Type: application/json'  -H 'Authorization: BEARER eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtIjoiYWRtaW4iLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY4MzY1MTc0OH0.QdYiPQdWPWCgCnwamMYPFNtmsR0rLG3I2n1E30Kohso' -X POST -d '{"query": "mutation { deleteProductReview(id: 56) {id rating comment createdAt}}"}' http://localhost:4000
+```
+
+```json
+{
+  "data": {
+    "deleteProductReview": {
+      "id": 56,
+      "rating": 6,
+      "comment": "six",
+      "createdAt": "1683654601176"
+    }
+  }
+}
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "\nInvalid `prisma.productReview.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
+      "locations": [
+        {
+          "line": 1,
+          "column": 12
+        }
+      ],
+      "path": [
+        "deleteProductReview"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      }
+    }
+  ],
+  "data": {
+    "deleteProductReview": null
+  }
+}
+```
+
+---
+
 
 ```bash
 ```
@@ -512,6 +844,9 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 ```json
 ```
 
+```json
+```
+
 ---
 
 
@@ -521,7 +856,11 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 ```json
 ```
 
+```json
+```
+
 ---
+
 
 ```bash
 ```
@@ -529,4 +868,56 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 ```json
 ```
 
+```json
+```
+
 ---
+
+
+```bash
+```
+
+```json
+```
+
+```json
+```
+
+---
+
+
+```bash
+```
+
+```json
+```
+
+```json
+```
+
+---
+
+
+```bash
+```
+
+```json
+```
+
+```json
+```
+
+---
+
+
+```bash
+```
+
+```json
+```
+
+```json
+```
+
+---
+

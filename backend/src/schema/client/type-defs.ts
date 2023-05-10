@@ -12,6 +12,7 @@ const typeDefs = `#graphql
 		updateClientByAuth(input: ClientInput!): ClientBasic
 		deleteClient(id: Int!): ClientBasic
 		upsertCode(clientId: Int!): Code
+		upsertCodeByPhone(phone: String!): Code
     }
 
     type Client {

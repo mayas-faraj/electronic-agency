@@ -132,7 +132,18 @@ const resolvers = {
   Mutation: {
     createClient: async (parent: any, args: any, app: AppContext) => {
       // generate user
-      const userName = args.input.email != null ? args.input.email.substring(0, args.input.email.indexOf("@")) : (args.input.firstName + args.input.lastName).replace(" ", "").replace("-", "");
+      let userName = args.input.email != null ? args.input.email.substring(0, args.input.email.indexOf("@")) : (args.input.firstName + "_" + args.input.lastName).replace(" ", "").replace("-", "");
+
+      const userResult = await app.prismaClient.client.findUnique({
+        where: {
+          user: userName
+        },
+        select: {
+          id: true
+        }
+      });
+
+      if (userResult?.id != null) userName += Math.ceil((Math.random() * 999) + 1).toString()
       // return result
       const result = await app.prismaClient.client.create({
         data: {

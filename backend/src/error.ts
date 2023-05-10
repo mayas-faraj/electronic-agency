@@ -7,7 +7,7 @@ export const clientFormatError = ((formattedError: GraphQLFormattedError, error:
     // unique key constainer
     if (msg.includes("key constraint")) {
         if (msg.includes("`clientid`")) resultMsg = "The user is not exist";
-        else if (msg.includes("`productsn`")) resultMsg = "Product serial number is not found";
+        else if (msg.includes("`productsn`") || msg.includes("`product_sn`")) resultMsg = "Product serial number is not found";
     } else if(msg.includes("unique constraint")) {
         if (msg.includes("`client_user_key`")) resultMsg = "user is already exist";
         else if (msg.includes("`admin_user_key`")) resultMsg = "admin user is already exist";

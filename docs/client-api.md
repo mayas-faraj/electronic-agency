@@ -30,24 +30,17 @@ if the operation success, the result is:
 if the client already exists (same phone, email) the server return this value
 
 ```json
-{
-  "errors": [
-    {
-      "message": "\nInvalid `prisma.client.create()` invocation:\n\n\nUnique constraint failed on the constraint: `client_phone_key`",
-      "locations": [
-        {
-          "line": 1,
-          "column": 12
-        }
-      ],
-      "path": [
-        "createAdmin"
-      ],
-      "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-      }
-    }
-  ]
+{ 
+  "errors": [{ "message": "phone is belong to existing user" } ],
+  "data": { "createClient": null }
+}
+```
+
+```json
+{ 
+  "errors": [{ "message": "email is belong to existing user" } ],
+  "data": { "createClient": null }
+}
 ```
 
 ## user profile
@@ -123,26 +116,8 @@ for testing purpose, the code is constant, 1988, if the id doesn't belong to any
 
 ```json
 {
-  "errors": [
-    {
-      "message": "\nInvalid `prisma.code.upsert()` invocation:\n\n\nForeign key constraint failed on the field: `clientId`",
-      "locations": [
-        {
-          "line": 1,
-          "column": 12
-        }
-      ],
-      "path": [
-        "upsertCode"
-      ],
-      "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-      }
-    }
-  ],
-  "data": {
-    "upsertCode": null
-  }
+  "errors": [ { "message": "The user is not exists" } ],
+  "data": { "upsertCode": null }
 }
 ```
 
@@ -407,23 +382,7 @@ if you add the item before, the system will display this error
 
 ```json
 {
-  "errors": [
-    {
-      "message": "\nInvalid `prisma.productItemsOnClients.create()` invocation:\n\n\nUnique constraint failed on the constraint: `PRIMARY`",
-      "locations": [
-        {
-          "line": 1,
-          "column": 12
-        }
-      ],
-      "path": [
-        "createProductItemOnClientByAuth"
-      ],
-      "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-      }
-    }
-  ],
+  "errors": [ { "message": "error while creating data"} ],
   "data": {
     "createProductItemOnClientByAuth": null
   }
@@ -432,26 +391,8 @@ if the serial number not found, the server is return this message:
 
 ```json
 {
-  "errors": [
-    {
-      "message": "\nInvalid `prisma.productItemsOnClients.create()` invocation:\n\n\nForeign key constraint failed on the field: `productSn`",
-      "locations": [
-        {
-          "line": 1,
-          "column": 12
-        }
-      ],
-      "path": [
-        "createProductItemOnClientByAuth"
-      ],
-      "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-      }
-    }
-  ],
-  "data": {
-    "createProductItemOnClientByAuth": null
-  }
+  "errors": [ { "message": "Product serial number is not found" }],
+  "data": { "createProductItemOnClientByAuth": null }
 }
 ```
 
@@ -514,26 +455,111 @@ you can't delete item that related with maintenance issue, so ther server will r
 
 ```json
 {
-  "errors": [
-    {
-      "message": "\nInvalid `prisma.productItemsOnClients.delete()` invocation:\n\n\nAn operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.",
-      "locations": [
-        {
-          "line": 1,
-          "column": 12
-        }
-      ],
-      "path": [
-        "deleteProductItemOnClientByAuth"
-      ],
-      "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-      }
-    }
-  ],
+  "errors": [ {
+      "message": "Cann't delete this item becuase it is related to other data, delete the related data first" } ],
   "data": {
     "deleteProductItemOnClientByAuth": null
   }
 }
 ```
+
+## orders
+after login, you can check your orders using this schema:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { ordersByAuth {id count totalPrice status createdAt product{name model} }}"}' http://localhost:4000
 ```
+
+```json
+{
+  "data": {
+    "ordersByAuth": [
+      {
+        "id": 9,
+        "count": 3,
+        "totalPrice": 453.5,
+        "status": "ACCEPTED",
+        "createdAt": "1683553150815",
+        "product": {
+          "name": "LG",
+          "model": "z-12889"
+        }
+      }
+    ]
+  }
+}
+```
+
+if you have a draft (already saved order data) you can query for it by this schema:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { ordersByAuth(isDraft: true) {id count totalPrice status createdAt product{name model} }}"}' http://localhost:4000
+```
+
+the result is same response of previous query.
+if you don't have any order yet, the system will return empty set:
+
+```json
+{
+  "data": {
+    "ordersByAuth": []
+  }
+}```
+
+to create new order, you can use this api:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOrderByAuth(input: {productId: 5, count: 5, totalPrice: 500, address: \"edge of word\", note: \"no note\"}) {id count totalPrice status createdAt  }}"}' http://localhost:4000 
+```
+
+if the operation success, the server returns this object
+
+```json
+
+  "data": {
+    "createOrderByAuth": {
+      "id": 11,
+      "count": 5,
+      "totalPrice": 500,
+      "status": "PENDING",
+      "createdAt": "1683731951823",
+    }
+  }
+}
+
+to save the order as a draft, we will just use isDraft parameter, the query should like:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOrderByAuth(input: {isDraft: true, productId: 5, count: 5, totalPrice: 500, address: \"edge of word\", note: \"no note\"}) {id count totalPrice status createdAt  }}"}' http://localhost:4000
+```
+
+and the result is the same of previous result to create normal order.
+
+```
+to delete te order, we will use the id of the order within this schema:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteOrderByAuth(id: 11) { count  }}"}' http://localhost:4000 
+```
+
+if the operation is succes, the server return this object:
+```json
+{
+  "data": {
+    "deleteOrderByAuth": {
+      "count": 1
+    }
+  }
+}
+```
+
+if the id not exists, or you don't have permission to delete the order, the result object is:
+
+{
+  "data": {
+    "deleteOrderByAuth": {
+      "count": 0
+    }
+  }
+}
+---

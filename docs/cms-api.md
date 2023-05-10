@@ -1,5 +1,18 @@
 # Air Condition System
 
+ADMIN:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtIjoiYWRtaW4iLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY4MzY1MTc0OH0.QdYiPQdWPWCgCnwamMYPFNtmsR0rLG3I2n1E30Kohso
+
+PRODUCT_MANAGER:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtIjoiYWxpIiwicm9sIjoiUFJPRFVDVF9NQU5BR0VSIiwiaWF0IjoxNjgzNzM0MDkwfQ.QV3Fvl1PsVQ7F7audDh9svft8cGkf8cudvjm8LNSptk
+
+SALES_MAN: 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtIjoiYWxhYSIsInJvbCI6IlNBTEVTX01BTiIsImlhdCI6MTY4MzczMzk1NX0.C6w9rqynE2T8hcv8t4sk15WYUvd38jOtSbIzYBWs-B4
+
+TECHNICAL:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtIjoiZmVyYXMiLCJyb2wiOiJURUNITklDQUwiLCJpYXQiOjE2ODM3MzQwNjF9.BrUAyuaUzknqdDT31LJnzC3qeyf-oOvWuVx0fWz6Hrc
+
+
 ```bash
 curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clients(filter: {onlyEnabled: true, fromDate: \"2023-05-07\"}) {id user phone email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000
 ```
@@ -839,57 +852,151 @@ curl -H 'Content-Type: application/json'  -H 'Authorization: BEARER eyJhbGciOiJI
 
 
 ```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { orders(filter: {status: \"ACCEPTED\", fromDate: \"2023-05-01\"}) {id count totalPrice status createdAt product{name model} }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "orders": [
+      {
+        "id": 9,
+        "count": 3,
+        "totalPrice": 453.5,
+        "status": "ACCEPTED",
+        "createdAt": "1683553150815",
+        "product": {
+          "name": "LG",
+          "model": "z-12889"
+        }
+      }
+    ]
+  }
+}
 ```
 
 ```json
+{
+  "data": {
+    "orders": []
+  }
+}
 ```
 
 ---
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { order(id: 9) {id count totalPrice status createdAt product{name model} client { user avatar } offer {id price validationDays createdAt} }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "order": {
+      "id": 9,
+      "count": 3,
+      "totalPrice": 453.5,
+      "status": "ACCEPTED",
+      "createdAt": "1683553150815",
+      "product": {
+        "name": "LG",
+        "model": "z-12889"
+      },
+      "client": {
+        "user": "lord.mayas",
+        "avatar": "/imgs/avatar/mayas.jpg"
+      },
+      "offer": {
+        "id": 5,
+        "price": 350,
+        "validationDays": 3,
+        "createdAt": "1683553150815"
+      }
+    }
+  }
+}
 ```
 
 ```json
+{
+  "data": {
+    "order": null
+  }
+}
 ```
 
 ---
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOfferByAuth {id price validationDays createdAt  }}"}' http://localhost:4000 | jq
 ```
 
 ```json
+{
+  "data": {
+    "createOfferByAuth": {
+      "id": 6,
+      "price": 400,
+      "validationDays": 5,
+      "createdAt": "1683734656028"
+    }
+  }
+}
 ```
 
 ```json
+{
+  "errors": [
+    {
+      "message": "the order of this offer is already exist"
+    }
+  ],
+  "data": {
+    "createOfferByAuth": null
+  }
+}
 ```
 
 ---
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateOfferByAuth(id: 6, input: {price: 420, validationDays: 6}) {id price validationDays createdAt  }}"}' http://localhost:4000
 ```
 
 ```json
-```
-
-```json
+{
+  "data": {
+    "updateOfferByAuth": {
+      "id": 6,
+      "price": 420,
+      "validationDays": 6,
+      "createdAt": "1683734656028"
+    }
+  }
+}
 ```
 
 ---
 
 
 ```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteOffer(id: 6) {id price validationDays createdAt  }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "deleteOffer": {
+      "id": 6,
+      "price": 420,
+      "validationDays": 6,
+      "createdAt": "1683734656028"
+    }
+  }
+}
 ```
 
 ```json

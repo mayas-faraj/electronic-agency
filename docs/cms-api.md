@@ -999,31 +999,55 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 }
 ```
 
-```json
-```
-
 ---
 
 
 ```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintenances(filter: { status: \"FIXED\", fromDate: \"2023-05-01\"}) {id address status bookedAt propertyType }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "maintenances": [
+      {
+        "id": 9,
+        "address": "Jaramaran-Damascus",
+        "status": "FIXED",
+        "bookedAt": "1685566800000",
+        "propertyType": "OFFICE"
+      }
+    ]
+  }
+}
 ```
-
-```json
-```
-
 ---
 
 
 ```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintenance(id: 9) {id address status propertyType bookedAt }}"}' http://localhost:4000
 ```
 
 ```json
+{
+  "data": {
+    "maintenance": {
+      "id": 9,
+      "address": "Jaramaran-Damascus",
+      "status": "FIXED",
+      "propertyType": "OFFICE",
+      "bookedAt": "1685566800000"
+    }
+  }
+}
 ```
 
 ```json
+{
+  "data": {
+    "maintenance": null
+  }
+}
 ```
 
 ---

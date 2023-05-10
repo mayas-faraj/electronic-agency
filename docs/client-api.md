@@ -563,3 +563,96 @@ if the id not exists, or you don't have permission to delete the order, the resu
   }
 }
 ---
+
+## maintenance
+to display your maintanance request, you can use this graphql schema:
+
+```bash
+curl -H 'Content-Type: application/json' -X  POST -d '{"query": "query { maintenancesByAuth {id address status propertyType bookedAt productItem {sn} }}"}' http://localhost:4000
+```
+
+the result is an array of your historical maintenance reqests and status of each on:
+
+```json
+{
+  "data": {
+    "maintenancesByAuth": [
+      {
+        "id": 9,
+        "address": "Jaramaran-Damascus",
+        "status": "FIXED",
+        "propertyType": "OFFICE",
+        "bookedAt": "1685566800000",
+        "productItem": {
+          "sn": "82780005"
+        }
+      }
+    ]
+  }
+}
+```
+if you didn't have any maintenance request, the system will return an empty array:
+
+```json
+{
+  "data": {
+    "maintenancesByAuth": []
+  }
+}
+```
+
+to schedule new maintenance request, you should use this schema:
+
+```bash
+curl -H 'Content-Type: application/json' -X  POST -d '{"query": "mutation { createMaintenance(input: {productSn: \"241784196\", description: \"extra heat\", propertyType: \"HOME\", address: \"Muhajreen - Damascus\", bookedAt: \"2023-6-22\"}) {id address status propertyType bookedAt productItem {sn} }}"}' http://localhost:4000 
+```
+
+and if the operation success, the server returns this object:
+```json
+{
+  "data": {
+    "createMaintenance": {
+      "id": 17,
+      "address": "Muhajreen - Damascus",
+      "status": "PENDING",
+      "propertyType": "HOME",
+      "bookedAt": "1687381200000",
+      "productItem": null
+    }
+  }
+}
+```
+
+if the input product key is not valid, the server returns this object:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Product serial number is not found"
+    }
+  ],
+  "data": {
+    "createMaintenance": null
+  }
+}
+```
+
+to delete the maintenance request, you can use this api:
+
+```bash
+curl -H 'Content-Type: application/json' -X  POST -d '{"query": "mutation { deleteMaintenanceByAuth(id: 17) { count }} "}' http://localhost:4000
+```
+
+and if the operation succss:
+
+```json
+{
+  "data": {
+    "deleteMaintenanceByAuth": {
+      "count": 0
+    }
+  }
+}
+```
+

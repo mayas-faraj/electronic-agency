@@ -118,7 +118,7 @@ const resolvers = {
   Mutation: {
     createProduct: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.product.create({
@@ -136,7 +136,7 @@ const resolvers = {
     },
     updateProduct: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.product.update({
@@ -158,7 +158,7 @@ const resolvers = {
     },
     deleteProduct: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
   
       // return result
       const result = await app.prismaClient.product.delete({
@@ -176,7 +176,7 @@ const resolvers = {
     },
     createProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
   
       // return result
       const result = await app.prismaClient.productItem.create({
@@ -194,7 +194,7 @@ const resolvers = {
     },
     updateProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
   
       // return result
       const result = await app.prismaClient.productItem.update({
@@ -214,7 +214,7 @@ const resolvers = {
     },
     deleteProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
   
       // return result
       const result = await app.prismaClient.productItem.delete({

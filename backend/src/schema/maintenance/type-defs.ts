@@ -1,14 +1,15 @@
 const typeDefs = `#graphql
 	extend type Query {
-        maintenances(filter: StatusFilter): [Maintenance]
-		maintenancesByAuth(isDraft: Boolean): [Maintenance]
+        maintenances(filter: StatusFilter): [MaintenanceBasic]
+		maintenance(id: Int!): Maintenance
+		maintenancesByAuth(isDraft: Boolean): [MaintenanceBasic]
     }
 
     extend type Mutation {
-        createMaintenanceByAuth(input: MaintenanceInput!): MaintenanceBasic
-		deleteMaintenanceByAuth(id: Int!): MaintenanceBasic
-		createRepair(input: RepairInput!): RepairBasic
-		updateRepair(id: Int!, input: RepairInput!): RepairBasic
+        createMaintenance(input: MaintenanceInput!): MaintenanceBasic
+		deleteMaintenanceByAuth(id: Int!): BatchResult
+		createRepairByAuth(input: RepairInput!): RepairBasic
+		updateRepairByAuth(id: Int!, input: RepairUpdate!): RepairBasic
 		deleteRepair(id: Int!): RepairBasic
     }
 
@@ -36,6 +37,7 @@ const typeDefs = `#graphql
 		createdAt: String
 		bookedAt: String
 		status: String
+		productItem: ProductItem
 	}
 
 	input MaintenanceInput {
@@ -68,8 +70,12 @@ const typeDefs = `#graphql
 	}
 
 	input RepairInput {
-		adminId: Int!
 		maintenanceId: Int!
+		price: Int!
+		description: String
+	}
+
+	input RepairUpdate {
 		price: Int!
 		description: String
 	}

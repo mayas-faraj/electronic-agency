@@ -21,7 +21,7 @@ const resolvers = {
   Mutation: {
     createCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.create({
@@ -35,7 +35,7 @@ const resolvers = {
     },
     updateCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.update({
@@ -52,7 +52,7 @@ const resolvers = {
     },
     deleteCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
   
       // return result
       const result = await app.prismaClient.category.delete({

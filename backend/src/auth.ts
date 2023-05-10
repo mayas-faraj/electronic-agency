@@ -29,7 +29,7 @@ export enum Role {
 
 export const checkAuthorization = (role: string, ...allowedRoles: Role[]) => {
   for (let allowedRole of allowedRoles) if (role === Role[allowedRole]) return true;
-  throw(new GraphQLError(`${role} is un authorized to access resources, only allowd for: ${allowedRoles}`));
+  throw(new GraphQLError(`${role != "" ? role : "user without a role"} is unauthorized to access resources, only allowd for role indexs: ${allowedRoles}`));
 };
 
 // decode user

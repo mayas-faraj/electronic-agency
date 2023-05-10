@@ -3,6 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 import { type AppContext, getUserFromJwt } from "./auth.js";
+import { clientFormatError } from "./error.js";
 import typeDefs from "./schema/type-defs.js";
 import resolvers from "./schema/resolvers.js";
 
@@ -18,7 +19,8 @@ const isDevelopment = process.env.NODE_ENV === "development";
 const apolloServer = new ApolloServer<AppContext>({
   typeDefs,
   resolvers,
-  introspection: isDevelopment,
+  introspection: true, //isDevelopment,
+  formatError: !isDevelopment ? clientFormatError : undefined
 });
 
 // start

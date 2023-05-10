@@ -30,6 +30,10 @@ const typeDefs = `#graphql
 	type UserJwt {
 		jwt: String!
 	}
+
+	type BatchResult {
+		count: Int!
+	}
 `;
 
 export default [typeDefs, clientTypeDefs, adminTypeDefs, categoryTypeDefs, productTypeDefs, maintenanceTypeDefs, orderTypeDefs];

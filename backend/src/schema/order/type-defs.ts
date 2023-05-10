@@ -1,14 +1,15 @@
 const typeDefs = `#graphql
 	extend type Query {
-        orders(filter: StatusFilter): [Order]
-		ordersByAuth(isDraft: Boolean): [Order]
+        orders(filter: StatusFilter): [OrderBasic]
+		order(id: Int!): Order
+		ordersByAuth(isDraft: Boolean): [OrderBasic]
     }
 
     extend type Mutation {
         createOrderByAuth(input: OrderInput!): OrderBasic
-		deleteOrderByAuth(id: Int!): OrderBasic
-		createOffer(input: OfferInput!): OfferBasic
-		updateOffer(id: Int!, input: OfferInput!): OfferBasic
+		deleteOrderByAuth(id: Int!): BatchResult
+		createOfferByAuth(input: OfferInput!): OfferBasic
+		updateOfferByAuth(id: Int!, input: OfferUpdate!): OfferBasic
 		deleteOffer(id: Int!): OfferBasic
     }
 
@@ -31,10 +32,10 @@ const typeDefs = `#graphql
 		totalPrice: Float!
 		status: String
 		createdAt: String
+		product: ProductBasic
 	}
 
 	input OrderInput {
-		clientId: Int!
 		productId: Int!
 		count: Int!
 		totalPrice: Float!
@@ -60,8 +61,12 @@ const typeDefs = `#graphql
 	}
 
 	input OfferInput {
-		adminId: Int!
 		orderId: Int!
+		price: Int!
+		validationDays: Int
+	}
+
+	input OfferUpdate {
 		price: Int!
 		validationDays: Int
 	}

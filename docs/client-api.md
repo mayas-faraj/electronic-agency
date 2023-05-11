@@ -106,7 +106,8 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { upser
 {
   "data": {
     "upsertCode": {
-      "createdAt": "1683510242112"
+      "clientId": "3",
+      "createdAt": "1683803858924"
     }
   }
 }
@@ -133,9 +134,11 @@ and ther server will return this object after the operation has been success:
 {
   "data": {
     "upsertCodeByPhone": {
-      "createdAt": "1683750758306"
+      "clientId": "6",
+      "createdAt": "1683803858924"
     }
   }
+}
 }
 ```
 

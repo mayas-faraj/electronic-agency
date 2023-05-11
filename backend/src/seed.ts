@@ -21,7 +21,7 @@ result = await prismaClient.client.createMany({
       firstName: "Mayas",
       lastName: "Faraj",
       phone: "0960009710",
-      avatar: "/imgs/avatar/mayas.jpg",
+      avatar: "/imgs/avatars/mayas.jpg",
       birthDate: new Date(1986, 8, 24),
       isMale: true,
       email: "uniqueprogrammer@hotmail.com",
@@ -33,7 +33,7 @@ result = await prismaClient.client.createMany({
       firstName: "Zaher",
       lastName: "Zaher",
       phone: "0911223344",
-      avatar: "/imgs/avatar/zaher.jpg",
+      avatar: "/imgs/avatars/zaher.jpg",
       birthDate: new Date(1988, 9, 1),
       isMale: true,
       email: "katsh88@hotmail.com",
@@ -44,7 +44,7 @@ result = await prismaClient.client.createMany({
       namePrefix: "Ms.",
       firstName: "Zainab",
       phone: "0955666777",
-      avatar: "/imgs/avatar/zainab.jpg",
+      avatar: "/imgs/avatars/zainab.jpg",
       birthDate: new Date(1992, 3, 1),
       isMale: false,
       email: "zainab@hotmail.com",
@@ -92,12 +92,12 @@ result = await prismaClient.category.createMany({
     {
       id: 1,
       name: "Residential",
-      image: "/imgs/categories/c1.jpg",
+      image: "/imgs/categories/resedental.png",
     },
     {
       id: 2,
       name: "Bussiness",
-      image: "/imgs/categories/c2.jpg",
+      image: "/imgs/categories/business.png",
     },
   ],
 });
@@ -111,7 +111,7 @@ result = await prismaClient.product.create({
     categoryId: 1,
     name: "LG",
     model: "z-12889",
-    image: "/imgs/products/p1.jpg",
+    image: "/imgs/products/p1.png",
     price: 150.5,
     description: `
             TruWifi
@@ -166,7 +166,7 @@ result = await prismaClient.product.create({
     categoryId: 1,
     name: "Samsung",
     model: "ab-23895-s",
-    image: "/imgs/products/p2.jpg",
+    image: "/imgs/products/p2.png",
     price: 210,
     description: `
             Smart watch
@@ -215,7 +215,7 @@ result = await prismaClient.product.create({
     categoryId: 1,
     name: "Haier",
     model: "a28394dj",
-    image: "/imgs/products/p3.jpg",
+    image: "/imgs/products/p3.png",
     price: 88.5,
     description: `
             TruWifi
@@ -260,7 +260,7 @@ result = await prismaClient.product.create({
     categoryId: 1,
     name: "General",
     model: "ge-283927",
-    image: "/imgs/products/p4.jpg",
+    image: "/imgs/products/p4.png",
     price: 250,
     description: `
             TruWifi
@@ -307,7 +307,7 @@ result = await prismaClient.product.create({
     categoryId: 1,
     name: "Mitsubishi",
     model: "z-12889",
-    image: "/imgs/products/p5.jpg",
+    image: "/imgs/products/p5.png",
     price: 773.5,
     description: `
             TruSmart Sensors
@@ -342,7 +342,7 @@ result = await prismaClient.product.create({
     categoryId: 2,
     name: "LG",
     model: "z-329249",
-    image: "/imgs/products/p6.jpg",
+    image: "/imgs/products/p6.png",
     price: 225.5,
     description: `
             TruSmart Sensors
@@ -377,7 +377,7 @@ result = await prismaClient.product.create({
     categoryId: 2,
     name: "Generals",
     model: "ge-234927",
-    image: "/imgs/products/p7.jpg",
+    image: "/imgs/products/p7.png",
     price: 289,
     description: `
             TruWifi

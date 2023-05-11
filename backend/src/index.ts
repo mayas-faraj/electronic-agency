@@ -1,5 +1,10 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from 'express';
+import cors from 'cors';
+import http from 'http';
+import bodyParser from "body-parser";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 import { type AppContext, getUserFromJwt } from "./auth.js";
@@ -15,17 +20,25 @@ dotenv.config();
 const port = parseInt(process.env.PORT ?? "4000");
 const isDevelopment = process.env.NODE_ENV === "development";
 
+// express server
+const app = express();
+const httpServer = http.createServer(app);
+
 // create apollo server
 const apolloServer = new ApolloServer<AppContext>({
   typeDefs,
   resolvers,
-  introspection: true, //isDevelopment,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  introspection: isDevelopment,
   formatError: !isDevelopment ? clientFormatError : undefined
 });
 
-// start
-const { url } = await startStandaloneServer(apolloServer, {
-  listen: { port },
+// start apollo server
+await apolloServer.start();
+
+
+// express middleware
+app.use("/graphql", cors<cors.CorsRequest>(), bodyParser.json(), expressMiddleware(apolloServer, {
   context: async ({ req }) => {
     let jwtToken = req.headers.authorization || "";
     if (jwtToken.indexOf(" ") > 0) jwtToken = jwtToken.split(" ")[1];
@@ -34,7 +47,11 @@ const { url } = await startStandaloneServer(apolloServer, {
       prismaClient: prismaClient,
     };
   },
-});
+}));
+
+// express static file serve
+app.use("/uploads", express.static('uploads'));
 
 // server has been started
-console.log(`🚀  Server ready at: ${url}`);
+await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
+console.log(`🚀  Server ready at: http://localhost:${port}/`);

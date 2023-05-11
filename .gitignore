@@ -1,7 +1,12 @@
 # library
 node_modules
+frontend/.pnp
+.pnp.js
+
 # backend output
 backend/dist
+#backend uploads
+backend/uploads
 # frontend output
 frontend/build
 # Keep environment variables out of version control

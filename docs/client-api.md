@@ -121,6 +121,40 @@ for testing purpose, the code is constant, 1988, if the id doesn't belong to any
 }
 ```
 
+you can very user by phone number by using schema:
+
+```bash
+curl -H 'Content-Type: application/json' -H -X POST -d '{"query": "mutation { upsertCodeByPhone(phone: \"0933112233\") {createdAt }}"}' http://localhost:4000
+```
+
+and ther server will return this object after the operation has been success:
+
+```json
+{
+  "data": {
+    "upsertCodeByPhone": {
+      "createdAt": "1683750758306"
+    }
+  }
+}
+```
+
+if the phone number that entered not belong to any user, the server return this object:
+
+```json
+{
+  "errors": [
+    {
+      "message": "no user related with entered phone numer-no user related with entered phone numer"
+    }
+  ],
+  "data": {
+    "upsertCodeByPhone": null
+  }
+}
+```
+
+
 ## verify code
 
 to verify code, we should send the user id and the code the the backend using the request:

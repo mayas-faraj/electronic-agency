@@ -264,7 +264,8 @@ const resolvers = {
           text: args.text,
         },
         select: {
-          createdAt: true,
+          clientId: true,
+          createdAt: true
         },
       });
 
@@ -284,8 +285,6 @@ const resolvers = {
         },
       });
 
-      console.log(codeText, args.phone, client);
-
       if (client?.id == null)
         throw new GraphQLError("no user related with entered phone numer");
 
@@ -301,6 +300,10 @@ const resolvers = {
         update: {
           text: codeText,
         },
+        select: {
+          clientId: true,
+          createdAt: true
+        }
       });
 
       return result;

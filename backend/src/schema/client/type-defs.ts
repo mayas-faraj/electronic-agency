@@ -60,7 +60,7 @@ const typeDefs = `#graphql
 	}
 
 	type Code {
-		text: String
+		clientId: String
 		createdAt: String
 	}
 `;

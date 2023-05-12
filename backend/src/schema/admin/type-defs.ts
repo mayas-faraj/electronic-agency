@@ -3,7 +3,7 @@ const typeDefs = `#graphql
         admins(filter: SearchFilter): [AdminBasic]
 		admin(id: Int!): Admin
 		adminByAuth: Admin
-		verifyAdmin(user: String!, password: String!): UserJwt
+		verifyAdmin(user: String!, password: String!): User
     }
 
     extend type Mutation {

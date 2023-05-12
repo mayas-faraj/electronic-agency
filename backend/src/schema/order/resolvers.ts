@@ -120,7 +120,7 @@ const resolvers = {
         }
       });
 
-      return { count: result._count };
+      return { count: result._count.id };
     },
     ordersByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result

@@ -122,7 +122,8 @@ const resolvers = {
           id: true
         },
         where: {
-          isRead: false
+          isRead: false,
+          isDraft: false
         }
       });
 

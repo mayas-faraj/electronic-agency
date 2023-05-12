@@ -1,0 +1,63 @@
+@import "colors";
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+
+    &>* {
+        flex-basis: 400px;
+        flex-grow: 1;
+    }
+}
+
+.form__wrapper {
+    margin: auto;
+}
+
+.form__container {
+    margin: auto 10vw;
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px 20px;
+    box-shadow: 2px 2px 10px #000;
+}
+
+.heading {
+    text-align: center;
+    color: $primary-color;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.loading__icon {
+    font-size: 1rem !important;
+    vertical-align: middle;
+    animation: wheel 1s ease-in-out infinite;
+
+}
+
+@keyframes wheel {
+    0% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(180deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    75% {
+        transform: rotate(0);
+    }
+
+}

@@ -1,0 +1,21 @@
+@import "colors";
+@import "sizes";
+
+html {
+    background-color: $primary-color;
+    color: $text-color;
+}
+
+body {
+    margin: 0;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.button {
+    background-color: $secondary-color;
+    color: $text-color;
+    padding: 10px;
+}

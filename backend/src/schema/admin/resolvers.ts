@@ -103,7 +103,8 @@ const resolvers = {
       if (result != null)  return { 
           jwt: decodeUser({ id: result.id, nam: result.user, rol: result.role}),
           id: result.id,
-          user: result.user
+          user: result.user,
+          role: result.role
         };
       else return { jwt: ""};
     }

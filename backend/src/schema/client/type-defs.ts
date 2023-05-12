@@ -3,7 +3,7 @@ const typeDefs = `#graphql
         clients(filter: SearchFilter): [ClientBasic]
 		client(id: Int!): Client
 		clientByAuth: Client
-		verifyClient(clientId: Int!, codeText: String!): UserJwt
+		verifyClient(clientId: Int!, codeText: String!): User
     }
 
     extend type Mutation {

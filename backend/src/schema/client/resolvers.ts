@@ -139,6 +139,8 @@ const resolvers = {
         });
         return {
           jwt: decodeUser({ id: result.id, nam: result.user, rol: "" }),
+          id: result.id,
+          user: result.user
         };
       } else return { jwt: "" };
     },

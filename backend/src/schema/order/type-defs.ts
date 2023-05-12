@@ -3,6 +3,7 @@ const typeDefs = `#graphql
         orders(filter: StatusFilter): [OrderBasic]
 		order(id: Int!): Order
 		ordersByAuth(isDraft: Boolean): [OrderBasic]
+		ordersUnreadCount: BatchResult
     }
 
     extend type Mutation {
@@ -20,6 +21,7 @@ const typeDefs = `#graphql
 		address: String!
 		note: String
 		status: String
+		isRead: Boolean
 		createdAt: String
 		product: ProductBasic
 		client: ClientBasic
@@ -31,6 +33,7 @@ const typeDefs = `#graphql
 		count: Int!
 		totalPrice: Float!
 		status: String
+		isRead: Boolean
 		createdAt: String
 		product: ProductBasic
 	}

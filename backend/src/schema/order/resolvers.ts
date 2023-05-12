@@ -14,6 +14,7 @@ const resolvers = {
           count: true,
           totalPrice: true,
           status: true,
+          isRead: true,
           createdAt: true,
           product: {
             select: {
@@ -40,6 +41,9 @@ const resolvers = {
       return result;
     },
     order: async (parent: any, args: any, app: AppContext) => {
+       // check permissions
+       checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+
       // return result
       const result = await app.prismaClient.order.findUnique({
         where: {
@@ -52,6 +56,7 @@ const resolvers = {
           address: true,
           note: true,
           status: true,
+          isRead: true,
           createdAt: true,
           product: {
             select: {
@@ -89,7 +94,32 @@ const resolvers = {
         },
       });
 
+      await app.prismaClient.order.update({
+        where: {
+          id: args.id
+        },
+        data: {
+          isRead: true
+        }
+      });
+
       return result;
+    },
+    ordersUnreadCount: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+
+      // return result
+      const result = await app.prismaClient.order.aggregate({
+        _count: {
+          id: true
+        },
+        where: {
+          isRead: false
+        }
+      });
+
+      return { count: result._count };
     },
     ordersByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result

@@ -3,6 +3,7 @@ const typeDefs = `#graphql
         maintenances(filter: StatusFilter): [MaintenanceBasic]
 		maintenance(id: Int!): Maintenance
 		maintenancesByAuth(isDraft: Boolean): [MaintenanceBasic]
+		maintenancesUnreadCount: BatchResult
     }
 
     extend type Mutation {
@@ -23,6 +24,7 @@ const typeDefs = `#graphql
 		createdAt: String
 		bookedAt: String
 		status: String
+		isRead: Boolean
 		repair: RepairBasic
 		productItem: ProductItem
 	}
@@ -37,6 +39,7 @@ const typeDefs = `#graphql
 		createdAt: String
 		bookedAt: String
 		status: String
+		isRead: Boolean
 		productItem: ProductItem
 	}
 

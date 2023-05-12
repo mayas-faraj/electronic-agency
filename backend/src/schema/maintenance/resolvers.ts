@@ -17,6 +17,7 @@ const resolvers = {
           longitude: true,
           latitude: true,
           status: true,
+          isRead: true,
           createdAt: true,
           bookedAt: true,
           productItem: {
@@ -51,6 +52,9 @@ const resolvers = {
       return result;
     },
     maintenance: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.TECHNICAL);
+
       // return result
       const result = await app.prismaClient.maintenance.findUnique({
         where: {
@@ -64,6 +68,7 @@ const resolvers = {
           longitude: true,
           latitude: true,
           status: true,
+          isRead: true,
           createdAt: true,
           bookedAt: true,
           productItem: {
@@ -95,7 +100,32 @@ const resolvers = {
         },
       });
 
+      await app.prismaClient.maintenance.update({
+        where: {
+          id: args.id
+        },
+        data: {
+          isRead: true
+        }
+      });
+
       return result;
+    },
+    maintenancesUnreadCount: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.TECHNICAL);
+
+      // return result
+      const result = await app.prismaClient.maintenance.aggregate({
+        _count: {
+          id: true
+        },
+        where: {
+          isRead: false
+        }
+      });
+
+      return { count: result._count };
     },
     maintenancesByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result

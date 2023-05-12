@@ -94,7 +94,8 @@ const resolvers = {
         },
       });
 
-      await app.prismaClient.order.update({
+      // set read value to true
+      if (result != null ) await app.prismaClient.order.update({
         where: {
           id: args.id
         },

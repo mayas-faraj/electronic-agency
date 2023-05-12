@@ -100,7 +100,8 @@ const resolvers = {
         },
       });
 
-      await app.prismaClient.maintenance.update({
+      // set read value to true
+      if (result != null ) await app.prismaClient.maintenance.update({
         where: {
           id: args.id
         },

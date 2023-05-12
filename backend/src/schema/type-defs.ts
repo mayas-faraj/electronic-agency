@@ -27,8 +27,11 @@ const typeDefs = `#graphql
 		toDate: String
 	}
 
-	type UserJwt {
+	type User {
 		jwt: String!
+		id: Int
+		user: String
+		role: String
 	}
 
 	type BatchResult {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { useNavigate } from 'react-router-dom';
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
@@ -6,11 +6,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LockIcon from "@mui/icons-material/Lock";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import { Snackbar, Alert } from "@mui/material";
-import getServerData from "../server-data";
+import getServerData from "../libs/server-data";
 import MainCover from "../components/main-cover";
 import styles from "../styles/login.module.scss";
+import StorageManager from "../libs/storage-manager";
 
-const LoginPage = () => {
+const LoginPage: FunctionComponent = () => {
   // components state
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -18,8 +19,10 @@ const LoginPage = () => {
   const [errorMessage, setErrrorMessage] = React.useState("");
   const [isLoading, setLoading] = React.useState(false);
 
-  // navigate to homepage init
-  const navigate = useNavigate();
+  // on load clear localstorage
+  React.useEffect(() => {
+    StorageManager.clear();
+  }, []);
 
   // component event handler
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -34,13 +37,7 @@ const LoginPage = () => {
     // verification of user
     setLoading(true);
     const action = async () => {
-      const loginResult = await getServerData(` 
-        query { 
-          verifyAdmin(user: "${user}", password: "${password}") {
-             jwt
-          } 
-        }
-      `, false);
+      const loginResult = await getServerData(`query { verifyAdmin(user: "${user}", password: "${password}") { jwt id user role } }`);
 
       setUser("");
       setPassword("");
@@ -52,16 +49,19 @@ const LoginPage = () => {
         const jwt = loginResult.data?.verifyAdmin?.jwt;
         if (jwt != null && jwt !== "") {
           setsuccessMessage("Login Success");
-          setTimeout(() => {
-            navigate("/");
-          }, 1000);
+
+          // save access token
+          StorageManager.save(jwt);
+
+          // navigate to home
+          setTimeout(() => { window.location.href="/"; }, 1000);
         } else setErrrorMessage("User and/or password error!");
       }
     };
     await action();
     setLoading(false);
   };
-  
+
   // render
   return (
     <div className={styles.wrapper}>
@@ -99,14 +99,14 @@ const LoginPage = () => {
                 ),
               }}
             />
-            <button disabled={isLoading} className="button" onClick={ e => { handleClick(e) }}>Sign in {isLoading ? <HourglassBottomIcon className={styles.loading__icon} />: undefined}</button>
+            <button disabled={isLoading} className="button" onClick={e => { handleClick(e) }}>Sign in {isLoading ? <HourglassBottomIcon className={styles.loading__icon} /> : undefined}</button>
           </form>
         </div>
       </div>
-      <Snackbar open={successMessage !== ""} onClose={ () => { setsuccessMessage("") } } autoHideDuration={6000}>
+      <Snackbar open={successMessage !== ""} onClose={() => { setsuccessMessage("") }} autoHideDuration={6000}>
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
-      <Snackbar open={errorMessage !== ""} onClose={ () => { setErrrorMessage("") } } autoHideDuration={6000}>
+      <Snackbar open={errorMessage !== ""} onClose={() => { setErrrorMessage("") }} autoHideDuration={6000}>
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
     </div>

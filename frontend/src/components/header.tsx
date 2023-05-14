@@ -1,20 +1,16 @@
 import React, { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import {
-  MaintenanceNotificationIcon,
-  OrderNotificationIcon,
-} from "./notification-icon";
+import { MaintenanceNotificationIcon, OrderNotificationIcon } from "./notification-icon";
 import logoImage from "../assets/imgs/logo.png";
 import RoleContext from "./role-context";
+import { Divider, IconButton } from "@mui/material";
 import styles from "../styles/header.module.scss";
-import { IconButton } from "@mui/material";
+import { AccountCircle, AdminPanelSettings, Category, ListAlt, RoomPreferences, Redeem } from "@mui/icons-material";
 
 const Header: FunctionComponent = () => {
   // privileges
@@ -22,18 +18,33 @@ const Header: FunctionComponent = () => {
 
   // component states
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<HTMLElement | null>(null);
+  const [mobileAnchorEl, setMobileAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMobileMenuOpen = Boolean(mobileAnchorEl);
 
+  // medel menu
+  interface ILink {
+    title: string
+    to: string
+    icon: JSX.Element
+  }
+
+  const links: ILink[] = [];
+  if (privileges.readAdmin) links.push({ title: "Admins", to: "/admins", icon: <AdminPanelSettings /> });
+  if (privileges.readClient) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
+  if (privileges.readCategory) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
+  if (privileges.readProduct) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
+  if (privileges.readMaintenance) links.push({ title: "Maintenances", to: "/maintenances", icon: <RoomPreferences /> });
+  if (privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
+
+  // event handlers
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+    setMobileAnchorEl(null);
   };
 
   const handleMenuClose = () => {
@@ -42,112 +53,83 @@ const Header: FunctionComponent = () => {
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+    setMobileAnchorEl(event.currentTarget);
   };
 
-  const menuId = "primary-search-account-menu";
+  // menu elements
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
+      anchorOrigin={{ vertical: "top", horizontal: "right", }}
       keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+      transformOrigin={{ vertical: "top", horizontal: "right", }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      className={styles["context-menu"]}
     >
-      <MenuItem>
-        <Link to="/profile">Profile</Link>
-      </MenuItem>
-      <MenuItem>
-        <Link to="/password">Change Password</Link>
-      </MenuItem>
-      <MenuItem>
-        <Link to="/login">Logout</Link>
-      </MenuItem>
+      <MenuItem><Link to="/profile">Profile</Link></MenuItem>
+      <MenuItem><Link to="/password">Change Password</Link></MenuItem>
+      <Divider />
+      <MenuItem><Link to="/login">Logout</Link></MenuItem>
     </Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
+      anchorEl={mobileAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right", }}
       keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+      transformOrigin={{ vertical: "top", horizontal: "right", }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      className={styles["mobile-menu"]}
     >
+      {
+        links.map(link => (
+          <MenuItem key={link.title}>{link.icon}<Link to={link.to}>{link.title}</Link></MenuItem>
+        ))
+      }
       {privileges.readMaintenance && (
-        <MenuItem>
-          <MaintenanceNotificationIcon />
-          <p>Maintenance</p>
-        </MenuItem>
+        <MenuItem><MaintenanceNotificationIcon />Maintenance</MenuItem>
       )}
       {privileges.readOrder && (
-        <MenuItem>
-          <OrderNotificationIcon />
-          <p>Orders</p>
-        </MenuItem>
+        <MenuItem><OrderNotificationIcon />Orders</MenuItem>
       )}
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton size="large" color="inherit">
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}><IconButton size="large" color="inherit"><AccountCircle /></IconButton>Profile</MenuItem>
     </Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <div className={styles.wrapper}>
       <AppBar position="static">
-        <Toolbar>
-          <IconButton sx={{ mr: 2 }}>
-            <Link to="/">
-              <img src={logoImage} alt="gree logo" className={styles.logo} />
-            </Link>
+        <Toolbar className={styles.toolbar}>
+          <IconButton>
+            <Link to="/"><img src={logoImage} alt="gree logo" className={styles.logo} /></Link>
           </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <div className={styles.hide_small}>
+            <div className={styles["main-menu"]}>
+              {
+                links.map(link => (
+                  <Link key={link.title} to={link.to}>{link.title}</Link>
+                ))
+              }
+            </div>
             {privileges.readMaintenance && <MaintenanceNotificationIcon />}
             {privileges.readOrder && <OrderNotificationIcon />}
-            <IconButton
-              size="large"
-              edge="end"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
+            <IconButton size="large" edge="end" onClick={handleProfileMenuOpen} color="inherit" >
               <AccountCircle />
             </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
+          </div>
+          <div className={styles.hide_large}>
+            <IconButton size="large" onClick={handleMobileMenuOpen} color="inherit" >
               <MoreIcon />
             </IconButton>
-          </Box>
+          </div>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+    </div>
   );
 };
 

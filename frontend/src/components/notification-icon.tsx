@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
-import RedeemIcon from "@mui/icons-material/Redeem";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
 import getServerData from "../libs/server-data";
 
@@ -35,7 +35,7 @@ const OrderNotificationIcon: FunctionComponent = () => {
   }, []);
 
   return (
-    <NotificationIcon icon={<RedeemIcon />} count={count}/>
+    <NotificationIcon icon={<ListAltIcon />} count={count}/>
   );
 };
 

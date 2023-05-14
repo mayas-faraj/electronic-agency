@@ -1,12 +1,15 @@
 import React from "react";
-import RoleContext from "../components/role-context";
 import Header from "../components/header";
+import Dashboard from "../components/dashboard";
 
 const HomePage = () => {
-  // read privileges
-  const privileges = React.useContext(RoleContext);
-  console.log(privileges);
-  return <div><Header /></div>;
+  // render page
+  return (
+    <>
+      <Header />
+      <Dashboard />
+    </>
+  )
 };
 
 export default HomePage;

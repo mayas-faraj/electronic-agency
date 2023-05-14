@@ -1,3 +1,58 @@
+@import "colors";
+@import "sizes";
+
+.toolbar {
+    justify-content: space-between;
+}
+
 .logo {
     max-width: 100px;
+}
+
+.menu {
+    display: block;
+}
+
+.hide_small,
+.hide_large {
+    display: flex;
+}
+
+.hide_small {
+    @media (max-width: $tablet-width) {
+        display: none !important;
+    }
+}
+
+.hide_large {
+    @media (min-width: $tablet-width) {
+        display: none !important;
+    }
+}
+
+.context-menu {
+    a {
+        color: #000;
+        text-decoration: none;
+    }
+}
+
+.main-menu {
+    line-height: 42px;
+    a {
+        color: $text-color;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+}
+
+.mobile-menu {
+    a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    li > svg {
+        padding: 10px 12px;
+    }
 }

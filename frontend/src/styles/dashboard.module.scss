@@ -1,0 +1,11 @@
+.wrapper {
+	display: flex;
+	gap: 30px;
+	flex-wrap: wrap;
+	padding: 30px;
+
+    & > * {
+        flex-basis: 400px;
+        flex-grow: 1;
+    }
+}

@@ -1,0 +1,44 @@
+@import "colors";
+
+.wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: $secondary-color;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.wrapper:not(.wide) {
+    flex-direction: column;
+}
+
+.wide {
+    flex-direction: row;
+}
+
+.title {
+    text-decoration: underline;
+}
+
+.info {
+    color: $accent-color;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.wide {
+    flex-direction: row;
+
+    .icon_wrapper {
+        padding: 0 35px;
+    }
+}
+
+.icon_wrapper {
+    svg {
+        font-size: 8rem;
+        color: $primary-color;
+    }
+}
+

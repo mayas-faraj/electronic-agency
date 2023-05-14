@@ -55,7 +55,9 @@ function App() {
 
   const loginRoutes = [{ path: "*", element: <Login /> }];
 
-  const router = createBrowserRouter(StorageManager.hasToken() ? routes : loginRoutes);
+  const router = createBrowserRouter(StorageManager.hasToken() ? routes : loginRoutes, {
+    basename: "/gree"
+  });
 
   // mui theme
   const theme = createTheme({

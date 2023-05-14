@@ -1,6 +1,7 @@
 const typeDefs = `#graphql
 	extend type Query {
         maintenances(filter: StatusFilter): [MaintenanceBasic]
+		maintenancesCount: AggregateResult
 		maintenance(id: Int!): Maintenance
 		maintenancesByAuth(isDraft: Boolean): [MaintenanceBasic]
 		maintenancesUnreadCount: BatchResult

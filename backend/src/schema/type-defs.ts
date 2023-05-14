@@ -37,6 +37,12 @@ const typeDefs = `#graphql
 	type BatchResult {
 		count: Int!
 	}
+
+	type AggregateResult {
+		count: Int
+		sum: Float
+		date: String
+	}
 `;
 
 export default [typeDefs, clientTypeDefs, adminTypeDefs, categoryTypeDefs, productTypeDefs, maintenanceTypeDefs, orderTypeDefs];

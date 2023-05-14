@@ -1,6 +1,7 @@
 const typeDefs = `#graphql
 	extend type Query {
         categories: [Category]
+		categoriesCount: AggregateResult
     }
 
     extend type Mutation {

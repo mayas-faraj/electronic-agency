@@ -1,5 +1,4 @@
 import { type AppContext, checkAuthorization, decodeUser, Role } from "../../auth.js";
-import filter from "../filter.js";
 
 const resolvers = {
   Query: {
@@ -16,6 +15,19 @@ const resolvers = {
       });
 
       return result;
+    },
+    categoriesCount: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.category.aggregate({
+        _count: {
+          id: true
+        },
+        _max: {
+          createdAt: true
+        }
+      });
+
+      return { count: result._count.id, date: result._max.createdAt };
     },
   },
   Mutation: {

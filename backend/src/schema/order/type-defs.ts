@@ -1,6 +1,7 @@
 const typeDefs = `#graphql
 	extend type Query {
         orders(filter: StatusFilter): [OrderBasic]
+		ordersCount: AggregateResult
 		order(id: Int!): Order
 		ordersByAuth(isDraft: Boolean): [OrderBasic]
 		ordersUnreadCount: BatchResult

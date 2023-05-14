@@ -40,6 +40,25 @@ const resolvers = {
 
       return result;
     },
+    ordersCount: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+
+      // return result
+      const result = await app.prismaClient.order.aggregate({
+        _count: {
+          id: true
+        },
+        _max: {
+          createdAt: true
+        },
+        _sum: {
+          count: true
+        }  
+      });
+
+      return { count: result._count.id, date: result._max.createdAt, sum: result._sum.count };
+    },
     order: async (parent: any, args: any, app: AppContext) => {
        // check permissions
        checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);

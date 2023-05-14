@@ -32,6 +32,19 @@ const resolvers = {
 
       return result;
     },
+    productsCount: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.product.aggregate({
+        _sum: {
+          id: true
+        },
+        _max: {
+          createdAt: true
+        }
+      });
+
+      return { count: result._sum.id, date: result._max.createdAt };
+    },
     product: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.product.findUnique({

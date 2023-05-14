@@ -1,4 +1,9 @@
-import { type AppContext, checkAuthorization, decodeUser, Role } from "../../auth.js";
+import {
+  type AppContext,
+  checkAuthorization,
+  decodeUser,
+  Role,
+} from "../../auth.js";
 import filter from "../filter.js";
 
 const resolvers = {
@@ -13,19 +18,40 @@ const resolvers = {
           id: true,
           user: true,
           isDisabled: true,
-          role: true
+          role: true,
         },
         where: {
           AND: [
-            { isDisabled: args.filter?.onlyEnabled != null ? !args.filter.onlyEnabled : undefined, },
+            {
+              isDisabled:
+                args.filter?.onlyEnabled != null
+                  ? !args.filter.onlyEnabled
+                  : undefined,
+            },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
-            { OR: [{ user: filter.searchFilter(args.filter?.keyword) }], }
-          ], 
+            { OR: [{ user: filter.searchFilter(args.filter?.keyword) }] },
+          ],
         },
       });
 
       return result;
+    },
+    adminsCount: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN);
+
+      // return result
+      const result = await app.prismaClient.admin.aggregate({
+        _count: {
+          id: true,
+        },
+        _max: {
+          createdAt: true
+        }
+      });
+
+      return { count: result._count.id, date: result._max.createdAt };
     },
     admin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
@@ -34,7 +60,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.admin.findUnique({
         where: {
-          id: args.id
+          id: args.id,
         },
         include: {
           offers: {
@@ -42,18 +68,18 @@ const resolvers = {
               id: true,
               price: true,
               validationDays: true,
-              createdAt: true
-            }
+              createdAt: true,
+            },
           },
           repairs: {
             select: {
               id: true,
               price: true,
               description: true,
-              createdAt: true
-            }
+              createdAt: true,
+            },
           },
-        }
+        },
       });
 
       return result;
@@ -62,7 +88,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.admin.findUnique({
         where: {
-          id: app.user.id
+          id: app.user.id,
         },
         include: {
           offers: {
@@ -70,18 +96,18 @@ const resolvers = {
               id: true,
               price: true,
               validationDays: true,
-              createdAt: true
-            }
+              createdAt: true,
+            },
           },
           repairs: {
             select: {
               id: true,
               price: true,
               description: true,
-              createdAt: true
-            }
+              createdAt: true,
+            },
           },
-        }
+        },
       });
 
       return result;
@@ -91,23 +117,28 @@ const resolvers = {
       const result = await app.prismaClient.admin.findFirst({
         where: {
           user: args.user,
-          password: args.password
+          password: args.password,
         },
         select: {
           id: true,
           user: true,
-          role: true
-        }
+          role: true,
+        },
       });
 
-      if (result != null)  return { 
-          jwt: decodeUser({ id: result.id, nam: result.user, rol: result.role}),
+      if (result != null)
+        return {
+          jwt: decodeUser({
+            id: result.id,
+            nam: result.user,
+            rol: result.role,
+          }),
           id: result.id,
           user: result.user,
-          role: result.role
+          role: result.role,
         };
-      else return { jwt: ""};
-    }
+      else return { jwt: "" };
+    },
   },
   Mutation: {
     createAdmin: async (parent: any, args: any, app: AppContext) => {
@@ -121,7 +152,7 @@ const resolvers = {
           password: args.input.password,
           role: args.input.role,
           isDisabled: args.input.isDisabled,
-        }
+        },
       });
 
       return result;
@@ -133,14 +164,14 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.admin.update({
         where: {
-          id: args.id
+          id: args.id,
         },
         data: {
           user: args.input.user,
           password: args.input.password,
           role: args.input.role,
           isDisabled: args.input.isDisabled,
-        }
+        },
       });
 
       return result;
@@ -149,32 +180,32 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.admin.update({
         where: {
-          id: app.user.id
+          id: app.user.id,
         },
         data: {
           user: args.input.user,
           password: args.input.password,
-        }
+        },
       });
-  
+
       return result;
     },
     deleteAdmin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
       checkAuthorization(app.user.rol, Role.ADMIN);
-  
+
       // return result
       const result = await app.prismaClient.admin.delete({
         where: {
-          id: args.id
+          id: args.id,
         },
         select: {
           id: true,
           user: true,
           isDisabled: true,
-        }
+        },
       });
-  
+
       return result;
     },
   },

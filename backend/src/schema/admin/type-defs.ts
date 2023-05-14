@@ -1,6 +1,7 @@
 const typeDefs = `#graphql
 	extend type Query {
         admins(filter: SearchFilter): [AdminBasic]
+		adminsCount: BatchResult
 		admin(id: Int!): Admin
 		adminByAuth: Admin
 		verifyAdmin(user: String!, password: String!): User

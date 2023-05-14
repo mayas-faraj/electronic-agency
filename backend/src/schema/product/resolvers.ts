@@ -35,7 +35,7 @@ const resolvers = {
     productsCount: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.product.aggregate({
-        _sum: {
+        _count: {
           id: true
         },
         _max: {
@@ -43,7 +43,7 @@ const resolvers = {
         }
       });
 
-      return { count: result._sum.id, date: result._max.createdAt };
+      return { count: result._count.id, date: result._max.createdAt };
     },
     product: async (parent: any, args: any, app: AppContext) => {
       // return result

@@ -5,7 +5,7 @@ import MainCover from "../components/main-cover";
 const NotFoundPage = () => {
   return (
     <div className="full-height">
-      <MainCover title="Page Not Found" isBlinking={true} />
+      <MainCover title="Page Not Found"/>
     </div>
   );
 };

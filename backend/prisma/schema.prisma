@@ -151,7 +151,7 @@ model Offer {
   id             Int      @id @default(autoincrement())
   adminId        Int      @map("admin_id")
   orderId        Int      @unique @map("order_id")
-  price          Int
+  price          Float
   validationDays Int?     @map("validation_days")
   createdAt      DateTime @default(now()) @map("created_at")
   order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -183,7 +183,7 @@ model Repair {
   id            Int         @id @default(autoincrement())
   adminId       Int         @map("admin_id")
   maintenanceId Int         @unique @map("maintenance_id")
-  price         Int         @default(0)
+  price         Float         @default(0)
   description   String      @db.LongText
   createdAt     DateTime    @default(now()) @map("created_at")
   admin         Admin       @relation(fields: [adminId], references: [id])

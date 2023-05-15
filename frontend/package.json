@@ -1,8 +1,8 @@
 {
-  "name": "electronic-agency frontend",
+  "name": "electronic-agency-frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://208.64.33.65/gree/",
+  "homepage": "http://208.64.33.65/alardh-alsalba/",
   "description": "frontend system for electronic agency for creative offer packages and maintenece service",
   "repository": {
     "type": "git",

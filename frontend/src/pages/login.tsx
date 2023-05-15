@@ -53,7 +53,7 @@ const LoginPage: FunctionComponent = () => {
           StorageManager.save(jwt);
 
           // navigate to home
-          setTimeout(() => { window.location.href="/"; }, 1000);
+          setTimeout(() => { window.location.href="/alardh-alsalba"; }, 1000);
         } else setErrrorMessage("User and/or password error!");
       }
     };

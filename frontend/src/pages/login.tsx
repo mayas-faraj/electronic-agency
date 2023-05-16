@@ -14,8 +14,8 @@ const LoginPage: FunctionComponent = () => {
   // components state
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [successMessage, setsuccessMessage] = React.useState("");
-  const [errorMessage, setErrrorMessage] = React.useState("");
+  const [successMessage, setSuccessMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
   const [isLoading, setLoading] = React.useState(false);
 
   // on load clear localstorage
@@ -29,7 +29,7 @@ const LoginPage: FunctionComponent = () => {
 
     // precondition
     if (user === "" || password === "") {
-      setErrrorMessage("Please fill-in the user and password");
+      setErrorMessage("Please fill-in the user and password");
       return;
     }
 
@@ -42,19 +42,19 @@ const LoginPage: FunctionComponent = () => {
       setPassword("");
 
       if (loginResult.errors != null) {
-        if (loginResult.errors.length > 0 && loginResult.errors[0].message != null) setErrrorMessage(loginResult.errors[0].message);
-        else setErrrorMessage("Error while trying to login operation.");
+        if (loginResult.errors.length > 0 && loginResult.errors[0].message != null) setErrorMessage(loginResult.errors[0].message);
+        else setErrorMessage("Error while trying to login operation.");
       } else {
         const jwt = loginResult.data?.verifyAdmin?.jwt;
         if (jwt != null && jwt !== "") {
-          setsuccessMessage("Login Success");
+          setSuccessMessage("Login Success");
 
           // save access token
           StorageManager.save(jwt);
 
           // navigate to home
           setTimeout(() => { window.location.href="/alardh-alsalba"; }, 1000);
-        } else setErrrorMessage("User and/or password error!");
+        } else setErrorMessage("User and/or password error!");
       }
     };
     await action();
@@ -102,10 +102,10 @@ const LoginPage: FunctionComponent = () => {
           </form>
         </div>
       </div>
-      <Snackbar open={successMessage !== ""} onClose={() => { setsuccessMessage("") }} autoHideDuration={6000}>
+      <Snackbar open={successMessage !== ""} onClose={() => { setSuccessMessage("") }} autoHideDuration={6000}>
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
-      <Snackbar open={errorMessage !== ""} onClose={() => { setErrrorMessage("") }} autoHideDuration={6000}>
+      <Snackbar open={errorMessage !== ""} onClose={() => { setErrorMessage("") }} autoHideDuration={6000}>
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
     </div>

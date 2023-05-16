@@ -1,0 +1,33 @@
+@import "colors";
+
+.wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.title__text {
+	border-top: 2px solid;
+	border-bottom: 2px solid;
+	padding: 2px 0 5px;
+}
+
+.command {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.button {
+	color: $text-color;
+	text-decoration: none;
+	background-color:$secondary-color;
+	padding: 8px;
+	min-width: 100px;
+	display: inline-block;
+	border-radius: 5px;
+	border: 1px solid;
+}

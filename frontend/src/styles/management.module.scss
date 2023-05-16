@@ -1,0 +1,32 @@
+@import "colors";
+
+.wrapper {
+    display: block;
+}
+
+.modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 400px;
+	background-color: $text-color;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 1px 1px 5px #000;
+	color: #000;
+	border: 2px solid $secondary-color;
+}
+
+.modal__buttons {
+    display: flex;
+    justify-content: space-between
+}
+
+.button--delete {
+    color: #ff6d6d !important;
+}
+
+.button--edit {
+    color: #16d650 !important;
+}

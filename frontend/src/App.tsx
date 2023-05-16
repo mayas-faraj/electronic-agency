@@ -43,17 +43,29 @@ function App() {
   }, [profile]);
 
   // lazy load pages
-  const Login = React.lazy(() => import("./pages/login"));
-  const Home = React.lazy(() => import("./pages/home"));
+  const LoginPage = React.lazy(() => import("./pages/login"));
+  const HomePage = React.lazy(() => import("./pages/home"));
+  const ProductsPage = React.lazy(() => import("./pages/products"));
+  const CategoriessPage = React.lazy(() => import("./pages/categories"));
+  const ClientsPage = React.lazy(() => import("./pages/clients"));
+  const AdminsPage = React.lazy(() => import("./pages/admins"));
+  const OrdersPage = React.lazy(() => import("./pages/orders"));
+  const MaintenancesPage = React.lazy(() => import("./pages/maintenances"));
 
   // app router
   const routes =[
-    { path: "/", element: <Home />, errorElement: <MainCover title="System Error!" /> },
-    { path: "/login", element: <Login /> },
+    { path: "/", element: <HomePage />, errorElement: <MainCover title="System Error!" /> },
+    { path: "/login", element: <LoginPage /> },
+    { path: "/products", element: <ProductsPage /> },
+    { path: "/categories", element: <CategoriessPage /> },
+    { path: "/clients", element: <ClientsPage /> },
+    { path: "/admins", element: <AdminsPage /> },
+    { path: "/orders", element: <OrdersPage /> },
+    { path: "/maintenances", element: <MaintenancesPage /> },
     { path: "*", element: <NotFoundPage /> },
   ];
 
-  const loginRoutes = [{ path: "*", element: <Login /> }];
+  const loginRoutes = [{ path: "*", element: <LoginPage /> }];
 
   const router = createBrowserRouter(StorageManager.hasToken() ? routes : loginRoutes, {
     basename: "/alardh-alsalba"

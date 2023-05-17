@@ -396,6 +396,101 @@ result = await prismaClient.product.create({
 
 console.log("product seed result: ", result);
 
+result = await prismaClient.product.create({
+  data: {
+    id: 8,
+    categoryId: 1,
+    name: "GREE Pular On-Off",
+    model: "GWH12AGCXB-K3NTA1A",
+    image: "/uploads/products/p8.png",
+    price: 100,
+    description: "GREE Wall Split, Pular, ON/OFF, R410a, Cool & Heat, T3, with 4m pipe, Nom. Cap: 1 Ton",
+    items: {
+      createMany: {
+        data: [{ sn: "4T58310004747" }, { sn: "4T58410002151" }],
+      },
+    },
+  },
+});
+
+result = await prismaClient.product.create({
+  data: {
+    id: 9,
+    categoryId: 2,
+    name: "GREE Cassette Inverter",
+    model: "GUD18TASF5/GUTD18WAS",
+    image: "/uploads/products/p9.png",
+    price: 120,
+    description: "GREE Cassette Split, 8-way, Eco-Inverter, C/H, R410a, T3, Nominal Capacity: 1.5 Ton",
+    items: {
+      createMany: {
+        data: [{ sn: "9AC9920000553" }, { sn: "9ADO120000627" }, { sn: "9P40130002562" }],
+      },
+    },
+  },
+});
+
+console.log("product seed result: ", result);
+
+
+result = await prismaClient.product.create({
+  data: {
+    id: 10,
+    categoryId: 1,
+    name: "GREE Window",
+    model: "GJE24AE-K3NMTG1C",
+    image: "/uploads/products/p10.png",
+    price: 120,
+    description: "GREE Air conditioner, Window type, ON/OFF, R410a, Nominal capacity: 2 Ton.",
+    items: {
+      createMany: {
+        data: [{ sn: "2101810002878" }],
+      },
+    },
+  },
+});
+
+console.log("product seed result: ", result);
+
+
+result = await prismaClient.product.create({
+  data: {
+    id: 11,
+    categoryId: 2,
+    name: "GREE Outdoor unit",
+    model: "GMV-680WM/B-X (P)",
+    image: "/uploads/products/p11.png",
+    price: 130,
+    description: "GREE GMV, Multi VRF, Outdoor, Inverter, T3,  Modular, Nominal Cap:68 KW.",
+    items: {
+      createMany: {
+        data: [{ sn: "9CB4130000082" }],
+      },
+    },
+  },
+});
+
+console.log("product seed result: ", result);
+
+result = await prismaClient.product.create({
+  data: {
+    id: 12,
+    categoryId: 2,
+    name: "GREE Indoor unit",
+    model: "GMV-ND112T/A-T",
+    image: "/uploads/products/p12.png",
+    price: 120,
+    description: "GMV- Four Way Cassette, Indoor Unit, Nominal Capacity: 11.2 KW.",
+    items: {
+      createMany: {
+        data: [{ sn: "8600030000111" }],
+      },
+    },
+  },
+});
+
+console.log("product seed result: ", result);
+
 // seed product on clients review
 result = await prismaClient.productItemsOnClients.createMany({
   data: [

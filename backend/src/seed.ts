@@ -404,10 +404,16 @@ result = await prismaClient.product.create({
     model: "GWH12AGCXB-K3NTA1A",
     image: "/uploads/products/p8.png",
     price: 100,
-    description: "GREE Wall Split, Pular, ON/OFF, R410a, Cool & Heat, T3, with 4m pipe, Nom. Cap: 1 Ton",
+    description:
+      "GREE Wall Split, Pular, ON/OFF, R410a, Cool & Heat, T3, with 4m pipe, Nom. Cap: 1 Ton",
     items: {
       createMany: {
-        data: [{ sn: "4T58310004747" }, { sn: "4T58410002151" }],
+        data: [
+          { sn: "4T58310004747" },
+          { sn: "4T58410002151" },
+          { sn: "4T58310004836" },
+          { sn: "4T58410002169" },
+        ],
       },
     },
   },
@@ -421,17 +427,24 @@ result = await prismaClient.product.create({
     model: "GUD18TASF5/GUTD18WAS",
     image: "/uploads/products/p9.png",
     price: 120,
-    description: "GREE Cassette Split, 8-way, Eco-Inverter, C/H, R410a, T3, Nominal Capacity: 1.5 Ton",
+    description:
+      "GREE Cassette Split, 8-way, Eco-Inverter, C/H, R410a, T3, Nominal Capacity: 1.5 Ton",
     items: {
       createMany: {
-        data: [{ sn: "9AC9920000553" }, { sn: "9ADO120000627" }, { sn: "9P40130002562" }],
+        data: [
+          { sn: "9AC9920000553" },
+          { sn: "9ADO120000627" },
+          { sn: "9P40130002562" },
+          { sn: "9P40130009925" },
+          { sn: "9AD0120000829" },
+          { sn: "9AC9930000032" },
+        ],
       },
     },
   },
 });
 
 console.log("product seed result: ", result);
-
 
 result = await prismaClient.product.create({
   data: {
@@ -441,17 +454,17 @@ result = await prismaClient.product.create({
     model: "GJE24AE-K3NMTG1C",
     image: "/uploads/products/p10.png",
     price: 120,
-    description: "GREE Air conditioner, Window type, ON/OFF, R410a, Nominal capacity: 2 Ton.",
+    description:
+      "GREE Air conditioner, Window type, ON/OFF, R410a, Nominal capacity: 2 Ton.",
     items: {
       createMany: {
-        data: [{ sn: "2101810002878" }],
+        data: [{ sn: "2101810002878" }, { sn: "2101830004885" }],
       },
     },
   },
 });
 
 console.log("product seed result: ", result);
-
 
 result = await prismaClient.product.create({
   data: {
@@ -461,10 +474,11 @@ result = await prismaClient.product.create({
     model: "GMV-680WM/B-X (P)",
     image: "/uploads/products/p11.png",
     price: 130,
-    description: "GREE GMV, Multi VRF, Outdoor, Inverter, T3,  Modular, Nominal Cap:68 KW.",
+    description:
+      "GREE GMV, Multi VRF, Outdoor, Inverter, T3,  Modular, Nominal Cap:68 KW.",
     items: {
       createMany: {
-        data: [{ sn: "9CB4130000082" }],
+        data: [{ sn: "9CB4130000082" }, { sn: "9CB4120000054" }],
       },
     },
   },
@@ -480,10 +494,11 @@ result = await prismaClient.product.create({
     model: "GMV-ND112T/A-T",
     image: "/uploads/products/p12.png",
     price: 120,
-    description: "GMV- Four Way Cassette, Indoor Unit, Nominal Capacity: 11.2 KW.",
+    description:
+      "GMV- Four Way Cassette, Indoor Unit, Nominal Capacity: 11.2 KW.",
     items: {
       createMany: {
-        data: [{ sn: "8600030000111" }],
+        data: [{ sn: "8600030000111" }, { sn: "8600030000093" }],
       },
     },
   },
@@ -576,7 +591,7 @@ result = await prismaClient.maintenance.create({
     bookedAt: new Date(2023, 6, 12),
     address: "Mazzeh-Damascus",
     status: "PENDING",
-    isDraft: true
+    isDraft: true,
   },
 });
 

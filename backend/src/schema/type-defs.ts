@@ -29,9 +29,8 @@ const typeDefs = `#graphql
 
 	type User {
 		jwt: String!
-		id: Int
-		user: String
-		role: String
+		status: bookean!
+		message: String!
 	}
 
 	type BatchResult {

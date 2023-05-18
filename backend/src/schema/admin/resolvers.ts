@@ -47,8 +47,8 @@ const resolvers = {
           id: true,
         },
         _max: {
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return { count: result._count.id, date: result._max.createdAt };
@@ -113,31 +113,50 @@ const resolvers = {
       return result;
     },
     verifyAdmin: async (parent: any, args: any, app: AppContext) => {
+      let message = "";
+      let success = false;
+
       // return result
-      const result = await app.prismaClient.admin.findFirst({
+      const userResult = await app.prismaClient.admin.findUnique({
         where: {
           user: args.user,
-          password: args.password,
         },
         select: {
           id: true,
-          user: true,
-          role: true,
+          isDisabled: true,
         },
       });
 
-      if (result != null)
-        return {
-          jwt: decodeUser({
-            id: result.id,
-            nam: result.user,
-            rol: result.role,
-          }),
-          id: result.id,
-          user: result.user,
-          role: result.role,
-        };
-      else return { jwt: "" };
+      if (userResult == null || userResult.id == null)
+        message = "User is not exists";
+      else if (userResult.isDisabled === true) message == "User disabled";
+      else {
+        const result = await app.prismaClient.admin.findFirst({
+          where: {
+            id: userResult.id,
+            password: args.password,
+          },
+          select: {
+            id: true,
+            user: true,
+            role: true,
+          },
+        });
+
+        if (result != null)
+          return {
+            jwt: decodeUser({
+              id: result.id,
+              nam: result.user,
+              rol: result.role,
+            }),
+            message: "Login success",
+            success: true,
+          };
+        else message = "password error";
+      }
+
+      return { jwt: "", message, success };
     },
   },
   Mutation: {

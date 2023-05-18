@@ -59,11 +59,11 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.client.aggregate({
         _count: {
-          id: true
+          id: true,
         },
         _max: {
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return { count: result._count.id, date: result._max.createdAt };
@@ -134,6 +134,7 @@ const resolvers = {
       const result = await app.prismaClient.client.findFirst({
         where: {
           id: args.clientId,
+          isDisabled: false,
           code: {
             text: args.codeText,
           },
@@ -155,10 +156,9 @@ const resolvers = {
         });
         return {
           jwt: decodeUser({ id: result.id, nam: result.user, rol: "" }),
-          id: result.id,
-          user: result.user
+          success: true,
         };
-      } else return { jwt: "" };
+      } else return { jwt: "", success: false };
     },
   },
   Mutation: {
@@ -283,7 +283,7 @@ const resolvers = {
         },
         select: {
           clientId: true,
-          createdAt: true
+          createdAt: true,
         },
       });
 
@@ -320,8 +320,8 @@ const resolvers = {
         },
         select: {
           clientId: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return result;

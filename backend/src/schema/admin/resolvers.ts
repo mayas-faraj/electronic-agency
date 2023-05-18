@@ -129,7 +129,7 @@ const resolvers = {
 
       if (userResult == null || userResult.id == null)
         message = "User is not exists";
-      else if (userResult.isDisabled === true) message == "User disabled";
+      else if (userResult.isDisabled === true) message = "User disabled";
       else {
         const result = await app.prismaClient.admin.findFirst({
           where: {

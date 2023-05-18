@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from "react";
-import Content from "../content";
 import getServerData from "../../libs/server-data";
 import data from "../../data.json";
 import Management, { ManagementType, Operation } from "../management";
+import ContentTable, { CellDataTransform, ITableHeader } from "../content-table";
 
 // types
 interface Category {
@@ -15,6 +15,13 @@ interface Category {
 const Categories: FunctionComponent = () => {
     // category state
     const [categories, setCategories] = React.useState<Category[]>([]);
+
+    // category schema
+    const tableHeader: ITableHeader[] = [
+        { key: "image", title: "Image"},
+        { key: "name", title: "Name"},
+        { key: "delete", title: "Delete", dataTransform: CellDataTransform.button},
+    ];
 
     // on load
     const action = async () => {
@@ -29,17 +36,13 @@ const Categories: FunctionComponent = () => {
     // render
     return (
         <div>
-            {
-                categories.map(category => (
-                    <div>
-                        <Content key={category.name} name="category">
-                            <div><img src={data["site-url"] + category.image} alt={category.name}/></div>
-                            <div>{category.name}</div>
-                            <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteCategory(id: ${category.id})  {id name model}}`} />
-                        </Content>
-                    </div>
-                ))
-            }
+            <ContentTable name="category" headers={tableHeader} data={
+                categories.map(category => ({
+                    ...category,
+                    image: <img src={data["site-url"] + category.image} alt={category.name}/>,
+                    delete: <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteCategory(id: ${category.id})  {id name model}}`} />
+                }))
+        } />
         </div>  
     );
 };

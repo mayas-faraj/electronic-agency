@@ -7,8 +7,8 @@ type keyValue = Record<string, primitive>;
 
 export interface IContentInterface {
     name: string;
-    initialValues?: keyValue[];
     children: ReactNode
+    initialValues?: keyValue[];
 }
 
 export interface IAction {
@@ -30,9 +30,7 @@ export const reducer = (state: keyValue[], action: IAction): keyValue[] => {
 // main component
 const Content: FunctionComponent<IContentInterface> = ({ name, children, initialValues }) => {
     return (
-        <NameContext.Provider value={name}>
-          <div className={styles.wrapper}>{children}</div>
-        </NameContext.Provider>
+        <NameContext.Provider value={name}>{children}</NameContext.Provider>
     );
 };
 

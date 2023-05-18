@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from "react";
-import Content from "../content";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
+import ContentTable, { CellDataTransform, ITableHeader } from "../content-table";
+
 
 // types
 interface Maintenance {
@@ -17,6 +18,13 @@ const Maintenances: FunctionComponent = () => {
     // maintenance state
     const [maintenances, setMaintenances] = React.useState<Maintenance[]>([]);
 
+    // maintenance schema
+    const tableHeader: ITableHeader[] = [
+        { key: "status", title: "Status"},
+        { key: "booketAt", title: "Booked date"},
+        { key: "address", title: "Address"},
+        { key: "delete", title: "Delete", dataTransform: CellDataTransform.button},
+    ];
     // on load
     const action = async () => {
         const result = await getServerData(`query { maintenances {id address status bookedAt propertyType }}`)
@@ -31,19 +39,14 @@ const Maintenances: FunctionComponent = () => {
     // render
     return (
         <div>
-            {
-                maintenances.map(maintenance => (
-                    <div>
-                        <Content key={maintenance.id} name="maintenance">
-                            <div>{maintenance.status}</div>
-                            <div>{maintenance.propertyType}</div>
-                            <div>{maintenance.status}</div>
-                            <div>{new Date(parseInt(maintenance.bookedAt)).toLocaleDateString()}</div>
-                            <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteMaintenance(id: ${maintenance.id})  {id}}`} />
-                        </Content>
-                    </div>
-                ))
-            }
+             <ContentTable name="maintenance" headers={tableHeader} data={
+                maintenances.map(maintenance => ({
+                    status: maintenance.status,
+                    bookedAt: new Date(parseInt(maintenance.bookedAt)).toLocaleDateString(),
+                    address: maintenance.address,
+                    delete: <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteMaintenance(id: ${maintenance.id})  {id}}`} />
+                }))
+            } />
         </div>  
     );
 };

@@ -18,13 +18,19 @@
 }
 
 .title {
-    text-decoration: underline;
+    text-decoration: underline 3px;
+    text-underline-offset: 6px;
+    color: $primary-color;
 }
 
 .info {
     color: $accent-color;
     font-weight: bold;
     font-size: 1.2rem;
+}
+
+.description {
+    color: $primary-color;
 }
 
 .wide {

@@ -1,5 +1,5 @@
 import React, { type FunctionComponent } from "react";
-import greeTitle from "../assets/imgs/gree-title.png";
+import logoImage from "../assets/imgs/logo.png";
 import styles from "../styles/main-cover.module.scss";
 
 interface MainCoverProps {
@@ -10,7 +10,7 @@ interface MainCoverProps {
 const MainCover: FunctionComponent<MainCoverProps> = ({ title, isBlinking }) => {
   return (
     <div className={styles.cover}>
-      <img className={styles.image + (isBlinking === true ? " " + styles.blink : "")} src={greeTitle} alt="Al Ardh Al Salba"/>
+      <img className={styles.image + (isBlinking === true ? " " + styles.blink : "")} src={logoImage} alt="Al Ardh Al Salba"/>
       {title != null && <h1 className={styles.title}>{title}</h1>}
     </div>
   );

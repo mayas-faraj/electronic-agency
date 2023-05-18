@@ -1,19 +1,28 @@
 import React, { FunctionComponent } from "react";
-import Content from "../content";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
+import ContentTable, { CellDataTransform, ITableHeader } from "../content-table";
 
 // types
 interface Client {
     id: number
     user: string
     phone: string
+    isDisabled: boolean
 }
 
 // main component
 const Clients: FunctionComponent = () => {
     // client state
     const [clients, setClients] = React.useState<Client[]>([]);
+
+    // clients schema
+    const tableHeader: ITableHeader[] = [
+        { key: "user", title: "User Name"},
+        { key: "phone", title: "Phone"},
+        { key: "isDisabled", title: "Disable", dataTransform: CellDataTransform.switch},
+        { key: "delete", title: "Delete", dataTransform: CellDataTransform.button},
+    ];
 
     // on load
     const action = async () => {
@@ -29,18 +38,13 @@ const Clients: FunctionComponent = () => {
     // render
     return (
         <div>
-            {
-                clients.map(client => (
-                    <div>
-                        <Content key={client.user} name="client">
-                            <div>{client.user}</div>
-                            <div>{client.phone}</div>
-                            <Management onUpdate={() => action() } type={ManagementType.switch} operation={Operation.update} command={`mutation { updateClient(id: ${client.id}, input: {isDisabled: ${true}})  {id}}`} />
-                            <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteClient(id: ${client.id})  {id}}`} />
-                        </Content>
-                    </div>
-                ))
-            }
+            <ContentTable name="client" headers={tableHeader} data={
+                clients.map(client => ({
+                    ...client,
+                    isDisabled: <Management onUpdate={() => action() } type={ManagementType.switch} operation={Operation.update} command={`mutation { updateClient(id: ${client.id}, input: {isDisabled: ${true}})  {id}}`} />,
+                    delete: <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteClient(id: ${client.id})  {id}}`} />
+                }))
+            } />
         </div>  
     );
 };

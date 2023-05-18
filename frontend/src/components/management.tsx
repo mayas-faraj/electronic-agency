@@ -6,6 +6,9 @@ import styles from "../styles/management.module.scss";
 import { DeleteForever, Edit } from "@mui/icons-material";
 
 // type define
+type primitive = number | string | boolean;
+type keyValue = Record<string, primitive>;
+
 export enum ManagementType {
     button,
     switch
@@ -22,7 +25,8 @@ interface IManagementProps {
     operation: Operation
     type?: ManagementType;
     hasConfirmModal?: boolean;
-    onUpdate?: () => void
+    initialValues?: keyValue[] ;
+    onUpdate?: () => void;
 }
 
 // component
@@ -72,7 +76,7 @@ const Management: FunctionComponent<IManagementProps> = ({ command, operation, t
     return (
         <>
             <div className={styles.wrapper}>
-                {(type == null || type === ManagementType.button) && <Button variant="text" className={buttonClass} onClick={() => handleEvent()}>{Operation[operation]} {buttonIcon}</Button>}
+                {(type == null || type === ManagementType.button) && <Button variant="text" className={buttonClass} onClick={() => handleEvent()}>{buttonIcon}</Button>}
                 {type === ManagementType.switch && <Switch className={styles.switch} onChange={() => action()} />}
             </div>
             <Snackbar open={successMessage !== ""} onClose={() => { setSuccessMessage("") }} autoHideDuration={6000}>

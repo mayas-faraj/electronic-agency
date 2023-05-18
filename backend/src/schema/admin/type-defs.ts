@@ -40,7 +40,7 @@ const typeDefs = `#graphql
 		isDisabled: Boolean
 	}
 
-	input AdminInput {
+	input AdminUpdate {
 		user: String
 		password: String
 		role: String

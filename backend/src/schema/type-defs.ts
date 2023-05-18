@@ -29,7 +29,7 @@ const typeDefs = `#graphql
 
 	type User {
 		jwt: String!
-		status: bookean!
+		status: Boolean!
 		message: String!
 	}
 

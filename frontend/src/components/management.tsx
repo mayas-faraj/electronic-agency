@@ -18,8 +18,10 @@ export enum Operation {
 }
 
 interface IManagementProps {
-    command: string;
     operation: Operation
+    command: string;
+    commandDisabled?: boolean;
+    commandDisabledMessage?: string;
     type?: ManagementType;
     hasConfirmModal?: boolean;
     initialValue?: any;
@@ -27,7 +29,7 @@ interface IManagementProps {
 }
 
 // component
-const Management: FunctionComponent<IManagementProps> = ({ command, operation, type, hasConfirmModal, initialValue, onUpdate }) => {
+const Management: FunctionComponent<IManagementProps> = ({ command, commandDisabled, commandDisabledMessage, operation, type, hasConfirmModal, initialValue, onUpdate }) => {
     // component states
     const [successMessage, setSuccessMessage] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -76,15 +78,18 @@ const Management: FunctionComponent<IManagementProps> = ({ command, operation, t
 
     // event handler
     const action = async () => {
-        const result = await getServerData(command);
-        if (result.errors != null) {
-            if (result.errors.length > 0) setErrorMessage(result.errors[0].message);
-            else setErrorMessage(`Error while ${Operation[operation]} ${name}`);
-        } else {
-            setSuccessMessage(`${Operation[operation]} ${name} has been completed successfully.`);
-            setModalOpen(false);
-            if (onUpdate != null) onUpdate();
-        }
+        if (commandDisabled !== true) {
+
+            const result = await getServerData(command);
+            if (result.errors != null) {
+                if (result.errors.length > 0) setErrorMessage(result.errors[0].message);
+                else setErrorMessage(`Error while ${Operation[operation]} ${name}`);
+            } else {
+                setSuccessMessage(`${Operation[operation]} ${name} has been completed successfully.`);
+                setModalOpen(false);
+                if (onUpdate != null) onUpdate();
+            }
+        } else setErrorMessage(commandDisabledMessage != null ? commandDisabledMessage : "Command is disabled");
     };
 
     const handleEvent = () => {

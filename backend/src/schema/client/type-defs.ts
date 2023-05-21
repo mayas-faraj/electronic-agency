@@ -46,6 +46,7 @@ const typeDefs = `#graphql
 		lastName: String
 		birthDate: String
 		isMale: Boolean
+		isDisabled: Boolean
 	}
 
 	input ClientInput {

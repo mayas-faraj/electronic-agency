@@ -15,6 +15,9 @@ const resolvers = {
           price: true,
           isDisabled: true
         },
+	orderBy: {
+	  id: "desc"
+	},
         where: {
           AND: [
             { categoryId: args.categoryId},

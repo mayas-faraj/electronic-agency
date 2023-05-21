@@ -5,7 +5,7 @@ import Products from "../components/content-tables/products";
 const ProductsPage = () => {
   return (
     <Page title="Manage Products">
-        <Products categoryId={1} />
+        <Products />
     </Page>
   )
 };

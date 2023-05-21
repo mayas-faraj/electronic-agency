@@ -1,11 +1,9 @@
 import React, { FunctionComponent } from "react";
-import { FormControl, InputLabel, MenuItem, Switch, TextField } from "@mui/material";
-import { Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Switch, Select, TextField } from "@mui/material";
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
 
 const initialInfo = {
-    id: 0,
     user: "",
     password: "",
     role: "PRODUCT_MANAGER",
@@ -53,11 +51,9 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
         if (id !== undefined) action();
     }, [id]);
 
-    console.log(info);
-
     // render component
     return (
-        <ContentForm id={id} name="admin" title="Create new admin" command={adminCommand} onUpdate={() => action()}>
+        <ContentForm id={id} name="admin" title="Create new admin" command={adminCommand} commandDisabled={info.user === "" || (info.password === "" && id === undefined)} onUpdate={() => action()}>
             <FormControl fullWidth margin="normal">
                 <TextField variant="outlined" label="Admin User" value={info.user} onChange={e => dispatch({ type: "set", key: "user", value: e.target.value })} />
             </FormControl>
@@ -68,7 +64,7 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
             )}
             <FormControl fullWidth margin="normal">
                 <InputLabel id="role-label">Role</InputLabel>
-                <Select labelId="role-label" variant="outlined" aria-label="role" label="Role" defaultValue={info.role} value={info.role} onChange={e => dispatch({ type: "set", key: "role", value: e.target.value })}>
+                <Select labelId="role-label" variant="outlined" label="Role" defaultValue={info.role} value={info.role} onChange={e => dispatch({ type: "set", key: "role", value: e.target.value })}>
                     <MenuItem value="ADMIN">Admin</MenuItem>
                     <MenuItem value="PRODUCT_MANAGER">Product Manager</MenuItem>
                     <MenuItem value="SALES_MAN">Sales Man</MenuItem>
@@ -77,7 +73,7 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
             </FormControl>
             {id !== undefined && (
                 <FormControl fullWidth margin="normal">
-                    <Switch onChange={(e) => dispatch({ type: "set", key: "isDisabled", value: e.target.checked})} checked={info.isDisabled as boolean} />
+                    <Switch onChange={(e) => dispatch({ type: "set", key: "isDisabled", value: e.target.checked })} checked={info.isDisabled as boolean} />
                 </FormControl>
             )}
         </ContentForm>

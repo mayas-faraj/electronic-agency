@@ -5,7 +5,7 @@ import ContentTable, { ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
 
 // types
-interface Client {
+interface IClient {
     id: number
     user: string
     phone: string
@@ -15,7 +15,7 @@ interface Client {
 // main component
 const Clients: FunctionComponent = () => {
     // client state
-    const [clients, setClients] = React.useState<Client[]>([]);
+    const [clients, setClients] = React.useState<IClient[]>([]);
 
     // context
     const privileges = React.useContext(RoleContext);
@@ -30,23 +30,29 @@ const Clients: FunctionComponent = () => {
 
     // on load
     const action = async () => {
-        const result = await getServerData(`query { clients { id user phone email firstName lastName namePrefix birthDate isMale }}`)
+        const result = await getServerData(`query { clients { id user phone isDisabled }}`)
         setClients(result.data.clients);
     };
 
+    // event handler
     React.useEffect(() => {   
         action();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // render
     return (
         <div>
-            <ContentTable name="client" headers={tableHeader} canRead={privileges.readClient} canWrite={privileges.writeClient} data={
+            <ContentTable 
+            name="client" 
+            headers={tableHeader} 
+            canRead={privileges.readClient} 
+            canWrite={privileges.writeClient} 
+            data={
                 clients.map(client => ({
-                    ...client,
-                    isDisabled: <Management onUpdate={() => action() } type={ManagementType.switch} operation={Operation.update} command={`mutation { updateClient(id: ${client.id}, input: {isDisabled: ${true}})  {id}}`} />,
-                    delete: <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteClient(id: ${client.id})  {id}}`} />
+                    user: client.user,
+                    phone: client.phone,
+                    isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateClient(id: ${client.id}, input: {isDisabled: ${!client.isDisabled}})  {id}}`} initialValue={client.isDisabled} onUpdate={() => action() }  />,
+                    delete: <Management type={ManagementType.button} operation={Operation.delete} command={`mutation { deleteClient(id: ${client.id})  {id}}`} hasConfirmModal={true} onUpdate={() => action() }  />
                 }))
             } />
         </div>  

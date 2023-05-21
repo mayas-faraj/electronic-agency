@@ -27,6 +27,7 @@ const resolvers = {
           lastName: true,
           birthDate: true,
           isMale: true,
+          isDisabled: true,
         },
         where: {
           AND: [

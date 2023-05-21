@@ -51,18 +51,19 @@ interface IContentForm {
   name: string
   title?: string
   command: string
+  commandDisabled?: boolean
   onUpdate?: () => void
   children :ReactNode
 }
 
 // main component
-const ContentForm: FunctionComponent<IContentForm> = ({ id, name, title, command, onUpdate, children }) => {
+const ContentForm: FunctionComponent<IContentForm> = ({ id, name, title, command, commandDisabled, onUpdate, children }) => {
   return (
     <div className={styles.wrapper}>
         { title != null && <h1 className={styles.title}>{title}</h1> }
         <div className={styles.form}>{children}</div>
         <Content name={name}>
-          <Management type={ManagementType.button} operation={ id === undefined ? Operation.create : Operation.update} hasConfirmModal={false} command={command} onUpdate={onUpdate} />
+          <Management type={ManagementType.button} operation={ id === undefined ? Operation.create : Operation.update} hasConfirmModal={false} command={command} commandDisabled={commandDisabled} commandDisabledMessage="Please fill all required fields" onUpdate={onUpdate} />
         </Content>
     </div>
   )

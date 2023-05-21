@@ -1,7 +1,7 @@
 import { GraphQLFormattedError } from "graphql";
 
 export const clientFormatError = ((formattedError: GraphQLFormattedError, error: unknown) => {
-    let resultMsg = '';
+    let resultMsg = 'unknown error';
     const msg = formattedError.message.toLowerCase();
 
     // unique key constainer
@@ -22,6 +22,6 @@ export const clientFormatError = ((formattedError: GraphQLFormattedError, error:
     else if (msg.includes("create()")) resultMsg = 'error while creating data'
     else if (msg.includes("update()")) resultMsg = 'error while saving data';
     else if (msg.includes("upsert()")) resultMsg = 'error while manipulating data';
-    else resultMsg = formattedError.message;
+    if (resultMsg == "") resultMsg = formattedError.message;
     return { message: resultMsg  };
   })

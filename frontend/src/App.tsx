@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RoleContext, { noPrivileges, type Privileges, getPrivileges } from "./components/role-context";
+import RoleContext, { noPrivileges, type Privileges, getPrivileges, Role } from "./components/role-context";
 import GlimmerPage from "./pages/glimmer";
 import NotFoundPage from "./pages/404";
 import '@fontsource/roboto/300.css';
@@ -15,12 +15,12 @@ import getServerData from "./libs/server-data";
 interface Profile {
   id: number
   user: string
-  role: string
+  role?: Role
 }
 
 function App() {
   // privileges state
-  const [profile, setProfile] = React.useState<Profile>({ id: 0, user: "", role: "" });
+  const [profile, setProfile] = React.useState<Profile>({ id: 0, user: "" });
   const [privileges, setPrivileges] = React.useState<Privileges>(noPrivileges);
 
   // side effects to load profile and privileges
@@ -51,6 +51,7 @@ function App() {
   const AdminsPage = React.lazy(() => import("./pages/admins"));
   const OrdersPage = React.lazy(() => import("./pages/orders"));
   const MaintenancesPage = React.lazy(() => import("./pages/maintenances"));
+  const AddAdminPage = React.lazy(() => import("./pages/add-admin"));
 
   // app router
   const routes =[
@@ -62,6 +63,7 @@ function App() {
     { path: "/admins", element: <AdminsPage /> },
     { path: "/orders", element: <OrdersPage /> },
     { path: "/maintenances", element: <MaintenancesPage /> },
+    { path: "/add-admin", element: <AddAdminPage /> },
     { path: "*", element: <NotFoundPage /> },
   ];
 

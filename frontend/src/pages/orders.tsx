@@ -1,6 +1,6 @@
 import React from "react";
 import Page from "../components/page";
-import Orders from "../components/contents/orders";
+import Orders from "../components/content-tables/orders";
 
 const OrdersPage = () => {
   return (

@@ -36,7 +36,7 @@ const LoginPage: FunctionComponent = () => {
     // verification of user
     setLoading(true);
     const action = async () => {
-      const loginResult = await getServerData(`query { verifyAdmin(user: "${user}", password: "${password}") { jwt id user role } }`);
+      const loginResult = await getServerData(`query { verifyAdmin(user: "${user}", password: "${password}") { jwt success message } }`);
 
       setUser("");
       setPassword("");
@@ -45,16 +45,18 @@ const LoginPage: FunctionComponent = () => {
         if (loginResult.errors.length > 0 && loginResult.errors[0].message != null) setErrorMessage(loginResult.errors[0].message);
         else setErrorMessage("Error while trying to login operation.");
       } else {
-        const jwt = loginResult.data?.verifyAdmin?.jwt;
-        if (jwt != null && jwt !== "") {
-          setSuccessMessage("Login Success");
+        const result = loginResult.data?.verifyAdmin;
+        if (result != null) {
+          if (result.success && result.jwt !== "") {
+            setSuccessMessage(result.message);
 
-          // save access token
-          StorageManager.save(jwt);
+            // save access token
+            StorageManager.save(result.jwt);
 
-          // navigate to home
-          setTimeout(() => { window.location.href="/alardh-alsalba"; }, 1000);
-        } else setErrorMessage("User and/or password error!");
+            // navigate to home
+            setTimeout(() => { window.location.href="/alardh-alsalba"; }, 1000);
+          } else setErrorMessage(result.message);
+        } else setErrorMessage("Unknown error");
       }
     };
     await action();

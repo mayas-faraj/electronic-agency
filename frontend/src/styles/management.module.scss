@@ -10,7 +10,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 400px;
-	background-color: $text-color;
+	background-color: $primary-color;
 	padding: 20px;
 	border-radius: 5px;
 	box-shadow: 1px 1px 5px #000;
@@ -20,7 +20,15 @@
 
 .modal__buttons {
     display: flex;
-    justify-content: space-between
+    justify-content: space-between;
+}
+
+.button--create {
+	background-color: $secondary-color !important;
+	color: $primary-color !important;
+	width: 100%;
+	padding: 15px 0 !important;
+	margin-top: 15px !important;
 }
 
 .button--delete {

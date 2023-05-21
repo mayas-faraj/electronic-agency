@@ -2,7 +2,8 @@ import React, { FunctionComponent } from "react";
 import getServerData from "../../libs/server-data";
 import data from "../../data.json";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { CellDataTransform, ITableHeader } from "../content-table";
+import ContentTable, { ITableHeader } from "../content-table";
+import RoleContext from "../role-context";
 
 // types
 interface Category {
@@ -16,11 +17,14 @@ const Categories: FunctionComponent = () => {
     // category state
     const [categories, setCategories] = React.useState<Category[]>([]);
 
+    // context
+    const privileges = React.useContext(RoleContext);
+
     // category schema
     const tableHeader: ITableHeader[] = [
-        { key: "image", title: "Image"},
+        { key: "image", title: "Image", isSpecialType: true},
         { key: "name", title: "Name"},
-        { key: "delete", title: "Delete", dataTransform: CellDataTransform.button},
+        { key: "delete", title: "Delete", isControlType: true},
     ];
 
     // on load
@@ -36,9 +40,9 @@ const Categories: FunctionComponent = () => {
     // render
     return (
         <div>
-            <ContentTable name="category" headers={tableHeader} data={
+            <ContentTable name="category" headers={tableHeader} canRead={privileges.readCategory} canWrite={privileges.writeCategory} data={
                 categories.map(category => ({
-                    ...category,
+                    name: category.name,
                     image: <img src={data["site-url"] + category.image} alt={category.name}/>,
                     delete: <Management onUpdate={() => action() } type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteCategory(id: ${category.id})  {id name model}}`} />
                 }))

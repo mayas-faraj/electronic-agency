@@ -18,10 +18,15 @@ body {
     background-color: $secondary-color;
     color: $primary-color;
     padding: 10px;
+    cursor: pointer;
 }
 
 td > img {
     width: 50px;
     height: 50px;
     object-fit: cover;
+}
+
+.full-height {
+    min-height: 100vh;
 }

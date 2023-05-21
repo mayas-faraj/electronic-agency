@@ -1,6 +1,6 @@
 import React from "react";
 import Page from "../components/page";
-import Products from "../components/contents/products";
+import Products from "../components/content-tables/products";
 
 const ProductsPage = () => {
   return (

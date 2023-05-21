@@ -1,14 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import { Alert, Button, Modal, Snackbar, Switch } from "@mui/material";
 import { NameContext } from "./content";
-import getServerData from "../libs/server-data"; 
+import getServerData from "../libs/server-data";
+import { DeleteForever, Edit, Save } from "@mui/icons-material";
 import styles from "../styles/management.module.scss";
-import { DeleteForever, Edit } from "@mui/icons-material";
 
 // type define
-type primitive = number | string | boolean;
-type keyValue = Record<string, primitive>;
-
 export enum ManagementType {
     button,
     switch
@@ -25,29 +22,52 @@ interface IManagementProps {
     operation: Operation
     type?: ManagementType;
     hasConfirmModal?: boolean;
-    initialValues?: keyValue[] ;
+    initialValue?: any;
     onUpdate?: () => void;
 }
 
 // component
-const Management: FunctionComponent<IManagementProps> = ({ command, operation, type, hasConfirmModal, onUpdate }) => {
+const Management: FunctionComponent<IManagementProps> = ({ command, operation, type, hasConfirmModal, initialValue, onUpdate }) => {
     // component states
     const [successMessage, setSuccessMessage] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
     const [modalOpen, setModalOpen] = React.useState(false);
 
+    // define types
+    interface IButtonInfo {
+        class: string
+        text: string
+        icon: ReactNode
+    }
+
     // define variables
-    let buttonClass = undefined;
-    let buttonIcon = null;
+    let buttonInfo: IButtonInfo = {
+        class: "",
+        text: "",
+        icon: null
+    };
 
     switch (operation) {
+        case Operation.create:
+            buttonInfo = {
+                class: styles["button--create"],
+                text: "Create new",
+                icon: <Save />
+            }
+            break;
         case Operation.update:
-            buttonClass = styles["button--update"];
-            buttonIcon = <Edit />;
+            buttonInfo = {
+                class: styles["button--update"],
+                text: "Update",
+                icon: <Edit />
+            }
             break;
         case Operation.delete:
-            buttonClass = styles["button--delete"];
-            buttonIcon = <DeleteForever />;
+            buttonInfo = {
+                class: styles["button--delete"],
+                text: "",
+                icon: <DeleteForever />
+            }
             break;
     }
 
@@ -76,8 +96,8 @@ const Management: FunctionComponent<IManagementProps> = ({ command, operation, t
     return (
         <>
             <div className={styles.wrapper}>
-                {(type == null || type === ManagementType.button) && <Button variant="text" className={buttonClass} onClick={() => handleEvent()}>{buttonIcon}</Button>}
-                {type === ManagementType.switch && <Switch className={styles.switch} onChange={() => action()} />}
+                {(type == null || type === ManagementType.button) && <Button variant="text" className={buttonInfo.class} onClick={() => handleEvent()}>{buttonInfo.icon} {buttonInfo.text}</Button>}
+                {type === ManagementType.switch && <Switch className={styles.switch} onChange={() => action()} defaultChecked={initialValue === true} />}
             </div>
             <Snackbar open={successMessage !== ""} onClose={() => { setSuccessMessage("") }} autoHideDuration={6000}>
                 <Alert severity="success">{successMessage}</Alert>

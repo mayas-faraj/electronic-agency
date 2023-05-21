@@ -1,31 +1,35 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import Content from "./content";
+import { Link } from "react-router-dom";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CsvDownloadButton from "react-json-to-csv";
+import Content from "./content";
+import styles from "../styles/content-table.module.scss";
 
 // types
-export enum CellDataTransform {
-  normal,
-  button,
-  switch
-}
-
 export interface ITableHeader {
   key: string
   title: string
-  dataTransform?: CellDataTransform
+  isControlType?: boolean
+  isSpecialType?: boolean
 }
 
 interface IContentTableProps {
   name: string
   headers: ITableHeader[]
   data: Record<string, ReactNode>[]
+  canRead: boolean
+  canWrite: boolean
+  hasSnColumn?: boolean
+  addNewLink?: string
 }
 
 // main component
-const ContentTable: FunctionComponent<IContentTableProps> = ({ name, headers, data }) => {
+const ContentTable: FunctionComponent<IContentTableProps> = ({ name, headers, canRead, canWrite, hasSnColumn, addNewLink, data }) => {
   // component state
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // event handler
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -37,51 +41,82 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({ name, headers, da
     setPage(0);
   };
 
+  // process privilege to product headers
+  const visibleHeader = headers.filter(header => canWrite || !header.isControlType);
+
+  // prepare export to csv
+  const csvHeader = headers.filter(header => !header.isControlType && !header.isSpecialType);
+
   // render
   return (
-    <Paper>
-      <TableContainer>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
+    <>
+      {
+        (canWrite && addNewLink != null) && <Link to={addNewLink} className={styles.button + " " + styles["button--main"]}><AddCircleIcon />Add new {name}</Link>
+      }
+      <Paper className={styles.wrapper}>
+        <TableContainer>
+          <Table stickyHeader>
+            {
+              canRead !== true && (
+                <caption className={styles.caption}>Access deined for this role!</caption>
+              )
+            }
+            <TableHead>
+              <TableRow>
+                {
+                  hasSnColumn && <TableCell>Sn</TableCell>
+                }
+                {
+                  visibleHeader.map(header => (
+                    <TableCell
+                      key={header.key}
+                      align={header.isControlType || header.isSpecialType ? "center" : "left"}>{header.title}</TableCell>
+                  ))
+                }
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {
-                headers.map(header => (
-                  <TableCell
-                    key={header.key}
-                    align={header.dataTransform === CellDataTransform.button || header.dataTransform === CellDataTransform.switch ? "center" : "left"}>{header.title}</TableCell>
+                canRead === true && data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((dataRow, rowIndex) => (
+                  <TableRow key={dataRow.id?.toString() ?? `row${rowIndex}`} >
+                    {
+                      hasSnColumn && <TableCell>{(page * rowsPerPage) + rowIndex + 1}</TableCell>
+                    }
+                    <Content name={name}>
+                      {
+                        visibleHeader.map(header => (
+                          <TableCell key={header.key + dataRow.id?.toString() ?? `row${rowIndex}`} align={header.isControlType || header.isSpecialType ? "center" : "left"}>
+                            {dataRow[header.key]}
+                          </TableCell>
+                        ))
+                      }
+                    </Content>
+                  </TableRow>
                 ))
               }
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((dataRow, rowIndex) => (
-                <TableRow>
-                  <Content key={dataRow.id?.toString() ?? `row${rowIndex}`} name={name}>
-                    {
-                      headers.map((header, colIndex) => (
-                        <TableCell key={header.key + dataRow.id?.toString() ?? `row${rowIndex}`} align={header.dataTransform === CellDataTransform.button || header.dataTransform === CellDataTransform.switch ? "center" : "left"}>
-                          {dataRow[header.key]}
-                        </TableCell>
-                      ))
-                    }
-                  </Content>
-                </TableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+        <CsvDownloadButton
+          className={styles.button + " " + styles["button--small"]}
+          headers={csvHeader.map(header => header.title)}
+          data={data.map(item => { return csvHeader.map(header => item[header.key]).filter(item => typeof item === "string" || typeof item === "number") })}
+          filename={name + ".csv"}
+          title={`Export ${name} to excel table and Download`}
+        >
+          <CloudDownloadIcon />
+        </CsvDownloadButton>
+      </Paper>
+    </>
   );
 };
 

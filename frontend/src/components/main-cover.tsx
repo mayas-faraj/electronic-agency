@@ -9,7 +9,7 @@ interface MainCoverProps {
 
 const MainCover: FunctionComponent<MainCoverProps> = ({ title, isBlinking }) => {
   return (
-    <div className={styles.cover}>
+    <div className={styles.cover + " full-height"}>
       <img className={styles.image + (isBlinking === true ? " " + styles.blink : "")} src={logoImage} alt="Al Ardh Al Salba"/>
       {title != null && <h1 className={styles.title}>{title}</h1>}
     </div>

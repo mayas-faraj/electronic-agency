@@ -1,8 +1,9 @@
 import React, { FunctionComponent } from "react";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { CellDataTransform, ITableHeader } from "../content-table";
+import ContentTable, { ITableHeader } from "../content-table";
 import data from "../../data.json";
+import RoleContext from "../role-context";
 
 // types
 interface Product {
@@ -22,12 +23,16 @@ const Products: FunctionComponent<{ categoryId: number }> = ({ categoryId }) => 
     // product state
     const [products, setProducts] = React.useState<Product[]>([]);
 
+    // context
+    const privileges = React.useContext(RoleContext);
+
+    // product schema
     const tableHeader: ITableHeader[] = [
-        { key: "image", title: "Image" },
+        { key: "image", title: "Image", isSpecialType: true },
         { key: "name", title: "Name" },
         { key: "model", title: "Model" },
-        { key: "isDisabled", title: "Disable", dataTransform: CellDataTransform.switch },
-        { key: "delete", title: "Delete", dataTransform: CellDataTransform.button },
+        { key: "isDisabled", title: "Disable", isControlType: true },
+        { key: "delete", title: "Delete", isControlType: true },
     ];
     // on load
     const action = async () => {
@@ -44,7 +49,7 @@ const Products: FunctionComponent<{ categoryId: number }> = ({ categoryId }) => 
     return (
         <div>
             {
-                <ContentTable name="product" headers={tableHeader} data={
+                <ContentTable name="product" headers={tableHeader} canRead={privileges.readProduct} canWrite={privileges.writeProduct} hasSnColumn={true} data={
                     products.map(product => ({
                         image: <img src={data["site-url"] + product.image} alt={product.name} />,
                         name: product.name,

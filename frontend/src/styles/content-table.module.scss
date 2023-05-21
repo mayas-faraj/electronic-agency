@@ -1,0 +1,37 @@
+@import "colors";
+
+.wrapper {
+    position: relative;
+}
+
+
+.button {
+	padding: 5px;
+    border-radius: 8px;
+    color: $primary-color;
+    cursor: pointer;
+	background-color: $secondary-color;
+    text-decoration: none;
+}
+
+.button--main {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px;
+
+    svg {
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+}
+
+.button--small {
+	position: absolute;
+    left: 10px;
+	bottom: 5px;
+	padding: 5px;
+}
+
+.caption {
+    text-align: center;
+}

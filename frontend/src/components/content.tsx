@@ -1,34 +1,16 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import styles from "../styles/content.module.scss";
-
-// define types
-type primitive = number | string | boolean;
-type keyValue = Record<string, primitive>;
-
-export interface IContentInterface {
-    name: string;
-    children: ReactNode
-    initialValues?: keyValue[];
-}
-
-export interface IAction {
-  key: string
-  value: primitive
-}
 
 // define name context
 export const NameContext = React.createContext("item");
 
-// define reducer
-export const reducer = (state: keyValue[], action: IAction): keyValue[] => {
-  return {
-    ...state,
-    [action.key]: action.value
-  }
+// define types
+export interface IContentInterface {
+    name: string;
+    children: ReactNode
 }
 
 // main component
-const Content: FunctionComponent<IContentInterface> = ({ name, children, initialValues }) => {
+const Content: FunctionComponent<IContentInterface> = ({ name, children }) => {
     return (
         <NameContext.Provider value={name}>{children}</NameContext.Provider>
     );

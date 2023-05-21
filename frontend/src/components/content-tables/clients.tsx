@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from "react";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { CellDataTransform, ITableHeader } from "../content-table";
+import ContentTable, { ITableHeader } from "../content-table";
+import RoleContext from "../role-context";
 
 // types
 interface Client {
@@ -16,12 +17,15 @@ const Clients: FunctionComponent = () => {
     // client state
     const [clients, setClients] = React.useState<Client[]>([]);
 
+    // context
+    const privileges = React.useContext(RoleContext);
+
     // clients schema
     const tableHeader: ITableHeader[] = [
         { key: "user", title: "User Name"},
         { key: "phone", title: "Phone"},
-        { key: "isDisabled", title: "Disable", dataTransform: CellDataTransform.switch},
-        { key: "delete", title: "Delete", dataTransform: CellDataTransform.button},
+        { key: "isDisabled", title: "Disable", isControlType: true},
+        { key: "delete", title: "Delete", isControlType: true},
     ];
 
     // on load
@@ -38,7 +42,7 @@ const Clients: FunctionComponent = () => {
     // render
     return (
         <div>
-            <ContentTable name="client" headers={tableHeader} data={
+            <ContentTable name="client" headers={tableHeader} canRead={privileges.readClient} canWrite={privileges.writeClient} data={
                 clients.map(client => ({
                     ...client,
                     isDisabled: <Management onUpdate={() => action() } type={ManagementType.switch} operation={Operation.update} command={`mutation { updateClient(id: ${client.id}, input: {isDisabled: ${true}})  {id}}`} />,

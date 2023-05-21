@@ -1,6 +1,6 @@
 import React from "react";
 import Page from "../components/page";
-import Maintenances from "../components/contents/maintenances";
+import Maintenances from "../components/content-tables/maintenances";
 
 const MaintenancesPage = () => {
   return (

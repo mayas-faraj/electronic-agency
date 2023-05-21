@@ -1,6 +1,6 @@
 import React from "react";
 import Page from "../components/page";
-import Admins from "../components/contents/admins";
+import Admins from "../components/content-tables/admins";
 
 const AdminsPage = () => {
   return (

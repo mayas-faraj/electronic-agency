@@ -1,7 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from "body-parser";
@@ -11,6 +11,7 @@ import { type AppContext, getUserFromJwt } from "./auth.js";
 import { clientFormatError } from "./error.js";
 import typeDefs from "./schema/type-defs.js";
 import resolvers from "./schema/resolvers.js";
+import { avatarMulter, categoriesMulter, productsMulter, uploadMiddleware } from "./uploader.js";
 
 // prisma client
 const prismaClient = new PrismaClient({ log: ["query"] , errorFormat: "minimal"});
@@ -51,6 +52,11 @@ app.use("/graphql", cors<cors.CorsRequest>(), bodyParser.json(), expressMiddlewa
 
 // express static file serve
 app.use("/uploads", express.static('uploads'));
+
+// express uploads
+app.post("/uploads-avatar", cors({ origin: "*" }), avatarMulter.single("avatar"), uploadMiddleware);
+app.post("/upload-category", cors({ origin: "*" }), categoriesMulter.single("category"), uploadMiddleware);
+app.post("/upload-product", cors({ origin: "*" }), productsMulter.single("product"), uploadMiddleware);
 
 // server has been started
 await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));

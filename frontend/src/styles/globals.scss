@@ -21,7 +21,14 @@ body {
     cursor: pointer;
 }
 
-td > img {
+.button--large {
+	display: inline-block;
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+td>img {
     width: 50px;
     height: 50px;
     object-fit: cover;
@@ -32,15 +39,39 @@ td > img {
 }
 
 .modal {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	max-width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 400px;
+    background-color: $primary-color;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px #000;
+    color: #000;
+    border: 2px solid $secondary-color;
+}
+
+.column-double {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: revert;
+    gap: 20px;
+    &>* {
+        flex-basis: 330px;
+        flex-grow: 1;
+    }
+}
+
+.side-image {
 	background-color: $primary-color;
-	padding: 20px;
-	border-radius: 5px;
-	box-shadow: 1px 1px 5px #000;
-	color: #000;
-	border: 2px solid $secondary-color;
+    margin: 15px 0;
+	width: 100%;
+	object-fit: contain;
+	border: 2px solid;
+	display: block;
+}
+
+.side-image--product {
+    height: 230px;
 }

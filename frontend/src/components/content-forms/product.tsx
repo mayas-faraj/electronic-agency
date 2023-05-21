@@ -2,12 +2,14 @@ import React, { FunctionComponent } from "react";
 import { FormControl, InputLabel, MenuItem, Switch, TextField, Select } from "@mui/material";
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
+import data from "../../data.json";
+import { HourglassBottom } from "@mui/icons-material";
 
 const initialInfo = {
     categoryId: 1,
     name: "",
     model: "",
-    image: "/uploads/products/p1.png",
+    image: "",
     description: "",
     price: 0,
     isDisabled: false
@@ -27,6 +29,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     // component reducer
     const [info, dispatch] = React.useReducer(reducer, initialInfo);
     const [categories, setCategories] = React.useState<ICategory[]>([]);
+    const [isUpload, setIsUpload] = React.useState(false);
 
     // process form type (create or update)
     const productCommand = id === undefined ?
@@ -44,7 +47,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "description", value: result.data.product.description });
             dispatch({ type: "set", key: "price", value: result.data.product.price });
             dispatch({ type: "set", key: "isDisabled", value: result.data.product.isDisabled });
-        } else { 
+        } else {
             dispatch({ type: "set", key: "name", value: initialInfo.name });
             dispatch({ type: "set", key: "categoryId", value: initialInfo.categoryId });
             dispatch({ type: "set", key: "model", value: initialInfo.model });
@@ -55,6 +58,29 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
         }
 
         if (onUpdate != null) onUpdate();
+    };
+
+    // handle file upload
+    const handleUploadImage = (image: File) => {
+        setIsUpload(true);
+        const action = async () => {
+            try {
+
+                const formData = new FormData();
+                formData.append("product", image);
+                const response = await fetch(data["site-url"] + "/upload-product", {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) dispatch({ type: "set", key: "image", value: "/" + result.message });
+            } catch (ex) {
+                console.log(ex);
+            }
+            
+            setIsUpload(false);
+        };
+        action();
     };
 
     // id edit form, load data
@@ -83,25 +109,34 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     // render component
     return (
         <ContentForm id={id} name="product" title="Create new product" command={productCommand} commandDisabled={info.name === "" || info.model === ""} onUpdate={() => action()}>
-            <FormControl fullWidth margin="normal">
-                <TextField variant="outlined" label="Product name" value={info.name} onChange={e => dispatch({ type: "set", key: "name", value: e.target.value })} />
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-                <TextField variant="outlined" label="Product model" value={info.model} onChange={e => dispatch({ type: "set", key: "model", value: e.target.value })} />
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="role-label">Category</InputLabel>
-                <Select labelId="role-label" variant="outlined" label="Category" defaultValue={info.categoryId} value={info.categoryId} onChange={e => dispatch({ type: "set", key: "categoryId", value: e.target.value })}>
-                {
-                    categories.map(category => (
-                        <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
-                    ))
-                }
-                </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-                <TextField variant="outlined" type="number" label="Price" value={info.price} onChange={e => dispatch({ type: "set", key: "price", value: e.target.value })} />
-            </FormControl>
+            <div className="column-double">
+                <div>
+                    <img className="side-image side-image--product" src={data["site-url"] + info.image as string} alt="product" />
+                    <input id="file-upload" accept="image/*" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
+                    <label htmlFor="file-upload" className="button button--large">Upload { isUpload && <HourglassBottom />}</label>
+                </div>
+                <div>
+                    <FormControl fullWidth margin="normal">
+                        <TextField variant="outlined" label="Product name" value={info.name} onChange={e => dispatch({ type: "set", key: "name", value: e.target.value })} />
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
+                        <TextField variant="outlined" label="Product model" value={info.model} onChange={e => dispatch({ type: "set", key: "model", value: e.target.value })} />
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel id="role-label">Category</InputLabel>
+                        <Select labelId="role-label" variant="outlined" label="Category" defaultValue={info.categoryId} value={info.categoryId} onChange={e => dispatch({ type: "set", key: "categoryId", value: e.target.value })}>
+                            {
+                                categories.map(category => (
+                                    <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                                ))
+                            }
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
+                        <TextField variant="outlined" type="number" label="Price" value={info.price} onChange={e => dispatch({ type: "set", key: "price", value: e.target.value })} />
+                    </FormControl>
+                </div>
+            </div>
             <FormControl fullWidth margin="normal">
                 <TextField variant="outlined" multiline={true} rows={5} label="Description" value={info.description} onChange={e => dispatch({ type: "set", key: "description", value: e.target.value })} />
             </FormControl>

@@ -508,7 +508,7 @@ you can't delete item that related with maintenance issue, so ther server will r
 after login, you can check your orders using this schema:
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { ordersByAuth {id count totalPrice status createdAt product{name model} }}"}' http://208.64.33.65:4000/graphql
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { ordersByAuth {id count totalPrice status createdAt product{ name model image } }}"}' http://208.64.33.65:4000/graphql
 ```
 
 ```json
@@ -523,7 +523,8 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { ordersBy
         "createdAt": "1683553150815",
         "product": {
           "name": "LG",
-          "model": "z-12889"
+          "model": "z-12889",
+          "image": "/uploads/imgs/products/p.jpg"
         }
       }
     ]
@@ -609,7 +610,7 @@ if the id not exists, or you don't have permission to delete the order, the resu
 to display your maintanance request, you can use this graphql schema:
 
 ```bash
-curl -H 'Content-Type: application/json' -X  POST -d '{"query": "query { maintenancesByAuth {id address status propertyType bookedAt productItem {sn} }}"}' http://208.64.33.65:4000/graphql
+curl -H 'Content-Type: application/json' -X  POST -d '{"query": "query { maintenancesByAuth {id address status propertyType bookedAt productItem { sn product { name model image } } } }"}' http://208.64.33.65:4000/graphql
 ```
 
 the result is an array of your historical maintenance reqests and status of each on:
@@ -625,7 +626,12 @@ the result is an array of your historical maintenance reqests and status of each
         "propertyType": "OFFICE",
         "bookedAt": "1685566800000",
         "productItem": {
-          "sn": "82780005"
+          "sn": "82780005",
+          "product": {
+            "name": "LG",
+            "model": "zx-459392",
+            "image": "/uploads/imgs/products/p.jpg"
+          }
         }
       }
     ]

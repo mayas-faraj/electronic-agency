@@ -4,51 +4,64 @@ import { Select } from "@mui/material";
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
 
-const Admin: FunctionComponent<{ id?: number }> = ({ id }) => {
-    // component reducer
-    const initialInfo = {
-        id: 0,
-        user: "",
-        password: "",
-        role: "PRODUCT_MANAGER",
-        isDisabled: false
-    };
+const initialInfo = {
+    id: 0,
+    user: "",
+    password: "",
+    role: "PRODUCT_MANAGER",
+    isDisabled: false
+};
 
+interface IAdminProps {
+    id?: number
+    onUpdate?: () => void
+}
+
+const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
+    // component reducer
     const [info, dispatch] = React.useReducer(reducer, initialInfo);
 
     // process form type (create or update)
-    const isUpdate = id !== undefined;
-    const adminCommand = !isUpdate ?
+    const adminCommand = id === undefined ?
         `mutation { createAdmin(input: {user: "${info.user}", password: "${info.password}" role: "${info.role}"}) {id user role}}` :
-        `mutation { updateAdmin(id: ${id},input: {user: "${info.user}", role: "${info.role}", isDisabled: "${info.isDisabled}"}) {id user role}}`;
+        `mutation { updateAdmin(id: ${id},input: {user: "${info.user}", role: "${info.role}", isDisabled: ${info.isDisabled}}) {id user role}}`;
 
     // load data function
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const action = async () => {
-        if (isUpdate) {
+        if (id !== undefined) {
             const result = await getServerData(`query { admin(id: ${id}) {id user role isDisabled} }`);
             dispatch({ type: "set", key: "user", value: result.data.admin.user });
-            dispatch({ type: "set", key: "role", value: result.data.admin.user });
-            dispatch({ type: "set", key: "isDisabled", value: result.data.admin.user });
+            dispatch({ type: "set", key: "role", value: result.data.admin.role });
+            dispatch({ type: "set", key: "isDisabled", value: result.data.admin.isDisabled });
         } else {
             dispatch({ type: "set", key: "user", value: initialInfo.user });
             dispatch({ type: "set", key: "password", value: initialInfo.password });
             dispatch({ type: "set", key: "role", value: initialInfo.role });
         }
+
+        if (onUpdate != null) onUpdate();
     };
 
     // id edit form, load data
     React.useEffect(() => {
-        if (isUpdate) action();
-    }, [action, isUpdate]);
+        const action = async () => {
+            const result = await getServerData(`query { admin(id: ${id}) {id user role isDisabled} }`);
+            dispatch({ type: "set", key: "user", value: result.data.admin.user });
+            dispatch({ type: "set", key: "role", value: result.data.admin.role });
+            dispatch({ type: "set", key: "isDisabled", value: result.data.admin.isDisabled });
+        };
+        if (id !== undefined) action();
+    }, [id]);
+
+    console.log(info);
 
     // render component
     return (
-        <ContentForm name="admin" title="Create new admin" command={adminCommand} onUpdate={() => action()}>
+        <ContentForm id={id} name="admin" title="Create new admin" command={adminCommand} onUpdate={() => action()}>
             <FormControl fullWidth margin="normal">
                 <TextField variant="outlined" label="Admin User" value={info.user} onChange={e => dispatch({ type: "set", key: "user", value: e.target.value })} />
             </FormControl>
-            {!isUpdate && (
+            {id === undefined && (
                 <FormControl fullWidth margin="normal">
                     <TextField variant="outlined" type="password" label="Password" value={info.password} onChange={e => dispatch({ type: "set", key: "password", value: e.target.value })} />
                 </FormControl>
@@ -62,9 +75,9 @@ const Admin: FunctionComponent<{ id?: number }> = ({ id }) => {
                     <MenuItem value="TECHNICAL">Technical</MenuItem>
                 </Select>
             </FormControl>
-            {isUpdate && (
+            {id !== undefined && (
                 <FormControl fullWidth margin="normal">
-                    <Switch onChange={(e) => dispatch({ type: "set", key: "isDisabled", value: e.target.checked})} value={info.isDisabled} />
+                    <Switch onChange={(e) => dispatch({ type: "set", key: "isDisabled", value: e.target.checked})} checked={info.isDisabled as boolean} />
                 </FormControl>
             )}
         </ContentForm>

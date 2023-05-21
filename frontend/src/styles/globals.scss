@@ -30,3 +30,17 @@ td > img {
 .full-height {
     min-height: 100vh;
 }
+
+.modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 400px;
+	background-color: $primary-color;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 1px 1px 5px #000;
+	color: #000;
+	border: 2px solid $secondary-color;
+}

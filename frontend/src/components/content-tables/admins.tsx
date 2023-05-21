@@ -1,11 +1,14 @@
 import React, { FunctionComponent } from "react";
-import getServerData from "../../libs/server-data";
+import EditIcon from "@mui/icons-material/Edit";
+import { Button, Modal } from "@mui/material";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
+import Admin from "../content-forms/admin";
+import getServerData from "../../libs/server-data";
 import RoleContext from "../role-context";
 
 // types
-interface Admin {
+interface IAdmin {
     id: number
     user: string
     role: string
@@ -15,7 +18,8 @@ interface Admin {
 // main component
 const Admins: FunctionComponent = () => {
     // admin state
-    const [admins, setAdmins] = React.useState<Admin[]>([]);
+    const [admins, setAdmins] = React.useState<IAdmin[]>([]);
+    const [editId, setEditId] = React.useState(0);
     
     // context
     const privileges = React.useContext(RoleContext);
@@ -25,6 +29,7 @@ const Admins: FunctionComponent = () => {
         { key: "user", title: "User Name"},
         { key: "role", title: "Role"},
         { key: "isDisabled", title: "Disable", isControlType: true},
+        { key: "edit", title: "Edit", isControlType: true},
         { key: "delete", title: "Delete", isControlType: true},
     ];
    
@@ -53,10 +58,16 @@ const Admins: FunctionComponent = () => {
                 admins.map(admin => ({
                     user: admin.user,
                     role: admin.role.toLowerCase().replace("_", " "),
-                    isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateAdmin(id: ${admin.id}, input: {isDisabled: ${!admin.isDisabled}})  {id}}`} initialValue={admin.isDisabled} onUpdate={() => action()} />,
-                    delete: <Management type={ManagementType.button} operation={Operation.delete} command={`mutation { deleteAdmin(id: ${admin.id})  {id}}`} hasConfirmModal={true} onUpdate={() => action()} />
+                    isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateAdmin(id: ${admin.id}, input: {isDisabled: ${!admin.isDisabled}})  {id}}`} initialValue={admin.isDisabled} onUpdate={action} />,
+                    edit: <Button variant="text" color="success" onClick={() => setEditId(admin.id)}><EditIcon /></Button>,
+                    delete: <Management type={ManagementType.button} operation={Operation.delete} command={`mutation { deleteAdmin(id: ${admin.id})  {id}}`} hasConfirmModal={true} onUpdate={action} />
                 }))
             } />
+            <Modal open={editId !== 0} onClose={() => setEditId(0)} >
+                <div className="modal">
+                    <Admin id={editId} onUpdate={() => action()} />
+                </div>
+            </Modal>
         </div>
     );
 };

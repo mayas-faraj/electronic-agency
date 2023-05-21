@@ -50,14 +50,14 @@ const Management: FunctionComponent<IManagementProps> = ({ command, operation, t
     switch (operation) {
         case Operation.create:
             buttonInfo = {
-                class: styles["button--create"],
+                class: styles["button--save"],
                 text: "Create new",
                 icon: <Save />
             }
             break;
         case Operation.update:
             buttonInfo = {
-                class: styles["button--update"],
+                class: styles["button--save"],
                 text: "Update",
                 icon: <Edit />
             }
@@ -97,7 +97,7 @@ const Management: FunctionComponent<IManagementProps> = ({ command, operation, t
         <>
             <div className={styles.wrapper}>
                 {(type == null || type === ManagementType.button) && <Button variant="text" className={buttonInfo.class} onClick={() => handleEvent()}>{buttonInfo.icon} {buttonInfo.text}</Button>}
-                {type === ManagementType.switch && <Switch className={styles.switch} onChange={() => action()} defaultChecked={initialValue === true} />}
+                {type === ManagementType.switch && <Switch className={styles.switch} onChange={() => action()} checked={initialValue === true} />}
             </div>
             <Snackbar open={successMessage !== ""} onClose={() => { setSuccessMessage("") }} autoHideDuration={6000}>
                 <Alert severity="success">{successMessage}</Alert>
@@ -108,7 +108,7 @@ const Management: FunctionComponent<IManagementProps> = ({ command, operation, t
             {
                 hasConfirmModal === true && (
                     <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-                        <div className={styles.modal}>
+                        <div className="modal">
                             <strong className={styles.modal__title}>Confirm</strong>
                             <p className={styles.modal__text}>Are you sure to {Operation[operation]} {name}?</p>
                             <div className={styles.modal__buttons}>

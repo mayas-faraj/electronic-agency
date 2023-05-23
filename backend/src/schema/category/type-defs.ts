@@ -2,11 +2,12 @@ const typeDefs = `#graphql
 	extend type Query {
         categories: [Category]
 		categoriesCount: AggregateResult
+		category(id: Int!): Category
     }
 
     extend type Mutation {
         createCategory(input: CategoryInput!): Category
-		updateCategory(id: Int!, input: CategoryInput!): Category
+		updateCategory(id: Int!, input: CategoryUpdate!): Category
 		deleteCategory(id: Int!): Category
     }
 
@@ -14,6 +15,7 @@ const typeDefs = `#graphql
 		id: Int!
 		name: String!
 		image: String
+		isDisabled: Boolean
 		createdAt: String
 		updatedAt: String
 	}
@@ -21,6 +23,12 @@ const typeDefs = `#graphql
 	input CategoryInput {
 		name: String!
 		image: String
+	}
+
+	input CategoryUpdate {
+		name: String
+		image: String
+		isDisabled: Boolean
 	}
 `;
 

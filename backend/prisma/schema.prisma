@@ -64,12 +64,13 @@ model Admin {
 }
 
 model Category {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(30)
-  image     String?   @db.VarChar(255)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  products  Product[]
+  id         Int       @id @default(autoincrement())
+  name       String    @unique @db.VarChar(30)
+  image      String?   @db.VarChar(255)
+  isDisabled Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  products   Product[]
 
   @@map("category")
 }
@@ -183,7 +184,7 @@ model Repair {
   id            Int         @id @default(autoincrement())
   adminId       Int         @map("admin_id")
   maintenanceId Int         @unique @map("maintenance_id")
-  price         Float         @default(0)
+  price         Float       @default(0)
   description   String      @db.LongText
   createdAt     DateTime    @default(now()) @map("created_at")
   admin         Admin       @relation(fields: [adminId], references: [id])

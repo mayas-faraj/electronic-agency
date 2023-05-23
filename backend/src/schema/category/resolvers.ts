@@ -9,6 +9,25 @@ const resolvers = {
           id: true,
           name: true,
           image: true,
+          isDisabled: true,
+          createdAt: true,
+          updatedAt: true
+        },
+      });
+
+      return result;
+    },
+    category: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.category.findUnique({
+        where: {
+          id: args.id
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          isDisabled: true,
           createdAt: true,
           updatedAt: true
         },
@@ -56,7 +75,8 @@ const resolvers = {
         },
         data: {
           name: args.input.name,
-          image: args.input.image
+          image: args.input.image,
+          isDisabled: args.input.isDisabled
         }
       });
 

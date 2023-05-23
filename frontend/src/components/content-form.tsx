@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode } from "react";
 import Management, { ManagementType, Operation } from "./management";
-import styles from "../styles/content-form.module.scss";
 import Content from "./content";
+import styles from "../styles/content-form.module.scss";
 
 // type defintion
 type primitiveType = number | string | boolean | Date;

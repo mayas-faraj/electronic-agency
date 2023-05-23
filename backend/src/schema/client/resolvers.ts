@@ -153,6 +153,7 @@ const resolvers = {
           },
           data: {
             isVerified: true,
+            lastLoginAt: new Date()
           },
         });
         return {

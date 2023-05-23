@@ -143,7 +143,16 @@ const resolvers = {
           },
         });
 
-        if (result != null)
+        if (result != null) {
+          await app.prismaClient.admin.update({
+            where: {
+              id: userResult.id,
+            },
+            data: {
+              lastLoginAt: new Date(),
+            },
+          });
+
           return {
             jwt: decodeUser({
               id: result.id,
@@ -153,7 +162,7 @@ const resolvers = {
             message: "Login success",
             success: true,
           };
-        else message = "password error";
+        } else message = "password error";
       }
 
       return { jwt: "", message, success };

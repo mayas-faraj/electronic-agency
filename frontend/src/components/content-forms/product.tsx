@@ -2,8 +2,7 @@ import React, { FunctionComponent } from "react";
 import { FormControl, InputLabel, MenuItem, Switch, TextField, Select } from "@mui/material";
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
-import data from "../../data.json";
-import { HourglassBottom } from "@mui/icons-material";
+import ImageUpload from "../image-upload";
 
 const initialInfo = {
     categoryId: 1,
@@ -29,7 +28,6 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     // component reducer
     const [info, dispatch] = React.useReducer(reducer, initialInfo);
     const [categories, setCategories] = React.useState<ICategory[]>([]);
-    const [isUpload, setIsUpload] = React.useState(false);
 
     // process form type (create or update)
     const productCommand = id === undefined ?
@@ -60,29 +58,6 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
         if (onUpdate != null) onUpdate();
     };
 
-    // handle file upload
-    const handleUploadImage = (image: File) => {
-        setIsUpload(true);
-        const action = async () => {
-            try {
-
-                const formData = new FormData();
-                formData.append("product", image);
-                const response = await fetch(data["site-url"] + "/upload-product", {
-                    method: "POST",
-                    body: formData
-                });
-                const result = await response.json();
-                if (result.success) dispatch({ type: "set", key: "image", value: "/" + result.message });
-            } catch (ex) {
-                console.log(ex);
-            }
-            
-            setIsUpload(false);
-        };
-        action();
-    };
-
     // id edit form, load data
     React.useEffect(() => {
         const action = async () => {
@@ -104,17 +79,13 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             setCategories(result.data.categories);
         };
         action();
-    }, [])
+    }, []);
 
     // render component
     return (
         <ContentForm id={id} name="product" title="Create new product" command={productCommand} commandDisabled={info.name === "" || info.model === ""} onUpdate={() => action()}>
             <div className="column-double">
-                <div>
-                    <img className="side-image side-image--product" src={data["site-url"] + info.image as string} alt="product" />
-                    <input id="file-upload" accept="image/*" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
-                    <label htmlFor="file-upload" className="button button--large">Upload { isUpload && <HourglassBottom />}</label>
-                </div>
+                <ImageUpload uploadUrl="/upload-product" formName="product" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} />
                 <div>
                     <FormControl fullWidth margin="normal">
                         <TextField variant="outlined" label="Product name" value={info.name} onChange={e => dispatch({ type: "set", key: "name", value: e.target.value })} />

@@ -54,9 +54,9 @@ app.use("/graphql", cors<cors.CorsRequest>(), bodyParser.json(), expressMiddlewa
 app.use("/uploads", express.static('uploads'));
 
 // express uploads
-app.post("/uploads-avatar", cors({ origin: "*" }), avatarMulter.single("avatar"), uploadMiddleware);
-app.post("/upload-category", cors({ origin: "*" }), categoriesMulter.single("category"), uploadMiddleware);
-app.post("/upload-product", cors({ origin: "*" }), productsMulter.single("product"), uploadMiddleware);
+app.post("/uploads-avatar", cors({ origin: "*" }), uploadMiddleware(avatarMulter));
+app.post("/upload-category", cors({ origin: "*" }), uploadMiddleware(categoriesMulter));
+app.post("/upload-product", cors({ origin: "*" }), uploadMiddleware(productsMulter));
 
 // server has been started
 await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));

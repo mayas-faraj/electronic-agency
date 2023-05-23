@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import multer from "multer";
 import path from "path";
 
@@ -11,7 +11,12 @@ const getMulter = (dirName: string, fileName: string) => {
       destination: `./uploads/${dirName}`,
       filename: (req, file, callback) => {
         const now = new Date();
-        callback(null, `${fileName}-${now.getTime().toString()}${path.extname(file.originalname)}`);
+        callback(
+          null,
+          `${fileName}-${now.getTime().toString()}${path.extname(
+            file.originalname
+          )}`
+        );
       },
     }),
     limits: { fileSize: maxSize },
@@ -26,18 +31,19 @@ const getMulter = (dirName: string, fileName: string) => {
   });
 };
 
-export const avatarMulter = getMulter("avatars", "av");
-export const categoriesMulter = getMulter("categories", "c");
-export const productsMulter = getMulter("products", "p");
-export const uploadMiddleware = (req: Request, res: Response) => {
-  if (req.file)
-    res.json({
-      success: true,
-      message: req.file.path,
+export const avatarMulter = getMulter("avatars", "av").single("avatar");
+export const categoriesMulter = getMulter("categories", "c").single("category");
+export const productsMulter = getMulter("products", "p").single("product");
+
+export const uploadMiddleware = (multerUpload: RequestHandler) => {
+  return (req: Request, res: Response) => {
+    multerUpload(req, res, (error) => {
+      if (error) {
+        res.status(400).json({ success: false, message: error.message });
+      } else {
+        if (req.file) res.json({ success: true, message: req.file.path });
+        else res.status(400).json({ success: false, message: "no file to upload" });
+      }
     });
-  else
-    res.status(400).json({
-      success: false,
-      message: "error while upload",
-    });
+  };
 };

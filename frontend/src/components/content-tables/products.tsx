@@ -4,9 +4,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
-import Product from "../content-forms/product";
+import ProductForm from "../content-forms/product";
+import ProductView from "../views/product";
 import data from "../../data.json";
 import RoleContext from "../role-context";
+import { Visibility } from "@mui/icons-material";
 
 // types
 interface IProduct {
@@ -26,6 +28,7 @@ const Products: FunctionComponent = () => {
     // product state
     const [products, setProducts] = React.useState<IProduct[]>([]);
     const [editId, setEditId] = React.useState(0);
+    const [viewId, setViewId] = React.useState(0);
 
     // context
     const privileges = React.useContext(RoleContext);
@@ -35,8 +38,8 @@ const Products: FunctionComponent = () => {
         { key: "image", title: "Image", isSpecialType: true },
         { key: "name", title: "Name" },
         { key: "model", title: "Model" },
-        { key: "price", title: "Price" },
         { key: "isDisabled", title: "Disable", isControlType: true },
+        { key: "view", title: "More Info", isControlType: true },
         { key: "edit", title: "Edit", isControlType: true },
         { key: "delete", title: "Delete", isControlType: true },
     ];
@@ -67,15 +70,20 @@ const Products: FunctionComponent = () => {
                         image: <img src={data["site-url"] + product.image} alt={product.name} />,
                         name: product.name,
                         model: product.model,
-                        price: product.price,
                         isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateProduct(id: ${product.id}, input: {isDisabled: ${!product.isDisabled}})  {id name model}}`} initialValue={product.isDisabled} onUpdate={() => action()} />,
+                        view: <Button variant="text" color="info" onClick={() => setViewId(product.id)}><Visibility /></Button>,
                         edit: <Button variant="text" color="success" onClick={() => setEditId(product.id)}><EditIcon /></Button>,
                         delete: <Management type={ManagementType.button} operation={Operation.delete} command={`mutation { deleteProduct(id: ${product.id})  {id name model}}`} hasConfirmModal={true} onUpdate={action} />
                     }))
                 } />
             <Modal open={editId !== 0} onClose={() => setEditId(0)} >
                 <div className="modal">
-                    <Product id={editId} onUpdate={() => action()} />
+                    <ProductForm id={editId} onUpdate={() => action()} />
+                </div>
+            </Modal>
+            <Modal open={viewId !== 0} onClose={() => setViewId(0)} >
+                <div className="modal">
+                    <ProductView id={viewId} />
                 </div>
             </Modal>
         </div>

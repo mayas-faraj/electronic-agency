@@ -53,6 +53,7 @@ function App() {
   const MaintenancesPage = React.lazy(() => import("./pages/maintenances"));
   const AddAdminPage = React.lazy(() => import("./pages/add-admin"));
   const AddProductPage = React.lazy(() => import("./pages/add-product"));
+  const AddCategoryPage = React.lazy(() => import("./pages/add-category"));
 
   // app router
   const routes =[
@@ -66,6 +67,7 @@ function App() {
     { path: "/maintenances", element: <MaintenancesPage /> },
     { path: "/add-admin", element: <AddAdminPage /> },
     { path: "/add-product", element: <AddProductPage /> },
+    { path: "/add-category", element: <AddCategoryPage /> },
     { path: "*", element: <NotFoundPage /> },
   ];
 

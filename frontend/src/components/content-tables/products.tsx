@@ -39,7 +39,7 @@ const Products: FunctionComponent = () => {
         { key: "name", title: "Name" },
         { key: "model", title: "Model" },
         { key: "isDisabled", title: "Disable", isControlType: true },
-        { key: "view", title: "More Info", isControlType: true },
+        { key: "view", title: "More Info", isSpecialType: true },
         { key: "edit", title: "Edit", isControlType: true },
         { key: "delete", title: "Delete", isControlType: true },
     ];

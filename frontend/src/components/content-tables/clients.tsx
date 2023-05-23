@@ -29,7 +29,7 @@ const Clients: FunctionComponent = () => {
         { key: "user", title: "User Name"},
         { key: "phone", title: "Phone"},
         { key: "isDisabled", title: "Disable", isControlType: true},
-        { key: "view", title: "More Info", isControlType: true},
+        { key: "view", title: "More Info", isSpecialType: true},
         { key: "delete", title: "Delete", isControlType: true},
     ];
 

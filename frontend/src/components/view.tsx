@@ -38,6 +38,7 @@ const View: FunctionComponent<IView> = ({ command, headers, title }) => {
     if (key === "isMale") return value ? <Face /> : <Face3 />;
     else if (value == null) return "-";
     else if (key === "createdAt" || key === "updatedAt" || key === "lastLoginAt") return new Date(parseInt(value as string)).toLocaleString();
+    else if (key === "birthDate") return new Date(parseInt(value as string)).toLocaleDateString();
     else return value;
   };
 

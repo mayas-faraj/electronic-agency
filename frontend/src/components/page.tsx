@@ -1,7 +1,8 @@
 import React, { FunctionComponent, ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "./header";
 import styles from "../styles/page.module.scss";
+import { ArrowBack } from "@mui/icons-material";
 
 // compoents props
 interface IPageProps {
@@ -11,6 +12,10 @@ interface IPageProps {
 
 // main component
 const Page: FunctionComponent<IPageProps> = ({ title, children }) => {
+  // navigation
+  const navigate = useNavigate();
+
+  // render component
   return (
     <>
       <Header />
@@ -18,7 +23,7 @@ const Page: FunctionComponent<IPageProps> = ({ title, children }) => {
         <h1 className={styles.title}><span className={styles.title__text}>{title}</span></h1>
         <div className={styles.content}>{children}</div>
         <div className={styles.command}>
-          <Link to="/" className={styles.button}>Back</Link>
+          <a className="button" href="#!" onClick={ () => navigate(-1) }><ArrowBack />Back</a>
         </div>
       </div>
     </>

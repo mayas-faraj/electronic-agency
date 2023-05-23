@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button, Modal } from "@mui/material";
+import { Visibility } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
 import AdminForm from "../content-forms/admin";
 import AdminView from "../views/admin";
 import getServerData from "../../libs/server-data";
 import RoleContext from "../role-context";
-import { Visibility } from "@mui/icons-material";
 
 // types
 interface IAdmin {
@@ -32,7 +32,7 @@ const Admins: FunctionComponent = () => {
         { key: "user", title: "User Name"},
         { key: "role", title: "Role"},
         { key: "isDisabled", title: "Disable", isControlType: true},
-        { key: "view", title: "More Info", isControlType: true},
+        { key: "view", title: "More Info", isSpecialType: true},
         { key: "edit", title: "Edit", isControlType: true},
         { key: "delete", title: "Delete", isControlType: true},
     ];

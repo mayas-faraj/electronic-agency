@@ -18,7 +18,14 @@ body {
     background-color: $secondary-color;
     color: $primary-color;
     padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
     cursor: pointer;
+    
+    svg {
+        margin-right: 10px;
+        vertical-align: middle;
+    }
 }
 
 .button--large {

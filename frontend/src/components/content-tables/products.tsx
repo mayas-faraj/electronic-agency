@@ -8,7 +8,8 @@ import ProductForm from "../content-forms/product";
 import ProductView from "../views/product";
 import data from "../../data.json";
 import RoleContext from "../role-context";
-import { Visibility } from "@mui/icons-material";
+import { Abc, Visibility } from "@mui/icons-material";
+import ProductItems from "../content-tables/product-item";
 
 // types
 interface IProduct {
@@ -29,6 +30,7 @@ const Products: FunctionComponent = () => {
     const [products, setProducts] = React.useState<IProduct[]>([]);
     const [editId, setEditId] = React.useState(0);
     const [viewId, setViewId] = React.useState(0);
+    const [manageItemId, setManageItemId] = React.useState(0);
 
     // context
     const privileges = React.useContext(RoleContext);
@@ -40,6 +42,7 @@ const Products: FunctionComponent = () => {
         { key: "model", title: "Model" },
         { key: "isDisabled", title: "Disable", isControlType: true },
         { key: "view", title: "More Info", isSpecialType: true },
+        { key: "item", title: "Manage SN", isControlType: true },
         { key: "edit", title: "Edit", isControlType: true },
         { key: "delete", title: "Delete", isControlType: true },
     ];
@@ -72,6 +75,7 @@ const Products: FunctionComponent = () => {
                         model: product.model,
                         isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateProduct(id: ${product.id}, input: {isDisabled: ${!product.isDisabled}})  {id name model}}`} initialValue={product.isDisabled} onUpdate={() => action()} />,
                         view: <Button variant="text" color="info" onClick={() => setViewId(product.id)}><Visibility /></Button>,
+                        item: <Button variant="text" color="info" onClick={() => setManageItemId(product.id)}><Abc /></Button>,
                         edit: <Button variant="text" color="success" onClick={() => setEditId(product.id)}><EditIcon /></Button>,
                         delete: <Management type={ManagementType.button} operation={Operation.delete} command={`mutation { deleteProduct(id: ${product.id})  {id name model}}`} hasConfirmModal={true} onUpdate={action} />
                     }))
@@ -84,6 +88,11 @@ const Products: FunctionComponent = () => {
             <Modal open={viewId !== 0} onClose={() => setViewId(0)} >
                 <div className="modal">
                     <ProductView id={viewId} />
+                </div>
+            </Modal>
+            <Modal open={manageItemId !== 0} onClose={() => setManageItemId(0)} >
+                <div className="modal">
+                    <ProductItems productId={manageItemId} />
                 </div>
             </Modal>
         </div>

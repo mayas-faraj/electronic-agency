@@ -14,7 +14,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtIjoiZmVyYXMiLCJyb2wiOiJURUN
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clients(filter: {onlyEnabled: true, fromDate: \"2023-05-07\"}) {id user phone email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clients(filter: {onlyEnabled: true, fromDate: \"2023-05-07\"}) {id user phone email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -58,10 +58,31 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clients(
   }
 }
 ```
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clients(pagination: { take: 3, id: 3 }, filter: {fromDate: \"2023-05-027\"}) {id user}}"}' http://localhost:4000/graphql | jq
+```
+
+```json
+{
+  "data": {
+    "clients": [
+      {
+        "id": 2,
+        "user": "zaherati"
+      },
+      {
+        "id": 1,
+        "user": "lord.mayas"
+      }
+    ]
+  }
+}
+```
 ---
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { client(id: 2) {id user phone email firstName lastName namePrefix birthDate isMale createdAt orders { id count totalPrice status createdAt  } reviews {rating comment createdAt} }} "}' http://localhost:4000 
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { client(id: 2) {id user phone email firstName lastName namePrefix birthDate isMale createdAt orders { id count totalPrice status createdAt  } reviews {rating comment createdAt} }} "}' http://localhost:4000/graphql | jq 
  ```
 
  ```json
@@ -120,7 +141,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clients(
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateClient(id: 5, input: {phone: \"0933000001\", email: \"master3@nomail.com\", namePrefix: \"Ms.\", firstName: \"Ramia\", lastName: \"Sulimana\", avatar: \"ramia.jpg\", birthDate: \"1988-12-4\", isDisabled: true}) {id user phone email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateClient(id: 5, input: {phone: \"0933000001\", email: \"master3@nomail.com\", namePrefix: \"Ms.\", firstName: \"Ramia\", lastName: \"Sulimana\", avatar: \"ramia.jpg\", birthDate: \"1988-12-4\", isDisabled: true}) {id user phone email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -144,7 +165,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 ---
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteClient(id: 5) {id user phone email firstName lastName namePrefix isMale}}"}' http://localhost:4000
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteClient(id: 5) {id user phone email firstName lastName namePrefix isMale}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -191,7 +212,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admins(filter: {onlyEnabled: true, fromDate: \"2023-05-07\"}) {id user role isDisabled }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admins(filter: {onlyEnabled: true, fromDate: \"2023-05-07\"}) {id user role isDisabled }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -230,7 +251,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admins(f
 ---
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admin(id: 1) {id user role isDisabled createdAt offers { id price validationDays} repairs {id price description createdAt}}} "}' http://localhost:4000
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admin(id: 1) {id user role isDisabled createdAt offers { id price validationDays} repairs {id price description createdAt}}} "}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -273,7 +294,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { admins(f
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { verifyAdmin(user: \"admin\", password: \"Zxasqw12\") { jwt }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { verifyAdmin(user: \"admin\", password: \"Zxasqw12\") { jwt }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -300,7 +321,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { verifyAd
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createAdmin(input: {user: \"master_tech\", password: \"xxx\", role: \"TECHNICAL\"}) {id user role}}"}' http://localhost:4000 | jq
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createAdmin(input: {user: \"master_tech\", password: \"xxx\", role: \"TECHNICAL\"}) {id user role}}"}' http://localhost:4000/graphql | jq | jq
 ```
 
 ```json
@@ -338,7 +359,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { creat
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateAdmin(id: 10,input: {user: \"mastert2\", password: \"vvv\"}) {id user role}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateAdmin(id: 10,input: {user: \"mastert2\", password: \"vvv\"}) {id user role}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -361,7 +382,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteAdmin(id: 10) { id user role }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteAdmin(id: 10) { id user role }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -405,7 +426,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createCategory(input: {name: \"test cat\", image: \"cat.png\"}) { id name image createdAt }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createCategory(input: {name: \"test cat\", image: \"cat.png\"}) { id name image createdAt }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -450,7 +471,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { creat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateCategory(id: 3, input: {name: \"test cat2\", image: \"cat2.png\"}) { id name image createdAt }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateCategory(id: 3, input: {name: \"test cat2\", image: \"cat2.png\"}) { id name image createdAt }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -469,7 +490,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteCategory(id: 3) { id name }}"}' http://localhost:4000 
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteCategory(id: 3) { id name }}"}' http://localhost:4000/graphql | jq 
 ```
 
 ```json
@@ -511,7 +532,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(id: 1) { id name model image description price createdAt category {name } items { sn createdAt} reviews {rating comment } }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(id: 1) { id name model image description price createdAt category {name } items { sn createdAt} reviews {rating comment } }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -573,7 +594,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProduct(input: {categoryId: 1, name: \"freshair\", model: \"s11\", image: \"fa.jpg\", description: \"and desc\", price: 120})  {id name model image description price}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProduct(input: {categoryId: 1, name: \"freshair\", model: \"s11\", image: \"fa.jpg\", description: \"and desc\", price: 120})  {id name model image description price}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -620,7 +641,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { creat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateProduct(id: 8, input: {name: \"freshair2\", model: \"s12\", image: \"fa2.jpg\", description: \"and desc2\", price: 125})  {id name model image description price}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateProduct(id: 8, input: {name: \"freshair2\", model: \"s12\", image: \"fa2.jpg\", description: \"and desc2\", price: 125})  {id name model image description price}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -641,7 +662,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProduct(id: 11)  {id name model}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProduct(id: 11)  {id name model}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -684,7 +705,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 ---
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductItem(productId: 1, sn: \"1111111\")  {sn createdAt}}"}' http://localhost:4000 
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductItem(productId: 1, sn: \"1111111\")  {sn createdAt}}"}' http://localhost:4000/graphql | jq 
 ```
 
 ```json
@@ -726,7 +747,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { creat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateProductItem(sn: \"1111111\", newSn: \"22222222222\")  {sn createdAt}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateProductItem(sn: \"1111111\", newSn: \"22222222222\")  {sn createdAt}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -744,7 +765,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProductItem(sn: \"22222222222\")  {sn createdAt}}"}' http://localhost:4000 
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteProductItem(sn: \"22222222222\")  {sn createdAt}}"}' http://localhost:4000/graphql | jq 
 ```
 
 ```json
@@ -787,7 +808,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductReviewByAuth(productId: 5, input: {rating: 5, comment: \"five stars\"}) {id rating comment createdAt}}"}' http://localhost:4000
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductReviewByAuth(productId: 5, input: {rating: 5, comment: \"five stars\"}) {id rating comment createdAt}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -807,7 +828,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 
 
 ```bash
-curl -H 'Content-Type: application/json'  -H 'Authorization: BEARER eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtIjoiYWRtaW4iLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY4MzY1MTc0OH0.QdYiPQdWPWCgCnwamMYPFNtmsR0rLG3I2n1E30Kohso' -X POST -d '{"query": "mutation { deleteProductReview(id: 56) {id rating comment createdAt}}"}' http://localhost:4000
+curl -H 'Content-Type: application/json'  -H 'Authorization: BEARER eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtIjoiYWRtaW4iLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY4MzY1MTc0OH0.QdYiPQdWPWCgCnwamMYPFNtmsR0rLG3I2n1E30Kohso' -X POST -d '{"query": "mutation { deleteProductReview(id: 56) {id rating comment createdAt}}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -852,7 +873,7 @@ curl -H 'Content-Type: application/json'  -H 'Authorization: BEARER eyJhbGciOiJI
 
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { orders(filter: {status: \"ACCEPTED\", fromDate: \"2023-05-01\"}) {id count totalPrice status createdAt product{name model} }}"}' http://localhost:4000
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { orders(filter: {status: \"ACCEPTED\", fromDate: \"2023-05-01\"}) {id count totalPrice status createdAt product{name model} }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -887,7 +908,7 @@ curl -H 'Content-Type: application/json'  -H 'Authorization: BEARER eyJhbGciOiJI
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { order(id: 9) {id count totalPrice status createdAt product{name model} client { user avatar } offer {id price validationDays createdAt} }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { order(id: 9) {id count totalPrice status createdAt product{name model} client { user avatar } offer {id price validationDays createdAt} }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -930,7 +951,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { order(id
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOfferByAuth {id price validationDays createdAt  }}"}' http://localhost:4000 | jq
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOfferByAuth {id price validationDays createdAt  }}"}' http://localhost:4000/graphql | jq | jq
 ```
 
 ```json
@@ -963,7 +984,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { creat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateOfferByAuth(id: 6, input: {price: 420, validationDays: 6}) {id price validationDays createdAt  }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateOfferByAuth(id: 6, input: {price: 420, validationDays: 6}) {id price validationDays createdAt  }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -983,7 +1004,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteOffer(id: 6) {id price validationDays createdAt  }}"}' http://localhost:4000
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteOffer(id: 6) {id price validationDays createdAt  }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -1003,7 +1024,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updat
 
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintenances(filter: { status: \"FIXED\", fromDate: \"2023-05-01\"}) {id address status bookedAt propertyType }}"}' http://localhost:4000
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintenances(filter: { status: \"FIXED\", fromDate: \"2023-05-01\"}) {id address status bookedAt propertyType }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json
@@ -1025,7 +1046,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintena
 
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintenance(id: 9) {id address status propertyType bookedAt }}"}' http://localhost:4000
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { maintenance(id: 9) {id address status propertyType bookedAt }}"}' http://localhost:4000/graphql | jq
 ```
 
 ```json

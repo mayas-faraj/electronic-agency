@@ -15,6 +15,7 @@ const resolvers = {
           totalPrice: true,
           status: true,
           isRead: true,
+          isOfferRequest: true,
           createdAt: true,
           product: {
             select: {
@@ -31,7 +32,10 @@ const resolvers = {
         where: {
           AND: [
             { isDraft: false },
-            { status: args.filter?.status != null ? args.filter.status : undefined,},
+            {
+              status:
+                args.filter?.status != null ? args.filter.status : undefined,
+            },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
           ],
@@ -40,28 +44,9 @@ const resolvers = {
 
       return result;
     },
-    ordersCount: async (parent: any, args: any, app: AppContext) => {
+    order: async (parent: any, args: any, app: AppContext) => {
       // check permissions
       checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
-
-      // return result
-      const result = await app.prismaClient.order.aggregate({
-        _count: {
-          id: true
-        },
-        _max: {
-          createdAt: true
-        },
-        _sum: {
-          count: true
-        }  
-      });
-
-      return { count: result._count.id, date: result._max.createdAt, sum: result._sum.count };
-    },
-    order: async (parent: any, args: any, app: AppContext) => {
-       // check permissions
-       checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
 
       // return result
       const result = await app.prismaClient.order.findUnique({
@@ -76,6 +61,7 @@ const resolvers = {
           note: true,
           status: true,
           isRead: true,
+          isOfferRequest: true,
           createdAt: true,
           product: {
             select: {
@@ -114,33 +100,17 @@ const resolvers = {
       });
 
       // set read value to true
-      if (result != null ) await app.prismaClient.order.update({
-        where: {
-          id: args.id
-        },
-        data: {
-          isRead: true
-        }
-      });
+      if (result != null)
+        await app.prismaClient.order.update({
+          where: {
+            id: args.id,
+          },
+          data: {
+            isRead: true,
+          },
+        });
 
       return result;
-    },
-    ordersUnreadCount: async (parent: any, args: any, app: AppContext) => {
-      // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
-
-      // return result
-      const result = await app.prismaClient.order.aggregate({
-        _count: {
-          id: true
-        },
-        where: {
-          isRead: false,
-          isDraft: false
-        }
-      });
-
-      return { count: result._count.id };
     },
     ordersByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
@@ -154,6 +124,7 @@ const resolvers = {
           count: true,
           totalPrice: true,
           status: true,
+          isOfferRequest: true,
           createdAt: true,
           product: {
             select: {
@@ -171,6 +142,46 @@ const resolvers = {
 
       return result;
     },
+    ordersUnreadCount: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+
+      // return result
+      const result = await app.prismaClient.order.aggregate({
+        _count: {
+          id: true,
+        },
+        where: {
+          isRead: false,
+          isDraft: false,
+        },
+      });
+
+      return { count: result._count.id };
+    },
+    ordersCount: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+
+      // return result
+      const result = await app.prismaClient.order.aggregate({
+        _count: {
+          id: true,
+        },
+        _max: {
+          createdAt: true,
+        },
+        _sum: {
+          count: true,
+        },
+      });
+
+      return {
+        count: result._count.id,
+        date: result._max.createdAt,
+        sum: result._sum.count,
+      };
+    },
   },
   Mutation: {
     createOrderByAuth: async (parent: any, args: any, app: AppContext) => {
@@ -184,6 +195,7 @@ const resolvers = {
           address: args.input.address,
           note: args.input.note,
           isDraft: args.input.isDraft,
+          isOfferRequest: args.input.isOfferRequest,
         },
       });
 

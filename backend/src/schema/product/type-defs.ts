@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
 	extend type Query {
-        products(categoryId: Int!, filter: SearchFilter): [ProductBasic]
+        products(subCategoryId: Int!, pagination: Pagination, filter: SearchFilter): [ProductBasic]
 		productsCount: AggregateResult
 		product(id: Int!): Product
 		productItem(sn: String!): ProductItem
@@ -14,6 +14,7 @@ const typeDefs = `#graphql
 		createProductItem(productId: Int!, sn: String!): ProductItemBasic
 		updateProductItem(sn: String!, newSn: String!): ProductItemBasic
 		deleteProductItem(sn: String!): ProductItemBasic
+		updateProductItemSold(sn: String!, isSold: Boolean!): ProductItemBasic
 		createProductItemOnClientByAuth(sn: String!): ProductItemOnClient
 		deleteProductItemOnClientByAuth(sn: String!): ProductItemOnClient
 		createProductReviewByAuth(productId: Int!, input: ProductReviewInput!): ProductReviewBasic
@@ -26,11 +27,12 @@ const typeDefs = `#graphql
 		model: String
 		image: String
 		description: String
+		specification: String
 		price: Float!
 		isDisabled: Boolean
 		createdAt: String
 		updatedAt: String
-		category: Category
+		subCategory: SubCategory
 		reviews: [ProductReviewBasic]
 		items: [ProductItemBasic]
 	}
@@ -46,33 +48,38 @@ const typeDefs = `#graphql
 	}
 
 	input ProductInput {
-		categoryId: Int!
+		subCategoryId: Int!
 		name: String!
 		model: String
 		image: String
 		description: String
+		specification: String
 		price: Float!
 	}
 
 	input ProductUpdate {
-		categoryId: Int
+		subCategoryId: Int
 		name: String
 		model: String
 		image: String
 		description: String
+		specification: String
 		price: Float
 		isDisabled: Boolean
 	}
 
 	type ProductItemBasic {
 		sn: String
+		isSold: Boolean
 		createdAt: String
 	}
 
 	type ProductItem {
 		sn: String
+		isSold: Boolean
 		createdAt: String
 		product: ProductBasic
+		client: ProductItemOnClient
 	}
 
 	type ProductItemOnClient {
@@ -80,7 +87,6 @@ const typeDefs = `#graphql
 		clientId: Int
 		createdAt: String
 	}
-
 
 	type ProductReview {
 		id: Int!

@@ -1,4 +1,9 @@
-import { type AppContext, checkAuthorization, decodeUser, Role } from "../../auth.js";
+import {
+  type AppContext,
+  checkAuthorization,
+  decodeUser,
+  Role,
+} from "../../auth.js";
 import filter from "../filter.js";
 
 const resolvers = {
@@ -6,6 +11,11 @@ const resolvers = {
     products: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.product.findMany({
+        skip: args.pagination?.id != null ? 1 : undefined,
+        take: args.pagination?.take,
+        cursor: args.pagination?.id != null ? {
+          id: args.pagination.id
+        } : undefined,
         select: {
           id: true,
           name: true,
@@ -13,23 +23,31 @@ const resolvers = {
           image: true,
           description: true,
           price: true,
-          isDisabled: true
+          isDisabled: true,
         },
-	orderBy: {
-	  id: "desc"
-	},
+        orderBy: {
+          id: "desc",
+        },
         where: {
           AND: [
-            { categoryId: args.categoryId},
-            { isDisabled: args.filter?.onlyEnabled != null ? !args.filter.onlyEnabled : undefined, },
+            { subCategoryId: args.subCategoryId },
+            {
+              isDisabled:
+                args.filter?.onlyEnabled != null
+                  ? !args.filter.onlyEnabled
+                  : undefined,
+            },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
-            { OR: [
-              { name: filter.searchFilter(args.filter?.keyword) },
-              { model: filter.searchFilter(args.filter?.keyword) },
-              { description: filter.searchFilter(args.filter?.keyword) }
-            ], }
-          ], 
+            {
+              OR: [
+                { name: filter.searchFilter(args.filter?.keyword) },
+                { model: filter.searchFilter(args.filter?.keyword) },
+                { description: filter.searchFilter(args.filter?.keyword) },
+                { specification: filter.searchFilter(args.filter?.keyword) },
+              ],
+            },
+          ],
         },
       });
 
@@ -39,11 +57,11 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.product.aggregate({
         _count: {
-          id: true
+          id: true,
         },
         _max: {
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return { count: result._count.id, date: result._max.createdAt };
@@ -52,30 +70,31 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.product.findUnique({
         where: {
-          id: args.id
+          id: args.id,
         },
         include: {
-          category: {
+          subCategory: {
             select: {
               id: true,
-              name: true
-            }
+              name: true,
+            },
           },
           reviews: {
             select: {
               id: true,
               rating: true,
               comment: true,
-              createdAt: true
-            }
+              createdAt: true,
+            },
           },
           items: {
             select: {
               sn: true,
-              createdAt: true
-            }
-          }
-        }
+              isSold: true,
+              createdAt: true,
+            },
+          },
+        },
       });
 
       return result;
@@ -84,7 +103,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.productItem.findUnique({
         where: {
-          sn: args.sn
+          sn: args.sn,
         },
         include: {
           product: {
@@ -95,7 +114,14 @@ const resolvers = {
               image: true,
               description: true,
               price: true,
-              isDisabled: true
+              isDisabled: true,
+            },
+          },
+          client: {
+            select: {
+              productSn: true,
+              clientId: true,
+              createdAt: true,
             }
           }
         },
@@ -108,12 +134,10 @@ const resolvers = {
       const result = await app.prismaClient.productItem.findMany({
         where: {
           client: {
-            clientId: app.user.id
-          }
+            clientId: app.user.id,
+          },
         },
-        select: {
-          sn: true,
-          createdAt: true,
+        include: {
           product: {
             select: {
               id: true,
@@ -122,10 +146,10 @@ const resolvers = {
               image: true,
               description: true,
               price: true,
-              isDisabled: true
-            }
-          }
-        }
+              isDisabled: true,
+            },
+          },
+        },
       });
 
       return result;
@@ -134,148 +158,182 @@ const resolvers = {
   Mutation: {
     createProduct: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.product.create({
         data: {
-         categoryId: args.input.categoryId,
-         name: args.input.name,
-         model: args.input.model,
-         image: args.input.image,
-         description: args.input.description,
-         price: args.input.price,
-        }
+          subCategoryId: args.input.subCategoryId,
+          name: args.input.name,
+          model: args.input.model,
+          image: args.input.image,
+          description: args.input.description,
+          specification: args.input.specification,
+          price: args.input.price,
+        },
       });
 
       return result;
     },
     updateProduct: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.product.update({
         where: {
-          id: args.id
+          id: args.id,
         },
         data: {
-          categoryId: args.input.categoryId,
+          subCategoryId: args.input.subCategoryId,
           name: args.input.name,
           model: args.input.model,
           image: args.input.image,
           description: args.input.description,
+          specification: args.input.specification,
           price: args.input.price,
-          isDisabled: args.input.isDisabled
-        }
+          isDisabled: args.input.isDisabled,
+        },
       });
 
       return result;
     },
     deleteProduct: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
-  
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
       // return result
       const result = await app.prismaClient.product.delete({
         where: {
-          id: args.id
+          id: args.id,
         },
         select: {
           id: true,
           name: true,
-          model: true
-        }
+          model: true,
+        },
       });
-  
+
       return result;
     },
     createProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
-  
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
       // return result
       const result = await app.prismaClient.productItem.create({
         data: {
           productId: args.productId,
-          sn: args.sn
+          sn: args.sn,
         },
         select: {
           sn: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
-  
+
       return result;
     },
     updateProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
-  
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
       // return result
       const result = await app.prismaClient.productItem.update({
         where: {
-          sn: args.sn
+          sn: args.sn,
         },
         data: {
-          sn: args.newSn
+          sn: args.newSn,
         },
         select: {
           sn: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
-  
+
+      return result;
+    },
+    updateProductItemSold: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+
+      // return result
+      const result = await app.prismaClient.productItem.update({
+        where: {
+          sn: args.sn,
+        },
+        data: {
+          isSold: args.isSold
+        },
+        select: {
+          sn: true,
+          createdAt: true,
+        },
+      });
+
       return result;
     },
     deleteProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
-  
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
       // return result
       const result = await app.prismaClient.productItem.delete({
         where: {
-          sn: args.sn
+          sn: args.sn,
         },
         select: {
           sn: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
-  
+
       return result;
     },
-    createProductItemOnClientByAuth: async (parent: any, args: any, app: AppContext) => {
+    createProductItemOnClientByAuth: async (
+      parent: any,
+      args: any,
+      app: AppContext
+    ) => {
       // return result
       const result = await app.prismaClient.productItemsOnClients.create({
         data: {
           clientId: app.user.id,
-          productSn: args.sn
+          productSn: args.sn,
         },
         select: {
           clientId: true,
           productSn: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
-  
+
       return result;
     },
-    deleteProductItemOnClientByAuth: async (parent: any, args: any, app: AppContext) => {
+    deleteProductItemOnClientByAuth: async (
+      parent: any,
+      args: any,
+      app: AppContext
+    ) => {
       // return result
       const result = await app.prismaClient.productItemsOnClients.delete({
         where: {
-          productSn: args.sn
+          productSn: args.sn,
         },
         select: {
           productSn: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
-  
+
       return result;
     },
-    createProductReviewByAuth: async (parent: any, args: any, app: AppContext) => {
+    createProductReviewByAuth: async (
+      parent: any,
+      args: any,
+      app: AppContext
+    ) => {
       // result result
       const result = await app.prismaClient.productReview.create({
         data: {
@@ -288,8 +346,8 @@ const resolvers = {
           id: true,
           rating: true,
           comment: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return result;
@@ -298,14 +356,14 @@ const resolvers = {
       // result result
       const result = await app.prismaClient.productReview.delete({
         where: {
-          id: args.id
+          id: args.id,
         },
         select: {
           id: true,
           rating: true,
           comment: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return result;

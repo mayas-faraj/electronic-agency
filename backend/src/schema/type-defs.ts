@@ -14,6 +14,11 @@ const typeDefs = `#graphql
 		_empty: String
     }
 
+	input Pagination {
+		id: Int
+		take: Int
+	}
+
     input SearchFilter {
 		onlyEnabled: Boolean
 		keyword: String

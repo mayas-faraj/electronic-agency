@@ -104,11 +104,49 @@ result = await prismaClient.category.createMany({
 
 console.log("category seed result: ", result);
 
+// seed category
+result = await prismaClient.subCategory.createMany({
+  data: [
+    {
+      id: 1,
+      categoryId: 1,
+      name: "Window Air Conditioner",
+      image: "/uploads/categories/window.png",
+    },
+    {
+      id: 2,
+      categoryId: 1,
+      name: "Smart Air Conditioner",
+      image: "/uploads/categories/smart.png",
+    },
+    {
+      id: 3,
+      categoryId: 1,
+      name: "Through-The-Wall Air Conditioner",
+      image: "/uploads/categories/wall.png",
+    },
+    {
+      id: 4,
+      categoryId: 2,
+      name: "Portable Air Conditioner.",
+      image: "/uploads/categories/portable.png",
+    },
+    {
+      id: 5,
+      categoryId: 2,
+      name: "Central Air Conditioner",
+      image: "/uploads/categories/central.png",
+    },
+  ],
+});
+
+console.log("category seed result: ", result);
+
 // seed products
 result = await prismaClient.product.create({
   data: {
     id: 1,
-    categoryId: 1,
+    subCategoryId: 1,
     name: "LG",
     model: "z-12889",
     image: "/uploads/products/p1.png",
@@ -163,7 +201,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 2,
-    categoryId: 1,
+    subCategoryId: 1,
     name: "Samsung",
     model: "ab-23895-s",
     image: "/uploads/products/p2.png",
@@ -212,7 +250,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 3,
-    categoryId: 1,
+    subCategoryId: 1,
     name: "Haier",
     model: "a28394dj",
     image: "/uploads/products/p3.png",
@@ -257,7 +295,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 4,
-    categoryId: 1,
+    subCategoryId: 2,
     name: "General",
     model: "ge-283927",
     image: "/uploads/products/p4.png",
@@ -304,7 +342,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 5,
-    categoryId: 1,
+    subCategoryId: 2,
     name: "Mitsubishi",
     model: "z-12889",
     image: "/uploads/products/p5.png",
@@ -339,7 +377,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 6,
-    categoryId: 2,
+    subCategoryId: 3,
     name: "LG",
     model: "z-329249",
     image: "/uploads/products/p6.png",
@@ -374,7 +412,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 7,
-    categoryId: 2,
+    subCategoryId: 3,
     name: "Generals",
     model: "ge-234927",
     image: "/uploads/products/p7.png",
@@ -399,7 +437,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 8,
-    categoryId: 1,
+    subCategoryId: 3,
     name: "GREE Pular On-Off",
     model: "GWH12AGCXB-K3NTA1A",
     image: "/uploads/products/p8.png",
@@ -422,7 +460,7 @@ result = await prismaClient.product.create({
 result = await prismaClient.product.create({
   data: {
     id: 9,
-    categoryId: 2,
+    subCategoryId: 4,
     name: "GREE Cassette Inverter",
     model: "GUD18TASF5/GUTD18WAS",
     image: "/uploads/products/p9.png",
@@ -449,7 +487,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 10,
-    categoryId: 1,
+    subCategoryId: 4,
     name: "GREE Window",
     model: "GJE24AE-K3NMTG1C",
     image: "/uploads/products/p10.png",
@@ -469,7 +507,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 11,
-    categoryId: 2,
+    subCategoryId: 4,
     name: "GREE Outdoor unit",
     model: "GMV-680WM/B-X (P)",
     image: "/uploads/products/p11.png",
@@ -489,7 +527,7 @@ console.log("product seed result: ", result);
 result = await prismaClient.product.create({
   data: {
     id: 12,
-    categoryId: 2,
+    subCategoryId: 5,
     name: "GREE Indoor unit",
     model: "GMV-ND112T/A-T",
     image: "/uploads/products/p12.png",

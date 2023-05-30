@@ -10,20 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// name, phone 30
+// name, phone 40
 // sn, email, password 50
 // link 255
-// address, note, comment  500
+// address, note, comment, description  500
 
 model Client {
   id          Int                     @id @default(autoincrement())
-  user        String                  @unique @db.VarChar(30)
-  phone       String                  @unique @db.VarChar(30)
+  user        String                  @unique @db.VarChar(40)
+  phone       String                  @unique @db.VarChar(40)
   email       String?                 @unique @db.VarChar(50)
   avatar      String?                 @db.VarChar(255)
   namePrefix  String                  @default("Mr.") @map("name_prefix") @db.Char(3)
-  firstName   String                  @map("first_name") @db.VarChar(30)
-  lastName    String?                 @map("last_name") @db.VarChar(30)
+  firstName   String                  @map("first_name") @db.VarChar(40)
+  lastName    String?                 @map("last_name") @db.VarChar(40)
   birthDate   DateTime?               @map("birth_date")
   isMale      Boolean                 @default(true) @map("is_male") @db.TinyInt
   isDisabled  Boolean                 @default(false) @map("is_disabled") @db.TinyInt
@@ -50,8 +50,8 @@ model Code {
 
 model Admin {
   id          Int       @id @default(autoincrement())
-  user        String    @unique @db.VarChar(30)
-  password    String    @db.VarChar(30)
+  user        String    @unique @db.VarChar(40)
+  password    String    @db.VarChar(40)
   isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
@@ -64,32 +64,48 @@ model Admin {
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique @db.VarChar(30)
-  image      String?   @db.VarChar(255)
-  isDisabled Boolean   @default(false) @map("is_disabled") @db.TinyInt
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
-  products   Product[]
+  id            Int           @id @default(autoincrement())
+  name          String        @unique @db.VarChar(40)
+  image         String?       @db.VarChar(255)
+  isDisabled    Boolean       @default(false) @map("is_disabled") @db.TinyInt
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime?     @updatedAt @map("updated_at")
+  subCategories SubCategory[]
 
   @@map("category")
 }
 
+model SubCategory {
+  id         Int       @id @default(autoincrement())
+  categoryId Int       @map("category_id")
+  name       String    @unique @db.VarChar(40)
+  image      String?   @db.VarChar(255)
+  isDisabled Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  category   Category  @relation(fields: [categoryId], references: [id])
+
+  products Product[]
+
+  @@map("sub_category")
+}
+
 model Product {
-  id          Int             @id @default(autoincrement())
-  categoryId  Int             @map("category_id")
-  name        String          @db.VarChar(30)
-  model       String?         @db.VarChar(30)
-  image       String?         @db.VarChar(255)
-  description String?         @db.LongText
-  price       Float           @default(0)
-  isDisabled  Boolean         @default(false) @map("is_disabled") @db.TinyInt
-  createdAt   DateTime        @default(now()) @map("created_at")
-  updatedAt   DateTime?       @updatedAt @map("updated_at")
-  category    Category        @relation(fields: [categoryId], references: [id])
-  items       ProductItem[]
-  orders      Order[]
-  reviews     ProductReview[]
+  id            Int             @id @default(autoincrement())
+  subCategoryId Int             @map("sub_category_id")
+  name          String          @db.VarChar(40)
+  model         String?         @db.VarChar(40)
+  image         String?         @db.VarChar(255)
+  description   String?         @db.VarChar(500)
+  specification String?         @db.LongText
+  price         Float           @default(0)
+  isDisabled    Boolean         @default(false) @map("is_disabled") @db.TinyInt
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime?       @updatedAt @map("updated_at")
+  subCategory   SubCategory     @relation(fields: [subCategoryId], references: [id])
+  items         ProductItem[]
+  orders        Order[]
+  reviews       ProductReview[]
 
   @@unique([name, model])
   @@map("product")
@@ -99,6 +115,7 @@ model ProductItem {
   sn           String                 @id
   productId    Int                    @map("product_id")
   createdAt    DateTime               @default(now()) @map("created_at")
+  isSold       Boolean                @default(false) @map("is_sold") @db.TinyInt
   product      Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
   client       ProductItemsOnClients?
   maintenances Maintenance[]
@@ -130,20 +147,21 @@ model ProductReview {
 }
 
 model Order {
-  id         Int         @id @default(autoincrement())
-  clientId   Int         @map("client_id")
-  productId  Int         @map("product_id")
-  count      Int         @default(1)
-  totalPrice Float       @map("total_price")
-  address    String      @db.VarChar(500)
-  note       String?     @db.VarChar(500)
-  status     OrderStatus @default(PENDING)
-  isRead     Boolean     @default(false) @map("is_read") @db.TinyInt
-  isDraft    Boolean     @default(false) @map("is_draft") @db.TinyInt
-  createdAt  DateTime    @default(now()) @map("created_at")
-  client     Client      @relation(fields: [clientId], references: [id])
-  product    Product     @relation(fields: [productId], references: [id])
-  offer      Offer?
+  id             Int         @id @default(autoincrement())
+  clientId       Int         @map("client_id")
+  productId      Int         @map("product_id")
+  count          Int         @default(1)
+  totalPrice     Float       @map("total_price")
+  address        String      @db.VarChar(500)
+  note           String?     @db.VarChar(500)
+  status         OrderStatus @default(PENDING)
+  isRead         Boolean     @default(false) @map("is_read") @db.TinyInt
+  isDraft        Boolean     @default(false) @map("is_draft") @db.TinyInt
+  isOfferRequest Boolean     @default(false) @map("is_offer_request") @db.TinyInt
+  createdAt      DateTime    @default(now()) @map("created_at")
+  client         Client      @relation(fields: [clientId], references: [id])
+  product        Product     @relation(fields: [productId], references: [id])
+  offer          Offer?
 
   @@map("order")
 }

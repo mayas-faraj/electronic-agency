@@ -1,4 +1,5 @@
-import { type AppContext, checkAuthorization, decodeUser, Role } from "../../auth.js";
+import { type AppContext, checkAuthorization, Role } from "../../auth.js";
+import filter from "../filter.js";
 
 const resolvers = {
   Query: {
@@ -11,7 +12,22 @@ const resolvers = {
           image: true,
           isDisabled: true,
           createdAt: true,
-          updatedAt: true
+          updatedAt: true,
+        },
+        where: {
+          AND: [
+            {
+              isDisabled:
+                args.filter?.onlyEnabled != null
+                  ? !args.filter.onlyEnabled
+                  : undefined,
+            },
+            { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
+            { createdAt: filter.dateFilter(args.filter?.toDate, true) },
+            {
+              OR: [{ name: filter.searchFilter(args.filter?.keyword) }],
+            },
+          ],
         },
       });
 
@@ -21,7 +37,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.category.findUnique({
         where: {
-          id: args.id
+          id: args.id,
         },
         select: {
           id: true,
@@ -29,21 +45,72 @@ const resolvers = {
           image: true,
           isDisabled: true,
           createdAt: true,
-          updatedAt: true
+          updatedAt: true,
         },
       });
 
       return result;
     },
-    categoriesCount: async (parent: any, args: any, app: AppContext) => {
+    subCategories: async (parent: any, args: any, app: AppContext) => {
       // return result
-      const result = await app.prismaClient.category.aggregate({
+      const result = await app.prismaClient.subCategory.findMany({
+        where: {
+          AND: [
+            { categoryId: args.categoryId },
+            {
+              isDisabled:
+                args.filter?.onlyEnabled != null
+                  ? !args.filter.onlyEnabled
+                  : undefined,
+            },
+            { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
+            { createdAt: filter.dateFilter(args.filter?.toDate, true) },
+            {
+              OR: [{ name: filter.searchFilter(args.filter?.keyword) }],
+            },
+          ],
+        },
+        select: {
+          id: true,
+          categoryId: true,
+          name: true,
+          image: true,
+          isDisabled: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      return result;
+    },
+    subCategory: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.subCategory.findUnique({
+        where: {
+          id: args.id,
+        },
+        select: {
+          id: true,
+          categoryId: true,
+          name: true,
+          image: true,
+          isDisabled: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      return result;
+    },
+    subCategoriesCount: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.subCategory.aggregate({
         _count: {
-          id: true
+          id: true,
         },
         _max: {
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       return { count: result._count.id, date: result._max.createdAt };
@@ -52,49 +119,100 @@ const resolvers = {
   Mutation: {
     createCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.create({
         data: {
           name: args.input.name,
           image: args.input.image,
-        }
+        },
       });
 
       return result;
     },
     updateCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.update({
         where: {
-          id: args.id
+          id: args.id,
         },
         data: {
           name: args.input.name,
           image: args.input.image,
-          isDisabled: args.input.isDisabled
-        }
+          isDisabled: args.input.isDisabled,
+        },
       });
 
       return result;
     },
     deleteCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.PRODUCT_MANAGER);
-  
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
       // return result
       const result = await app.prismaClient.category.delete({
         where: {
-          id: args.id
+          id: args.id,
         },
         select: {
           id: true,
-          name: true
-        }
+          name: true,
+        },
+      });
+
+      return result;
+    },
+    createSubCategory: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
+      // return result
+      const result = await app.prismaClient.subCategory.create({
+        data: {
+          categoryId: args.input.categoryId,
+          name: args.input.name,
+          image: args.input.image,
+        },
+      });
+
+      return result;
+    },
+    updateSubCategory: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
+      // return result
+      const result = await app.prismaClient.subCategory.update({
+        where: {
+          id: args.id,
+        },
+        data: {
+          categoryId: args.input.categoryId,
+          name: args.input.name,
+          image: args.input.image,
+          isDisabled: args.input.isDisabled,
+        },
+      });
+
+      return result;
+    },
+    deleteSubCategory: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
+
+      // return result
+      const result = await app.prismaClient.category.delete({
+        where: {
+          id: args.id,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
       });
 
       return result;

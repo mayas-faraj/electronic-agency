@@ -1,14 +1,19 @@
 const typeDefs = `#graphql
 	extend type Query {
-        categories: [Category]
-		categoriesCount: AggregateResult
+        categories(filter: SearchFilter): [Category]
 		category(id: Int!): Category
+		subCategories(categoryId: Int!, filter: SearchFilter): [SubCategory]
+		subCategory(id: Int!): SubCategory
+		subCategoriesCount: AggregateResult
     }
 
     extend type Mutation {
         createCategory(input: CategoryInput!): Category
 		updateCategory(id: Int!, input: CategoryUpdate!): Category
 		deleteCategory(id: Int!): Category
+		createSubCategory(input: SubCategoryInput!): SubCategory
+		updateSubCategory(id: Int!, input: SubCategoryUpdate!): SubCategory
+		deleteSubCategory(id: Int!): SubCategory
     }
 
     type Category {
@@ -26,6 +31,29 @@ const typeDefs = `#graphql
 	}
 
 	input CategoryUpdate {
+		name: String
+		image: String
+		isDisabled: Boolean
+	}
+
+	type SubCategory {
+		id: Int!
+		categoryId: Int!
+		name: String!
+		image: String
+		isDisabled: Boolean
+		createdAt: String
+		updatedAt: String
+	}
+
+	input SubCategoryInput {
+		categoryId: Int!
+		name: String!
+		image: String
+	}
+
+	input SubCategoryUpdate {
+		categoryId: Int
 		name: String
 		image: String
 		isDisabled: Boolean

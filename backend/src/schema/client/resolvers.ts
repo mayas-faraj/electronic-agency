@@ -16,6 +16,11 @@ const resolvers = {
 
       // return result
       const result = await app.prismaClient.client.findMany({
+        skip: args.pagination?.id != null ? 1 : undefined,
+        take: args.pagination?.take,
+        cursor: args.pagination?.id != null ? {
+          id: args.pagination?.id
+        } : undefined,
         select: {
           id: true,
           user: true,
@@ -49,6 +54,9 @@ const resolvers = {
             },
           ],
         },
+        orderBy: {
+          id: "desc"
+        }
       });
 
       return result;

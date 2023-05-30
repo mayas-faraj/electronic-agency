@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
 	extend type Query {
-        clients(filter: SearchFilter): [ClientBasic]
+        clients(filter: SearchFilter, pagination: Pagination): [ClientBasic]
 		clientsCount: AggregateResult
 		client(id: Int!): Client
 		clientByAuth: Client

@@ -19,6 +19,7 @@ const typeDefs = `#graphql
     type Category {
 		id: Int!
 		name: String!
+		nameTranslated: String!
 		image: String
 		isDisabled: Boolean
 		createdAt: String
@@ -27,11 +28,13 @@ const typeDefs = `#graphql
 
 	input CategoryInput {
 		name: String!
+		nameTranslated: String!
 		image: String
 	}
 
 	input CategoryUpdate {
 		name: String
+		nameTranslated: String
 		image: String
 		isDisabled: Boolean
 	}
@@ -40,6 +43,7 @@ const typeDefs = `#graphql
 		id: Int!
 		categoryId: Int!
 		name: String!
+		nameTranslated: String!
 		image: String
 		isDisabled: Boolean
 		createdAt: String
@@ -49,12 +53,14 @@ const typeDefs = `#graphql
 	input SubCategoryInput {
 		categoryId: Int!
 		name: String!
+		nameTranslated: String!
 		image: String
 	}
 
 	input SubCategoryUpdate {
 		categoryId: Int
 		name: String
+		nameTranslated: String
 		image: String
 		isDisabled: Boolean
 	}

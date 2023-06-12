@@ -9,6 +9,7 @@ const resolvers = {
         select: {
           id: true,
           name: true,
+          nameTranslated: true,
           image: true,
           isDisabled: true,
           createdAt: true,
@@ -25,7 +26,10 @@ const resolvers = {
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
             {
-              OR: [{ name: filter.searchFilter(args.filter?.keyword) }],
+              OR: [
+                { name: filter.searchFilter(args.filter?.keyword) },
+                { nameTranslated: filter.searchFilter(args.filter?.keyword) },
+              ],
             },
           ],
         },
@@ -42,6 +46,7 @@ const resolvers = {
         select: {
           id: true,
           name: true,
+          nameTranslated: true,
           image: true,
           isDisabled: true,
           createdAt: true,
@@ -66,7 +71,10 @@ const resolvers = {
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
             {
-              OR: [{ name: filter.searchFilter(args.filter?.keyword) }],
+              OR: [
+                { name: filter.searchFilter(args.filter?.keyword) },
+                { nameTranslated: filter.searchFilter(args.filter?.keyword) },
+              ],
             },
           ],
         },
@@ -74,6 +82,7 @@ const resolvers = {
           id: true,
           categoryId: true,
           name: true,
+          nameTranslated: true,
           image: true,
           isDisabled: true,
           createdAt: true,
@@ -93,6 +102,7 @@ const resolvers = {
           id: true,
           categoryId: true,
           name: true,
+          nameTranslated: true,
           image: true,
           isDisabled: true,
           createdAt: true,
@@ -125,6 +135,7 @@ const resolvers = {
       const result = await app.prismaClient.category.create({
         data: {
           name: args.input.name,
+          nameTranslated: args.input.nameTranslated,
           image: args.input.image,
         },
       });
@@ -142,6 +153,7 @@ const resolvers = {
         },
         data: {
           name: args.input.name,
+          nameTranslated: args.input.nameTranslated,
           image: args.input.image,
           isDisabled: args.input.isDisabled,
         },
@@ -175,6 +187,7 @@ const resolvers = {
         data: {
           categoryId: args.input.categoryId,
           name: args.input.name,
+          nameTranslated: args.input.name,
           image: args.input.image,
         },
       });
@@ -193,6 +206,7 @@ const resolvers = {
         data: {
           categoryId: args.input.categoryId,
           name: args.input.name,
+          nameTranslated: args.input.name,
           image: args.input.image,
           isDisabled: args.input.isDisabled,
         },

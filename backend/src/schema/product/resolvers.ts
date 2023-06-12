@@ -1,7 +1,6 @@
 import {
   type AppContext,
   checkAuthorization,
-  decodeUser,
   Role,
 } from "../../auth.js";
 import filter from "../filter.js";
@@ -19,9 +18,11 @@ const resolvers = {
         select: {
           id: true,
           name: true,
+          nameTranslated: true,
           model: true,
           image: true,
           description: true,
+          descriptionTranslated: true,
           price: true,
           isDisabled: true,
         },
@@ -42,9 +43,12 @@ const resolvers = {
             {
               OR: [
                 { name: filter.searchFilter(args.filter?.keyword) },
+                { nameTranslated: filter.searchFilter(args.filter?.keyword) },
                 { model: filter.searchFilter(args.filter?.keyword) },
                 { description: filter.searchFilter(args.filter?.keyword) },
+                { descriptionTranslated: filter.searchFilter(args.filter?.keyword) },
                 { specification: filter.searchFilter(args.filter?.keyword) },
+                { specificationTranslated: filter.searchFilter(args.filter?.keyword) },
               ],
             },
           ],
@@ -110,9 +114,11 @@ const resolvers = {
             select: {
               id: true,
               name: true,
+              nameTranslated: true,
               model: true,
               image: true,
               description: true,
+              descriptionTranslated: true,
               price: true,
               isDisabled: true,
             },
@@ -142,9 +148,11 @@ const resolvers = {
             select: {
               id: true,
               name: true,
+              nameTranslated: true,
               model: true,
               image: true,
               description: true,
+              descriptionTranslated: true,
               price: true,
               isDisabled: true,
             },
@@ -165,10 +173,14 @@ const resolvers = {
         data: {
           subCategoryId: args.input.subCategoryId,
           name: args.input.name,
+          nameTranslated: args.input.nameTranslated, 
           model: args.input.model,
           image: args.input.image,
           description: args.input.description,
+          descriptionTranslated: args.input.descriptionTranslated,
           specification: args.input.specification,
+          specificationTranslated: args.input.specificationTranslated,
+          catalogFile: args.input.catalogFile,
           price: args.input.price,
         },
       });
@@ -187,10 +199,14 @@ const resolvers = {
         data: {
           subCategoryId: args.input.subCategoryId,
           name: args.input.name,
+          nameTranslated: args.input.nameTranslated,
           model: args.input.model,
           image: args.input.image,
           description: args.input.description,
+          descriptionTranslated: args.input.descriptionTranslated,
           specification: args.input.specification,
+          specificationTranslated: args.input.specificationTranslated,
+          catalogFile: args.input.catalogFile,
           price: args.input.price,
           isDisabled: args.input.isDisabled,
         },
@@ -210,6 +226,7 @@ const resolvers = {
         select: {
           id: true,
           name: true,
+          nameTranslated: true,
           model: true,
         },
       });

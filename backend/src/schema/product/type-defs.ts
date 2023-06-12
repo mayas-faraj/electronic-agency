@@ -24,11 +24,15 @@ const typeDefs = `#graphql
     type Product {
 		id: Int!
 		name: String!
+		nameTranslated: String!
 		model: String
 		image: String
 		description: String
+		descriptionTranslated: String
 		specification: String
-		price: Float!
+		specificationTranslated: String
+		catalogFile: String
+		price: Float
 		isDisabled: Boolean
 		createdAt: String
 		updatedAt: String
@@ -40,30 +44,40 @@ const typeDefs = `#graphql
 	type ProductBasic {
 		id: Int!
 		name: String!
+		nameTranslated: String!
 		model: String
 		image: String
 		description: String
-		price: Float!
+		descriptionTranslated: String
+		price: Float
 		isDisabled: Boolean
 	}
 
 	input ProductInput {
 		subCategoryId: Int!
 		name: String!
+		nameTranslated: String!
 		model: String
 		image: String
 		description: String
+		descriptionTranslated: String
 		specification: String
+		specificationTranslated: String
+		catalogFile: String
 		price: Float!
 	}
 
 	input ProductUpdate {
 		subCategoryId: Int
 		name: String
+		nameTranslated: String
 		model: String
 		image: String
 		description: String
+		descriptionTranslated: String
 		specification: String
+		specificationTranslated: String
+		catalogFile: String
 		price: Float
 		isDisabled: Boolean
 	}

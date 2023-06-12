@@ -12,7 +12,7 @@ datasource db {
 
 // name, phone 40
 // sn, email, password 50
-// link 255
+// link 400
 // address, note, comment, description  500
 
 model Client {
@@ -20,7 +20,7 @@ model Client {
   user        String                  @unique @db.VarChar(40)
   phone       String                  @unique @db.VarChar(40)
   email       String?                 @unique @db.VarChar(50)
-  avatar      String?                 @db.VarChar(255)
+  avatar      String?                 @db.VarChar(400)
   namePrefix  String                  @default("Mr.") @map("name_prefix") @db.Char(3)
   firstName   String                  @map("first_name") @db.VarChar(40)
   lastName    String?                 @map("last_name") @db.VarChar(40)
@@ -64,48 +64,56 @@ model Admin {
 }
 
 model Category {
-  id            Int           @id @default(autoincrement())
-  name          String        @unique @db.VarChar(40)
-  image         String?       @db.VarChar(255)
-  isDisabled    Boolean       @default(false) @map("is_disabled") @db.TinyInt
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime?     @updatedAt @map("updated_at")
-  subCategories SubCategory[]
+  id             Int           @id @default(autoincrement())
+  name           String        @unique @db.VarChar(40)
+  nameTranslated String        @unique @map("name_translated") @db.VarChar(40)
+  image          String?       @db.VarChar(400)
+  isDisabled     Boolean       @default(false) @map("is_disabled") @db.TinyInt
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime?     @updatedAt @map("updated_at")
+  subCategories  SubCategory[]
 
   @@map("category")
 }
 
 model SubCategory {
-  id         Int       @id @default(autoincrement())
-  categoryId Int       @map("category_id")
-  name       String    @unique @db.VarChar(40)
-  image      String?   @db.VarChar(255)
-  isDisabled Boolean   @default(false) @map("is_disabled") @db.TinyInt
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
-  category   Category  @relation(fields: [categoryId], references: [id])
+  id             Int       @id @default(autoincrement())
+  categoryId     Int       @map("category_id")
+  name           String    @db.VarChar(40)
+  nameTranslated String    @map("name_translated") @db.VarChar(40)
+  image          String?   @db.VarChar(400)
+  isDisabled     Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+  category       Category  @relation(fields: [categoryId], references: [id])
 
   products Product[]
 
+  @@unique([categoryId, name])
+  @@unique([categoryId, nameTranslated])
   @@map("sub_category")
 }
 
 model Product {
-  id            Int             @id @default(autoincrement())
-  subCategoryId Int             @map("sub_category_id")
-  name          String          @db.VarChar(40)
-  model         String?         @db.VarChar(40)
-  image         String?         @db.VarChar(255)
-  description   String?         @db.VarChar(500)
-  specification String?         @db.LongText
-  price         Float           @default(0)
-  isDisabled    Boolean         @default(false) @map("is_disabled") @db.TinyInt
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime?       @updatedAt @map("updated_at")
-  subCategory   SubCategory     @relation(fields: [subCategoryId], references: [id])
-  items         ProductItem[]
-  orders        Order[]
-  reviews       ProductReview[]
+  id                      Int             @id @default(autoincrement())
+  subCategoryId           Int             @map("sub_category_id")
+  name                    String          @db.VarChar(40)
+  nameTranslated          String          @map("name_translated") @db.VarChar(40)
+  model                   String?         @db.VarChar(40)
+  image                   String?         @db.VarChar(400)
+  description             String?         @db.VarChar(500)
+  descriptionTranslated   String?         @map("description_translated") @db.VarChar(500)
+  specification           String?         @db.LongText
+  specificationTranslated String?         @map("specification_translated") @db.LongText
+  price                   Float?
+  catalogFile             String?         @map("catalog_file") @db.VarChar(400)
+  isDisabled              Boolean         @default(false) @map("is_disabled") @db.TinyInt
+  createdAt               DateTime        @default(now()) @map("created_at")
+  updatedAt               DateTime?       @updatedAt @map("updated_at")
+  subCategory             SubCategory     @relation(fields: [subCategoryId], references: [id])
+  items                   ProductItem[]
+  orders                  Order[]
+  reviews                 ProductReview[]
 
   @@unique([name, model])
   @@map("product")

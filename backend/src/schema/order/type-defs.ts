@@ -33,7 +33,7 @@ const typeDefs = `#graphql
 	type OrderBasic {
 		id: Int!
 		count: Int!
-		totalPrice: Float!
+		totalPrice: Float
 		status: String
 		isRead: Boolean
 		isOfferRequest: Boolean
@@ -44,7 +44,7 @@ const typeDefs = `#graphql
 	input OrderInput {
 		productId: Int!
 		count: Int!
-		totalPrice: Float!
+		totalPrice: Float
 		address: String!
 		note: String
 		isDraft: Boolean

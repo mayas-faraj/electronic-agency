@@ -187,7 +187,7 @@ const resolvers = {
         data: {
           categoryId: args.input.categoryId,
           name: args.input.name,
-          nameTranslated: args.input.name,
+          nameTranslated: args.input.nameTranslated,
           image: args.input.image,
         },
       });
@@ -206,7 +206,7 @@ const resolvers = {
         data: {
           categoryId: args.input.categoryId,
           name: args.input.name,
-          nameTranslated: args.input.name,
+          nameTranslated: args.input.nameTranslated,
           image: args.input.image,
           isDisabled: args.input.isDisabled,
         },
@@ -219,7 +219,7 @@ const resolvers = {
       checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
 
       // return result
-      const result = await app.prismaClient.category.delete({
+      const result = await app.prismaClient.subCategory.delete({
         where: {
           id: args.id,
         },

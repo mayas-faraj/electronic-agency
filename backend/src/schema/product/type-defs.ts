@@ -64,7 +64,7 @@ const typeDefs = `#graphql
 		specification: String
 		specificationTranslated: String
 		catalogFile: String
-		price: Float!
+		price: Float
 	}
 
 	input ProductUpdate {

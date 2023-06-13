@@ -28,9 +28,11 @@ const resolvers = {
                 select: {
                   id: true,
                   name: true,
+                  nameTranslated: true,
                   model: true,
                   image: true,
                   description: true,
+                  descriptionTranslated: true,
                   price: true,
                   isDisabled: true
                 }
@@ -95,11 +97,13 @@ const resolvers = {
                 select: {
                   id: true,
                   name: true,
+                  nameTranslated: true,
                   model: true,
                   image: true,
                   description: true,
                   price: true,
-                  isDisabled: true
+                  isDisabled: true,
+                  descriptionTranslated: true
                 }
                 
               }
@@ -174,9 +178,11 @@ const resolvers = {
                 select: {
                   id: true,
                   name: true,
+                  nameTranslated: true,
                   model: true,
                   image: true,
                   description: true,
+                  descriptionTranslated: true,
                   price: true,
                   isDisabled: true
                 }

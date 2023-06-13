@@ -159,7 +159,7 @@ model Order {
   clientId       Int         @map("client_id")
   productId      Int         @map("product_id")
   count          Int         @default(1)
-  totalPrice     Float       @map("total_price")
+  totalPrice     Float?      @map("total_price")
   address        String      @db.VarChar(500)
   note           String?     @db.VarChar(500)
   status         OrderStatus @default(PENDING)

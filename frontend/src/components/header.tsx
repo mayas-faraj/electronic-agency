@@ -35,8 +35,8 @@ const Header: FunctionComponent = () => {
   if (privileges.readClient) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
   if (privileges.readCategory) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
   if (privileges.readProduct) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
-  if (privileges.readMaintenance) links.push({ title: "Maintenances", to: "/maintenances", icon: <RoomPreferences /> });
   if (privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
+  if (privileges.readMaintenance) links.push({ title: "Maintenances", to: "/maintenances", icon: <RoomPreferences /> });
 
   // event handlers
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -89,11 +89,11 @@ const Header: FunctionComponent = () => {
           <MenuItem key={link.title}>{link.icon}<Link to={link.to}>{link.title}</Link></MenuItem>
         ))
       }
-      {privileges.readMaintenance && (
-        <MenuItem><MaintenanceNotificationIcon />Maintenance</MenuItem>
-      )}
       {privileges.readOrder && (
         <MenuItem><OrderNotificationIcon />Orders</MenuItem>
+      )}
+      {privileges.readMaintenance && (
+        <MenuItem><MaintenanceNotificationIcon />Maintenance</MenuItem>
       )}
       <MenuItem onClick={handleProfileMenuOpen}><IconButton size="large" color="inherit"><AccountCircle /></IconButton>Profile</MenuItem>
     </Menu>
@@ -104,7 +104,7 @@ const Header: FunctionComponent = () => {
       <AppBar position="static">
         <Toolbar className={styles.toolbar}>
           <IconButton>
-            <Link to="/"><img src={logoImage} alt="gree logo" className={styles.logo} /></Link>
+            <Link to="/"><img src={logoImage} alt="alardh-alsalba logo" className={styles.logo} /></Link>
           </IconButton>
           <div className={styles.hide_small}>
             <div className={styles["main-menu"]}>
@@ -114,8 +114,8 @@ const Header: FunctionComponent = () => {
                 ))
               }
             </div>
-            {privileges.readMaintenance && <MaintenanceNotificationIcon />}
             {privileges.readOrder && <OrderNotificationIcon />}
+            {privileges.readMaintenance && <MaintenanceNotificationIcon />}
             <IconButton size="large" edge="end" onClick={handleProfileMenuOpen} color="inherit" >
               <AccountCircle />
             </IconButton>

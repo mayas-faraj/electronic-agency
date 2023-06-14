@@ -21,7 +21,7 @@ body {
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
-    
+
     svg {
         margin-right: 10px;
         vertical-align: middle;
@@ -29,16 +29,27 @@ body {
 }
 
 .button--large {
-	display: inline-block;
-	width: 100%;
-	box-sizing: border-box;
-	text-align: center;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
 }
 
-td>img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
+.button-wide-wrapper button {
+	width: 100%;
+	padding: 16px;
+	background: $secondary-color;
+}
+
+
+td {
+    white-space: pre-wrap;
+
+    &>img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
 }
 
 .full-height {
@@ -66,19 +77,28 @@ td>img {
     flex-wrap: wrap;
     flex-direction: revert;
     gap: 20px;
+
     &>* {
         flex-basis: 330px;
         flex-grow: 1;
     }
 }
 
-.side-image {
-	background-color: $primary-color;
+.row-flex {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    height: 55px;
     margin: 15px 0;
-	width: 100%;
-	object-fit: contain;
-	border: 2px solid;
-	display: block;
+}
+
+.side-image {
+    background-color: $primary-color;
+    margin: 15px 0;
+    width: 100%;
+    object-fit: contain;
+    border: 2px solid;
+    display: block;
 }
 
 .side-image--product {

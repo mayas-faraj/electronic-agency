@@ -6,9 +6,10 @@ const Category: FunctionComponent<{id: number}> = ({ id }) => {
   return (
     <View 
     title="Category details"
-    command={`query { category(id: ${id}) { name image isDisabled createdAt updatedAt } }`}
+    command={`query { category(id: ${id}) { name nameTranslated image isDisabled createdAt updatedAt } }`}
     headers={[
-        {key: "name", title: "User Name", icon: <CategoryIcon />},
+        {key: "name", title: "Category Name", icon: <CategoryIcon />},
+        {key: "nameTranslated", title: "Category Name (Arabic)", icon: <CategoryIcon />},
         {key: "isDisabled", title: "Active Status", icon: <Flag />},
         {key: "createdAt", title: "Creation Date", icon: <MoreTime />},
         {key: "updatedAt", title: "Updated Date", icon: <HistoryToggleOff />},

@@ -6,9 +6,10 @@ const Product: FunctionComponent<{id: number}> = ({ id }) => {
   return (
     <View 
     title="Product details"
-    command={`query { product(id: ${id}) { name model image description price createdAt updatedAt isDisabled category {name } } }`}
+    command={`query { product(id: ${id}) { name nameTranslated model image price createdAt updatedAt isDisabled } }`}
     headers={[
         {key: "name", title: "Product Name", icon: <Redeem />},
+        {key: "nameTranslated", title: "Product Name (Arabic)", icon: <Redeem />},
         {key: "model", title: "Model", icon: <Category />},
         {key: "price", title: "Price", icon: <LocalAtm />},
         {key: "isDisabled", title: "Active Status", icon: <Flag />},

@@ -19,7 +19,7 @@ const typeDefs = `#graphql
     type Order {
 		id: Int!
 		count: Int!
-		totalPrice: Float!
+		totalPrice: Float
 		address: String!
 		note: String
 		status: String

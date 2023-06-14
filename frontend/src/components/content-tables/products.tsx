@@ -14,7 +14,6 @@ import ProductItems from "../content-tables/product-item";
 // types
 interface IProduct {
     id: number
-    categoryId: number
     name: string
     model: string
     image?: string
@@ -48,9 +47,8 @@ const Products: FunctionComponent = () => {
     ];
     // on load
     const action = async () => {
-        const result1 = await getServerData(`query { products(categoryId: ${1}) { id name model image description price isDisabled }}`)
-        const result2 = await getServerData(`query { products(categoryId: ${2}) { id name model image description price isDisabled }}`)
-        setProducts([...result1.data.products, ...result2.data.products]);
+        const result = await getServerData(`query { products { id name model image description price isDisabled }}`)
+        setProducts(result.data.products);
     };
 
     // event handler

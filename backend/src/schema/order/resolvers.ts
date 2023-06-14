@@ -207,6 +207,19 @@ const resolvers = {
 
       return result;
     },
+    updateOrderStatus: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.order.update({
+        where: {
+          id: args.id
+        },
+        data: {
+          status: args.status
+        }
+      });
+
+      return result;
+    },
     deleteOrderByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.order.deleteMany({
@@ -219,7 +232,7 @@ const resolvers = {
     },
     createOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
 
       // return result
       const result = await app.prismaClient.offer.create({
@@ -241,7 +254,7 @@ const resolvers = {
     },
     updateOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
 
       // return result
       const result = await app.prismaClient.offer.update({
@@ -265,7 +278,7 @@ const resolvers = {
     },
     deleteOffer: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
 
       // return result
       const result = await app.prismaClient.offer.delete({

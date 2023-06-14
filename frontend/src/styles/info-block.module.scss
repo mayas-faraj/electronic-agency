@@ -2,6 +2,7 @@
 
 .wrapper {
     display: flex;
+    position: relative;
     justify-content: space-around;
     align-items: center;
     background-color: $secondary-color;
@@ -18,9 +19,12 @@
 }
 
 .title {
-    text-decoration: underline 3px;
-    text-underline-offset: 6px;
-    color: $primary-color;
+    font-size: 1.5rem;
+    a {
+        text-decoration: underline 3px;
+        text-underline-offset: 10px;
+        color: $primary-color;
+    }
 }
 
 .info {
@@ -48,3 +52,13 @@
     }
 }
 
+.readmore-link {
+	color: $primary-color;
+	position: absolute;
+	right: 20px;
+	top: 10px;
+
+    svg {
+        font-size: 3rem;
+    }
+}

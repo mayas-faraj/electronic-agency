@@ -26,10 +26,11 @@ interface IManagementProps {
     hasConfirmModal?: boolean;
     initialValue?: any;
     onUpdate?: () => void;
+    className?: string
 }
 
 // component
-const Management: FunctionComponent<IManagementProps> = ({ command, commandDisabled, commandDisabledMessage, operation, type, hasConfirmModal, initialValue, onUpdate }) => {
+const Management: FunctionComponent<IManagementProps> = ({ command, commandDisabled, commandDisabledMessage, operation, type, hasConfirmModal, initialValue, className, onUpdate }) => {
     // component states
     const [successMessage, setSuccessMessage] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -100,7 +101,7 @@ const Management: FunctionComponent<IManagementProps> = ({ command, commandDisab
     // render component
     return (
         <>
-            <div className={styles.wrapper}>
+            <div className={`${styles.wrapper} ${className}`}>
                 {(type == null || type === ManagementType.button) && <Button variant="text" className={buttonInfo.class} onClick={() => handleEvent()}>{buttonInfo.icon} {buttonInfo.text}</Button>}
                 {type === ManagementType.switch && <Switch className={styles.switch} onChange={() => action()} checked={initialValue === true} />}
             </div>

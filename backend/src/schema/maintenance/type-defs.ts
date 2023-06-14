@@ -9,6 +9,7 @@ const typeDefs = `#graphql
 
     extend type Mutation {
         createMaintenance(input: MaintenanceInput!): MaintenanceBasic
+		updateMaintenanceStatus(id: Int!, status: String!): MaintenanceBasic
 		deleteMaintenanceByAuth(id: Int!): BatchResult
 		createRepairByAuth(input: RepairInput!): RepairBasic
 		updateRepairByAuth(id: Int!, input: RepairUpdate!): RepairBasic

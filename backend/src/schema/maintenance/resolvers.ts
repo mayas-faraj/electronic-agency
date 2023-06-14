@@ -105,7 +105,12 @@ const resolvers = {
                   isDisabled: true,
                   descriptionTranslated: true
                 }
-                
+              },
+              client: {
+                select: {
+                  clientId: true,
+                  createdAt: true
+                }
               }
             },
           },
@@ -227,6 +232,19 @@ const resolvers = {
 
       return result;
     },
+    updateMaintenanceStatus: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const reuslt = await app.prismaClient.maintenance.update({
+        where: {
+          id: args.id
+        },
+        data: {
+          status: args.status
+        }
+      });
+
+      return reuslt;
+    },
     deleteMaintenanceByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.maintenance.deleteMany({
@@ -244,7 +262,7 @@ const resolvers = {
     },
     createRepairByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.TECHNICAL);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.TECHNICAL);
 
       // return result
       const result = await app.prismaClient.repair.create({
@@ -266,7 +284,7 @@ const resolvers = {
     },
     updateRepairByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.TECHNICAL);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.TECHNICAL);
 
       // return result
       const result = await app.prismaClient.repair.update({
@@ -290,7 +308,7 @@ const resolvers = {
     },
     deleteRepair: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.TECHNICAL);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.TECHNICAL);
 
       // return result
       const result = await app.prismaClient.repair.delete({

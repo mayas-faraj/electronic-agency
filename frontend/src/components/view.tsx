@@ -36,7 +36,6 @@ const View: FunctionComponent<IView> = ({ command, headers, title }) => {
     // transform data
     if (key === "isDisabled") return value ? <Cancel color="error" /> : <TaskAlt color="success" />;
     if (key === "isMale") return value ? <Face /> : <Face3 />;
-    else if (value == null) return "-";
     else if (key === "createdAt" || key === "updatedAt" || key === "lastLoginAt") return new Date(parseInt(value as string)).toLocaleString();
     else if (key === "birthDate") return new Date(parseInt(value as string)).toLocaleDateString();
     else return value;
@@ -48,7 +47,7 @@ const View: FunctionComponent<IView> = ({ command, headers, title }) => {
       {title != null && <h1 className={styles.title}>{title}</h1>}
       <div className={styles.data}>
         {
-          headers.map(header  => (
+          headers.filter(header => data[header.key] != null).map(header  => (
             <div key={header.key} className={styles.row}>
               <div className={styles.cell}>{header.icon}</div>
               <div className={styles.cell}>{header.title}</div>

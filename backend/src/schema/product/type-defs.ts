@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
 	extend type Query {
-        products(subCategoryId: Int!, pagination: Pagination, filter: SearchFilter): [ProductBasic]
+        products(subCategoryId: Int, pagination: Pagination, filter: SearchFilter): [ProductBasic]
 		productsCount: AggregateResult
 		product(id: Int!): Product
 		productItem(sn: String!): ProductItem

@@ -230,7 +230,6 @@ enum OrderStatus {
   PENDING
   REJECTED
   ACCEPTED
-  CANCELED
   CLOSED
 }
 

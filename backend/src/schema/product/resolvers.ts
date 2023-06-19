@@ -23,8 +23,18 @@ const resolvers = {
           image: true,
           description: true,
           descriptionTranslated: true,
+          specification: true,
+          specificationTranslated: true,
           price: true,
           isDisabled: true,
+          catalogFile: true,
+          subCategory: {
+            select: {
+              id: true,
+              categoryId: true,
+              name: true
+            }
+          }
         },
         orderBy: {
           id: "desc",
@@ -34,9 +44,7 @@ const resolvers = {
             { subCategoryId: args.subCategoryId },
             {
               isDisabled:
-                args.filter?.onlyEnabled != null
-                  ? !args.filter.onlyEnabled
-                  : undefined,
+                args.filter?.showDisabled === true ? undefined : false
             },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
@@ -80,6 +88,7 @@ const resolvers = {
           subCategory: {
             select: {
               id: true,
+              categoryId: true,
               name: true,
             },
           },
@@ -153,6 +162,8 @@ const resolvers = {
               image: true,
               description: true,
               descriptionTranslated: true,
+              specification: true,
+              specificationTranslated: true,
               price: true,
               isDisabled: true,
             },

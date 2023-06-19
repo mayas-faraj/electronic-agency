@@ -20,7 +20,7 @@ const typeDefs = `#graphql
 	}
 
     input SearchFilter {
-		onlyEnabled: Boolean
+		showDisabled: Boolean
 		keyword: String
 		fromDate: String
 		toDate: String

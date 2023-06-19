@@ -24,9 +24,7 @@ const resolvers = {
           AND: [
             {
               isDisabled:
-                args.filter?.onlyEnabled != null
-                  ? !args.filter.onlyEnabled
-                  : undefined,
+                args.filter?.showDisabled === true ? undefined : false,
             },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },

@@ -49,6 +49,9 @@ const typeDefs = `#graphql
 		image: String
 		description: String
 		descriptionTranslated: String
+		specification: String
+		specificationTranslated: String
+		catalogFile: String,
 		price: Float
 		isDisabled: Boolean
 	}

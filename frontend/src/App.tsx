@@ -38,7 +38,6 @@ function App() {
 
   React.useEffect(() => {
     // profile has changed
-    console.log("profile has changed, setting privileges as: ", profile.role);
     setPrivileges(getPrivileges(profile.role));
   }, [profile]);
 

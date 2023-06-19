@@ -47,7 +47,7 @@ const Products: FunctionComponent = () => {
     ];
     // on load
     const action = async () => {
-        const result = await getServerData(`query { products { id name model image description price isDisabled }}`)
+        const result = await getServerData(`query { products(filter: {showDisabled: true}) { id name model image description price isDisabled }}`)
         setProducts(result.data.products);
     };
 

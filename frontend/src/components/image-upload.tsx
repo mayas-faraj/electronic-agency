@@ -50,7 +50,7 @@ const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName
 
     return (
         <div className={styles.wrapper}>
-            <img className="side-image side-image--product" src={data["site-url"] + (imageSrc)} alt="product" />
+            <img className="side-image side-image--product" src={imageSrc ? data["site-url"] + imageSrc : ""} alt="product" />
             <input id="file-upload" accept="image/*" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
             <label htmlFor="file-upload" className="button button--large">Upload {isUpload && <HourglassBottom />}</label>
             <Snackbar open={errorMessage !== ""} onClose={() => { setErrorMessage("") }} autoHideDuration={6000}>

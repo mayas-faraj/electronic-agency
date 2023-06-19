@@ -1,15 +1,15 @@
 import React, { FunctionComponent } from "react";
-import { Button, Modal } from "@mui/material";
+import { Button, InputAdornment, Modal, TextField } from "@mui/material";
+import { Abc, Search, Visibility } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
+import ProductItems from "../content-tables/product-item";
 import ProductForm from "../content-forms/product";
 import ProductView from "../views/product";
 import data from "../../data.json";
 import RoleContext from "../role-context";
-import { Abc, Visibility } from "@mui/icons-material";
-import ProductItems from "../content-tables/product-item";
+import getServerData from "../../libs/server-data";
 
 // types
 interface IProduct {
@@ -30,6 +30,7 @@ const Products: FunctionComponent = () => {
     const [editId, setEditId] = React.useState(0);
     const [viewId, setViewId] = React.useState(0);
     const [manageItemId, setManageItemId] = React.useState(0);
+    const [keyword, setKeyword] = React.useState("");
 
     // context
     const privileges = React.useContext(RoleContext);
@@ -46,19 +47,32 @@ const Products: FunctionComponent = () => {
         { key: "delete", title: "Delete", isControlType: true },
     ];
     // on load
-    const action = async () => {
-        const result = await getServerData(`query { products(filter: {showDisabled: true}) { id name model image description price isDisabled }}`)
+    const action = React.useCallback(async () => {
+        const result = await getServerData(`query { products(filter: {showDisabled: true, keyword: "${keyword}"}) { id name model image description price isDisabled }}`)
         setProducts(result.data.products);
-    };
+    }, [keyword]);
 
     // event handler
     React.useEffect(() => {
         action();
-    }, []);
+    }, [action]);
 
     // render
     return (
         <div>
+            <TextField
+              label="Search"
+              value={keyword}
+              onChange={(e) => { setKeyword(e.target.value) }}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
             <ContentTable
                 name="product"
                 headers={tableHeader}
@@ -66,12 +80,13 @@ const Products: FunctionComponent = () => {
                 canWrite={privileges.writeProduct}
                 hasSnColumn={true}
                 addNewLink="/add-product"
+                isAddNewRight={true}
                 data={
                     products.map(product => ({
                         image: <img src={data["site-url"] + product.image} alt={product.name} />,
                         name: product.name,
                         model: product.model,
-                        isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateProduct(id: ${product.id}, input: {isDisabled: ${!product.isDisabled}})  {id name model}}`} initialValue={product.isDisabled} onUpdate={() => action()} />,
+                        isDisabled: <Management type={ManagementType.switch} operation={Operation.update} command={`mutation { updateProduct(id: ${product.id}, input: {isDisabled: ${!product.isDisabled}})  {id name model}}`} initialValue={product.isDisabled} onUpdate={action} />,
                         view: <Button variant="text" color="info" onClick={() => setViewId(product.id)}><Visibility /></Button>,
                         item: <Button variant="text" color="info" onClick={() => setManageItemId(product.id)}><Abc /></Button>,
                         edit: <Button variant="text" color="success" onClick={() => setEditId(product.id)}><EditIcon /></Button>,

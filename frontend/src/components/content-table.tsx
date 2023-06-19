@@ -23,10 +23,11 @@ interface IContentTableProps {
   canWrite: boolean
   hasSnColumn?: boolean
   addNewLink?: string
+  isAddNewRight?: boolean
 }
 
 // main component
-const ContentTable: FunctionComponent<IContentTableProps> = ({ name, headers, canRead, canWrite, hasSnColumn, addNewLink, data }) => {
+const ContentTable: FunctionComponent<IContentTableProps> = ({ name, headers, canRead, canWrite, hasSnColumn, addNewLink, isAddNewRight, data }) => {
   // component state
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -51,7 +52,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({ name, headers, ca
   return (
     <>
       {
-        (canWrite && addNewLink != null) && <Link to={addNewLink} className={styles.button + " " + styles["button--main"]}><AddCircleIcon />Add new {name}</Link>
+        (canWrite && addNewLink != null) && <Link to={addNewLink} className={`${styles.button} ${styles["button--main"]} ${isAddNewRight === true ? styles["button--right"] : ""}`}><AddCircleIcon />Add new {name}</Link>
       }
       <Paper className={styles.wrapper}>
         <TableContainer>

@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-import { Button, Modal } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
+import { Button, InputAdornment, Modal, TextField } from "@mui/material";
+import { Search, Visibility } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
 import AdminForm from "../content-forms/admin";
 import AdminView from "../views/admin";
-import getServerData from "../../libs/server-data";
 import RoleContext from "../role-context";
+import getServerData from "../../libs/server-data";
 
 // types
 interface IAdmin {
@@ -23,6 +23,7 @@ const Admins: FunctionComponent = () => {
     const [admins, setAdmins] = React.useState<IAdmin[]>([]);
     const [editId, setEditId] = React.useState(0);
     const [viewId, setViewId] = React.useState(0);
+    const [keyword, setKeyword] = React.useState("");
     
     // context
     const privileges = React.useContext(RoleContext);
@@ -38,19 +39,32 @@ const Admins: FunctionComponent = () => {
     ];
    
     // on load
-    const action = async () => {
-        const result = await getServerData(`query { admins { id user role isDisabled }}`)
+    const action = React.useCallback(async () => {
+        const result = await getServerData(`query { admins(filter: {keyword: "${keyword}"}) { id user role isDisabled }}`)
         setAdmins(result.data.admins);
-    };
+    }, [keyword]);
 
     // event handler
     React.useEffect(() => {
         action();
-    }, []);
+    }, [action]);
 
     // render
     return (
         <div>
+            <TextField
+              label="Search"
+              value={keyword}
+              onChange={(e) => { setKeyword(e.target.value) }}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
             <ContentTable 
             name="admin" 
             headers={tableHeader} 
@@ -58,6 +72,7 @@ const Admins: FunctionComponent = () => {
             canWrite={privileges.writeAdmin} 
             hasSnColumn={true} 
             addNewLink="/add-admin"
+            isAddNewRight={true}
             data={
                 admins.map(admin => ({
                     user: admin.user,

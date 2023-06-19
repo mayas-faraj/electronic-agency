@@ -2,6 +2,7 @@
 
 .wrapper {
     position: relative;
+    margin-top: 20px;
 }
 
 
@@ -12,6 +13,10 @@
     cursor: pointer;
 	background-color: $secondary-color;
     text-decoration: none;
+}
+
+.button--right {
+    float: right;
 }
 
 .button--main {

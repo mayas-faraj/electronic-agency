@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from "react";
-import getServerData from "../../libs/server-data";
-import { Button, Modal } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
+import { Button, InputAdornment, Modal, TextField } from "@mui/material";
+import { Search, Visibility } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
 import ClientView from "../views/client";
 import RoleContext from "../role-context";
+import getServerData from "../../libs/server-data";
 
 // types
 interface IClient {
@@ -20,6 +20,7 @@ const Clients: FunctionComponent = () => {
     // client state
     const [clients, setClients] = React.useState<IClient[]>([]);
     const [viewId, setViewId] = React.useState(0);
+    const [keyword, setKeyword] = React.useState("");
 
     // context
     const privileges = React.useContext(RoleContext);
@@ -34,19 +35,32 @@ const Clients: FunctionComponent = () => {
     ];
 
     // on load
-    const action = async () => {
-        const result = await getServerData(`query { clients { id user phone isDisabled }}`)
+    const action = React.useCallback(async () => {
+        const result = await getServerData(`query { clients(filter: {keyword: "${keyword}"}) { id user phone isDisabled }}`);
         setClients(result.data.clients);
-    };
+    }, [keyword]);
 
     // event handler
     React.useEffect(() => {   
         action();
-    }, []);
+    }, [action]);
 
     // render
     return (
         <div>
+            <TextField
+              label="Search"
+              value={keyword}
+              onChange={(e) => { setKeyword(e.target.value) }}
+              variant="outlined"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
             <ContentTable 
             name="client" 
             headers={tableHeader} 

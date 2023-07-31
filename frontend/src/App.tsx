@@ -1,21 +1,26 @@
 import React, { Suspense } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RoleContext, { noPrivileges, type Privileges, getPrivileges, Role } from "./components/role-context";
+import RoleContext, {
+  noPrivileges,
+  type Privileges,
+  getPrivileges,
+  Role,
+} from "./components/role-context";
 import GlimmerPage from "./pages/glimmer";
 import NotFoundPage from "./pages/404";
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 import MainCover from "./components/main-cover";
 import StorageManager from "./libs/storage-manager";
 import getServerData from "./libs/server-data";
 
 interface Profile {
-  id: number
-  user: string
-  role?: Role
+  id: number;
+  user: string;
+  role?: Role;
 }
 
 function App() {
@@ -28,7 +33,9 @@ function App() {
     // on app load
     const action = async () => {
       // seting profile
-      const result = await getServerData("query { adminByAuth { id user role } }");
+      const result = await getServerData(
+        "query { adminByAuth { id user role } }"
+      );
       setProfile(result.data.adminByAuth);
     };
 
@@ -38,7 +45,7 @@ function App() {
 
   React.useEffect(() => {
     // profile has changed
-    setPrivileges(getPrivileges(profile.role));
+    setPrivileges(getPrivileges(profile?.role));
   }, [profile]);
 
   // lazy load pages
@@ -51,14 +58,21 @@ function App() {
   const AdminsPage = React.lazy(() => import("./pages/admins"));
   const OrdersPage = React.lazy(() => import("./pages/orders"));
   const MaintenancesPage = React.lazy(() => import("./pages/maintenances"));
+  const PasswordPage = React.lazy(() => import("./pages/password"));
   const AddAdminPage = React.lazy(() => import("./pages/add-admin"));
   const AddProductPage = React.lazy(() => import("./pages/add-product"));
   const AddCategoryPage = React.lazy(() => import("./pages/add-category"));
-  const AddSubCategoryPage = React.lazy(() => import("./pages/add-sub-category"));
+  const AddSubCategoryPage = React.lazy(
+    () => import("./pages/add-sub-category")
+  );
 
   // app router
-  const routes =[
-    { path: "/", element: <HomePage />, errorElement: <MainCover title="System Error!" /> },
+  const routes = [
+    {
+      path: "/",
+      element: <HomePage />,
+      errorElement: <MainCover title="System Error!" />,
+    },
     { path: "/login", element: <LoginPage /> },
     { path: "/products", element: <ProductsPage /> },
     { path: "/categories", element: <CategoriessPage /> },
@@ -67,6 +81,7 @@ function App() {
     { path: "/admins", element: <AdminsPage /> },
     { path: "/orders", element: <OrdersPage /> },
     { path: "/maintenances", element: <MaintenancesPage /> },
+    { path: "/password", element: <PasswordPage /> },
     { path: "/add-admin", element: <AddAdminPage /> },
     { path: "/add-product", element: <AddProductPage /> },
     { path: "/add-category", element: <AddCategoryPage /> },
@@ -76,9 +91,12 @@ function App() {
 
   const loginRoutes = [{ path: "*", element: <LoginPage /> }];
 
-  const router = createBrowserRouter(StorageManager.hasToken() ? routes : loginRoutes, {
-    basename: "/alardh-alsalba"
-  });
+  const router = createBrowserRouter(
+    StorageManager.hasToken() ? routes : loginRoutes,
+    {
+      basename: "/alardh-alsalba",
+    }
+  );
 
   // mui theme
   const theme = createTheme({
@@ -92,7 +110,7 @@ function App() {
     },
     typography: {
       fontFamily: "roboto",
-    }
+    },
   });
 
   // render

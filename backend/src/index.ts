@@ -14,7 +14,7 @@ import resolvers from "./schema/resolvers.js";
 import { avatarMulter, categoriesMulter, productsMulter, uploadMiddleware } from "./uploader.js";
 
 // prisma client
-const prismaClient = new PrismaClient({ log: ["query"] , errorFormat: "minimal"});
+const prismaClient = new PrismaClient({ errorFormat: "minimal"});
 
 // read configuration
 dotenv.config();

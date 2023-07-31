@@ -67,7 +67,6 @@ const Header: FunctionComponent = () => {
       onClose={handleMenuClose}
       className={styles["context-menu"]}
     >
-      <MenuItem>Profile</MenuItem>
       <MenuItem><Link to="/password">Change Password</Link></MenuItem>
       <Divider />
       <MenuItem><Link to="/login">Logout</Link></MenuItem>

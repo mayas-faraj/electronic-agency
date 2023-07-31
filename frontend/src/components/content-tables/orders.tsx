@@ -64,7 +64,7 @@ const Orders: FunctionComponent = () => {
                     image: <img src={data["site-url"] + order.product?.image} alt={order.product?.name} />,
                     product: order.product?.name + '\n' + order.product?.model,
                     count: order.count,
-                    totalPrice: order.isOfferRequest ? <span></span> : order.totalPrice,
+                    totalPrice: order.isOfferRequest ? "Offer Request" : order.totalPrice,
                     view: <Button variant="text" color="info" onClick={() => setOpenId(order.id)}>{order.isRead ? <Drafts /> : <Email />}</Button>,
                     status: order.status,
                     delete: <Management onUpdate={() => action()} type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteOrder(id: ${order.id})  {id}}`} />

@@ -4,7 +4,7 @@ import Admins from "../components/content-tables/admins";
 
 const AdminsPage = () => {
   return (
-    <Page title="System Admin">
+    <Page title="System Backend User">
         <Admins />
     </Page>
   )

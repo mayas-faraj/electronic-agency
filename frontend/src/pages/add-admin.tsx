@@ -4,7 +4,7 @@ import Admin from "../components/content-forms/admin";
 
 const AddAdminPage = () => {
   return (
-    <Page title="Add New Admin">
+    <Page title="Add New Backend User">
         <Admin />
     </Page>
   )

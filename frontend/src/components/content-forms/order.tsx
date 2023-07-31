@@ -103,7 +103,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
             <div className="row-flex">
                 <Button variant="contained" color="primary" onClick={() => setViewProduct(true)}><LocalOffer /> Product Info</Button>
                 <Button variant="contained" color="primary" onClick={() => setViewClient(true)}><PermContactCalendar /> User Info</Button>
-                <Button variant="contained" color="primary" onClick={() => setViewOffer(true)}><WorkspacePremium />{info.offerId === 0 ? "Create" : "Update"} Offer</Button>
+                <Button variant="contained" color="primary" onClick={() => setViewOffer(true)} disabled={!info.isOfferRequest}><WorkspacePremium />{info.offerId === 0 ? "Create" : "Update"} Offer</Button>
                 {info.email !== "" && <Button variant="contained" color="primary" href={`mailto:${info.email}?subject=Offer for you from Alardh-Alsalba&body=We create a special offer for you`}><Send /> Send Email</Button>}
             </div>
             <Modal open={viewClient} onClose={() => setViewClient(false)} >

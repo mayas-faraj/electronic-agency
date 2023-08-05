@@ -11,7 +11,7 @@ import { type AppContext, getUserFromJwt } from "./auth.js";
 import { clientFormatError } from "./error.js";
 import typeDefs from "./schema/type-defs.js";
 import resolvers from "./schema/resolvers.js";
-import { avatarMulter, categoriesMulter, productsMulter, uploadMiddleware } from "./uploader.js";
+import { avatarMulter, categoriesMulter, productsMulter, specificationsMulter, uploadMiddleware } from "./uploader.js";
 
 // prisma client
 const prismaClient = new PrismaClient({ errorFormat: "minimal"});
@@ -57,6 +57,7 @@ app.use("/uploads", express.static('uploads'));
 app.post("/uploads-avatar", cors({ origin: "*" }), uploadMiddleware(avatarMulter));
 app.post("/upload-category", cors({ origin: "*" }), uploadMiddleware(categoriesMulter));
 app.post("/upload-product", cors({ origin: "*" }), uploadMiddleware(productsMulter));
+app.post("/upload-specification", cors({ origin: "*" }), uploadMiddleware(specificationsMulter));
 
 // server has been started
 await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));

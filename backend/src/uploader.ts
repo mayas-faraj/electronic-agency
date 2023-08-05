@@ -34,6 +34,7 @@ const getMulter = (dirName: string, fileName: string) => {
 export const avatarMulter = getMulter("avatars", "av").single("avatar");
 export const categoriesMulter = getMulter("categories", "c").single("category");
 export const productsMulter = getMulter("products", "p").single("product");
+export const specificationsMulter = getMulter("specifications", "s").single("specification");
 
 export const uploadMiddleware = (multerUpload: RequestHandler) => {
   return (req: Request, res: Response) => {

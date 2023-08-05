@@ -15,6 +15,7 @@ const initialInfo = {
     descriptionTranslated: "",
     specification: "",
     specificationTranslated: "",
+    specificationImage: "",
     price: "",
     catalogFile: "",
     isDisabled: false
@@ -38,13 +39,13 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
 
     // process form type (create or update)
     const productCommand = id === undefined ?
-        `mutation { createProduct(input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.replaceAll("\n", "\\n")}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", price: ${info.price !== "" ? info.price : null}, catalogFile: "${info.catalogFile}"}) { id name model } }` :
-        `mutation { updateProduct(id: ${id}, input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.trim()}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", price: ${info.price !== "" ? info.price : null}, catalogFile: "${info.catalogFile}", isDisabled: ${info.isDisabled}}) { id name model } }`;
+        `mutation { createProduct(input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.replaceAll("\n", "\\n")}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", specificationImage: "${info.specificationImage}", price: ${info.price !== "" ? info.price : null}, catalogFile: "${info.catalogFile}"}) { id name model } }` :
+        `mutation { updateProduct(id: ${id}, input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.trim()}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", specificationImage: "${info.specificationImage}", price: ${info.price !== "" ? info.price : null}, catalogFile: "${info.catalogFile}", isDisabled: ${info.isDisabled}}) { id name model } }`;
 
     // load data function
     const action = async () => {
         if (id !== undefined) {
-            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated catalogFile price isDisabled} }`);
+            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage catalogFile price isDisabled} }`);
             dispatch({ type: "set", key: "name", value: result.data.product.name });
             dispatch({ type: "set", key: "nameTranslated", value: result.data.product.nameTranslated });
             dispatch({ type: "set", key: "categoryId", value: result.data.product.subCategory.categoryId });
@@ -55,6 +56,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "descriptionTranslated", value: result.data.product.descriptionTranslated });
             dispatch({ type: "set", key: "specification", value: result.data.product.specification });
             dispatch({ type: "set", key: "specificationTranslated", value: result.data.product.specificationTranslated });
+            dispatch({ type: "set", key: "specificationImage", value: result.data.product.specificationImage });
             dispatch({ type: "set", key: "price", value: result.data.product.price });
             dispatch({ type: "set", key: "catalogFile", value: result.data.product.catalogFile });
             dispatch({ type: "set", key: "isDisabled", value: result.data.product.isDisabled });
@@ -69,6 +71,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "descriptionTranslated", value: initialInfo.descriptionTranslated });
             dispatch({ type: "set", key: "specification", value: initialInfo.specification });
             dispatch({ type: "set", key: "specificationTranslated", value: initialInfo.specificationTranslated });
+            dispatch({ type: "set", key: "specificationImage", value: initialInfo.specificationImage });
             dispatch({ type: "set", key: "price", value: initialInfo.price });
             dispatch({ type: "set", key: "catalogFile", value: initialInfo.catalogFile });
             dispatch({ type: "set", key: "isDisabled", value: initialInfo.isDisabled });
@@ -89,7 +92,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     React.useEffect(() => {
         // in edit, load product data
         const loadProduct = async () => {
-            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated price catalogFile isDisabled} }`);
+            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage price catalogFile isDisabled} }`);
             dispatch({ type: "set", key: "categoryId", value: result.data.product.subCategory.categoryId });
             dispatch({ type: "set", key: "subCategoryId", value: result.data.product.subCategory.id });
             dispatch({ type: "set", key: "name", value: result.data.product.name });
@@ -100,6 +103,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "descriptionTranslated", value: result.data.product.descriptionTranslated });
             dispatch({ type: "set", key: "specification", value: result.data.product.specification });
             dispatch({ type: "set", key: "specificationTranslated", value: result.data.product.specificationTranslated });
+            dispatch({ type: "set", key: "specificationImage", value: result.data.product.specificationImage });
             dispatch({ type: "set", key: "price", value: result.data.product.price });
             dispatch({ type: "set", key: "catalogFile", value: result.data.product.catalogFile });
             dispatch({ type: "set", key: "isDisabled", value: result.data.product.isDisabled });
@@ -130,7 +134,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     return (
         <ContentForm id={id} name="product" title="Create new product" command={productCommand} commandDisabled={info.name === "" || info.nameTranslated === "" || info.model === "" || info.subCategoryId === 0} onUpdate={() => action()}>
             <div className="column-double">
-                <ImageUpload uploadUrl="/upload-product" formName="product" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} />
+                <ImageUpload name="image" uploadUrl="/upload-product" formName="product" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} />
                 <div>
                     <FormControl fullWidth margin="normal">
                         <TextField variant="outlined" label="Product name" value={info.name} onChange={e => dispatch({ type: "set", key: "name", value: e.target.value })} />
@@ -180,7 +184,10 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             <FormControl fullWidth margin="normal">
                 <TextField variant="outlined" multiline={true} rows={5} label="Specification (Arabic)" value={info.specificationTranslated != null ? info.specificationTranslated : ""} onChange={e => dispatch({ type: "set", key: "specificationTranslated", value: e.target.value })} />
             </FormControl>
-            <FormControl fullWidth margin="normal">
+            <div className="column-double">
+                <ImageUpload name="specificationImage" uploadUrl="/upload-specification" formName="specification" value={info.specificationImage as string} onChange={url => dispatch({ type: "set", key: "specificationImage", value: url })} />
+                <div>
+                <FormControl fullWidth margin="normal">
                 <TextField variant="outlined" label="Catalog URL" value={info.catalogFile != null ? info.catalogFile : ""} onChange={e => dispatch({ type: "set", key: "catalogFile", value: e.target.value })} />
             </FormControl>
             {id !== undefined && (
@@ -188,6 +195,8 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
                     <Switch onChange={(e) => dispatch({ type: "set", key: "isDisabled", value: e.target.checked })} checked={info.isDisabled as boolean} />
                 </FormControl>
             )}
+                </div>
+            </div>
         </ContentForm>
     )
 }

@@ -1,12 +1,15 @@
 # Air Condition System
+
 > air condition is using graphql for api, the graphql is post request that contains json data, the json data always contain data object that contains the operation name and inside it the data if exists, and it maybe container errors object if there are errors during operation.
 
 ## user signup
+
 first stage, we will create a non-verified user with the basic info, the phone is required, the request schema take this shape:
 
 ```bash
 curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createClient(input: {phone: \"0933112233\", email: \"master@nomail.com\", namePrefix: \"Ms.\", firstName: \"Rita\", lastName: \"Yazbek\"}) {id user phone email firstName lastName namePrefix }}"}' http://localhost:4000/graphql | jq
 ```
+
 if the operation success, the result is:
 
 ```json
@@ -28,25 +31,29 @@ if the operation success, the result is:
 if the client already exists (same phone, email) the server return this value
 
 ```json
-{ 
-  "errors": [{ "message": "phone is belong to existing user" } ],
+{
+  "errors": [{ "message": "phone is belong to existing user" }],
   "data": { "createClient": null }
 }
 ```
 
 ```json
-{ 
-  "errors": [{ "message": "email is belong to existing user" } ],
+{
+  "errors": [{ "message": "email is belong to existing user" }],
   "data": { "createClient": null }
 }
 ```
 
 ## user profile
+
 after login, you can use this quest to get the profile info.
+
 ```bash
 curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clientByAuth {id user phone email firstName lastName namePrefix birthDate isMale createdAt }} "}' http://localhost:4000/graphql | jq
 ```
+
 the result for this request is:
+
 ```json
 {
   "data": {
@@ -91,9 +98,11 @@ the result:
   }
 }
 ```
+
 ---
 
 ## user verification code
+
 after create user, the result of the operation contains the id, we will use this id to request the verification code using this request:
 
 ```bash
@@ -114,7 +123,7 @@ for testing purpose, the code is constant, 1988, if the id doesn't belong to any
 
 ```json
 {
-  "errors": [ { "message": "The user is not exists" } ],
+  "errors": [{ "message": "The user is not exists" }],
   "data": { "upsertCode": null }
 }
 ```
@@ -154,7 +163,6 @@ if the phone number that entered not belong to any user, the server return this 
 }
 ```
 
-
 ## verify code
 
 to verify code, we should send the user id and the code the the backend using the request:
@@ -177,6 +185,7 @@ if the user has code the the code is valid, the server retrive this result:
 ```
 
 if ths code is valid, or user id is not exists, the server retrive this result:
+
 ```json
 {
   "data": {
@@ -187,13 +196,15 @@ if ths code is valid, or user id is not exists, the server retrive this result:
   }
 }
 ```
+
 we should use this toke in future request in the header of request :
-Authorization: Bearer <token>
+Authorization: Bearer [token]
 
 ---
-## categories
-each cateroy contains id, name and image, to display all categories, you can use this api:
 
+## categories
+
+each cateroy contains id, name and image, to display all categories, you can use this api:
 
 ```bash
  curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { categories { id name nameTranslated image }}"}' http://localhost:4000/graphql | jq
@@ -222,10 +233,9 @@ each cateroy contains id, name and image, to display all categories, you can use
 
 ---
 
-
 ## sub categories
-each subcateroy contains id, name and image, and then you can find products by subcategory, to display all subcategories by category id as a parent item, you can use this api:
 
+each subcateroy contains id, name and image, and then you can find products by subcategory, to display all subcategories by category id as a parent item, you can use this api:
 
 ```bash
  curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { subCategories(categoryId: 2) { id name nameTranslated image }}"}' http://localhost:4000/graphql | jq
@@ -321,6 +331,7 @@ each subcateroy contains id, name and image, and then you can find products by s
 ---
 
 ## products
+
 to display all product of subcategory, we should use this graphql request:
 
 ```bash
@@ -455,6 +466,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { products
   }
 }
 ```
+
 the price is optional field, if there is no price, this item is only to get by offer request.
 you can use filter parameters to select special set of products, the full list of filters displayed in this api:
 
@@ -469,7 +481,7 @@ keyword is used to search within the name, model or description in primary and s
   "data": {
     "products": [
       {
-       "id": 236,
+        "id": 236,
         "name": "General",
         "nameTranslated": "جنرال",
         "model": "ET010N1970",
@@ -488,6 +500,7 @@ to use pagination, first we should get initial set of data using the same prviou
 ```bash
 curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { products(subCategoryId: 1, pagination: {take: 3}, filter: {fromDate: \"2023-5-1\", toDate: \"2023-7-10\", keyword: \"طن\"}) { id name nameTranslated model image description descriptionTranslated price }}"}' http://localhost:4000/graphql | jq
 ```
+
 the previous example contains the filter data, it is optional and the schema is valid if it was omitted.
 the result is an array of product and the counts is equal to take args:
 
@@ -529,12 +542,15 @@ the result is an array of product and the counts is equal to take args:
   }
 }
 ```
+
 then we will include the last id value (234 in this case) with the next request by this schema:
+
 ```bash
 curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { products(subCategoryId: 1, pagination: {take: 3, id: 234}, filter: {fromDate: \"2023-5-1\", toDate: \"2023-5-10\", keyword: \"Gen\"}) { id name model image description price }}"}' http://localhost:4000/graphql | jq
 ```
 
 and the server will return the next 3 items (3 is the value of take):
+
 ```json
 {
   "data": {
@@ -568,10 +584,11 @@ and the server will return the next 3 items (3 is the value of take):
 to display a full information of a product, we should use this schema:
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(id: 1) { id name nameTranslated model image description descriptionTranslated specification specificationTranslated price createdAt subCategory {name }  catalogFile }}"}' http://localhost:4000/graphql | jq
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { product(id: 1) { id name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage price createdAt subCategory {name }  catalogFile }}"}' http://localhost:4000/graphql | jq
 ```
 
 the result json like this:
+
 ```json
 {
   "data": {
@@ -585,6 +602,7 @@ the result json like this:
       "descriptionTranslated": "سبليت كري السقفي، 8 اتجاهات، انفيرتر، تبريد وتدفئة، غاز 410a، السعة: 1.5 طن",
       "specification": "\nCapacity\tCooling\tKW\t1.6 - 5.5\nHeating\tKW\t1.5 - 6\nEER/C.O.P\t\tW/W\t3.39/3.62\nPower Supply\t\tPh,V,Hz\t1Ph, 220 - 240, 50Hz\nPower Input\tCooling \tKW\t0.3-2\nHeating\tKW\t0.3-2\nCurrent\tCooling \tA\t1.4-9\nHeating\tA\t1.4-9\n\nIndoor Unit\t\t\t\nAir Flow Volume\tIndoor\t\t580/480/400\nSound Pressure Level\tIndoor\tdB (A)\t39/35/31\nOutline Dimension\tW*H*D\tmm\t570*265*570\n\nPanel\t\t\t\nDimension\tW*H*D\tmm\t620*47.5*620\nCode\t\t\tTF05\n\nOutdoor Unit\t\t\t\nOutline Dimension\tOutdoor\tmm\t818*596*302\nFan\t\t\tSingle\nConnection Pipe\t\t\t\nPipe Diameter\tGas\tInch\t1/4''\nLiquid\tInch\t1/2''\nMax. Distance\tHeight/ Length\tm\t15/20\n    ",
       "specificationTranslated": "\nالسعة\tتبريد\tKW\t1.6 - 5.5\nتدفئة\tKW\t1.5 - 6\nEER/C.O.P معامل كفاءة الطاقة\t\tW/W\t3.39/3.62\nمصدر الطاقة\t\tPh,V,Hz\t1Ph, 220 - 240, 50Hz\nاستهلاك الكهرباء\tتبريد\tKW\t0.3-2\nتدفئة\tKW\t0.3-2\nالأمبيرية\tتبريد\tA\t1.4-9\nتدفئة\tA\t1.4-9\n\nالوحدة الداخلية\t\t\t\nتدفق الهواء\tالوحدة الداخلية\t\t580/480/400\nمستوى الصوت\tالوحدة الداخلية\tdB (A)\t39/35/31\nقياس الجهاز\tW*H*D\tmm\t570*265*570\n\nلوحة الجهاز\t\t\t\nقياس الجهاز\tW*H*D\tmm\t620*47.5*620\nالكود\t\t\tTF05\n\nالوحدة الخارجية\t\t\t\nقياس الجهاز\tالوحدة الخارجية\tmm\t818*596*302\nالمروحة\t\t\tSingle\nتوصيلات الأنابيب\t\t\t\nقطر الأنابيب\tسائل\tInch\t1/4''\nغاز\tInch\t1/2''\nالمسافة القصوى\tالارتفاع  الطول\tm\t15/20\n    ",
+      "specificationImage": "/uploads/specifications/e1.jpg",
       "price": 1100,
       "createdAt": "1686523830339",
       "subCategory": {
@@ -594,7 +612,6 @@ the result json like this:
     }
   }
 }
-
 ```
 
 the user can search for products by serial number to add them, this graphql query is used for searching
@@ -623,7 +640,6 @@ if the serial number was already exists in the database, the server returns the 
     }
   }
 }
-
 ```
 
 the createdAt field that returned from result is the date of created this serial number to system, you can omit it from the request schema.
@@ -636,17 +652,20 @@ if the serial number that entered is not related to any product, the server will
   }
 }
 ```
+
 ---
 
 ## product item
+
 user can add products items by serial number, the system detect the loged-in user automatically by authorization token and the product id, so you should only send the serial number to add the product.
 
 ```bash
  curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createProductItemOnClientByAuth(sn: \"241784197\")  {clientId productSn createdAt}}"}' http://localhost:4000/graphql | jq
- ```
+```
 
 if the operation success, the server return this result
-```json
+
+````json
 {
   "data": {
     "createProductItemOnClientByAuth": {
@@ -665,12 +684,13 @@ if you add the item before, the system will display this error
   "data": {
     "createProductItemOnClientByAuth": null
   }
-```
+````
+
 if the serial number not found, the server is return this message:
 
 ```json
 {
-  "errors": [ { "message": "Product serial number is not found" }],
+  "errors": [{ "message": "Product serial number is not found" }],
   "data": { "createProductItemOnClientByAuth": null }
 }
 ```
@@ -719,6 +739,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { delet
 ```
 
 if the operation success, the server returns info about deleted item:
+
 ```json
 {
   "data": {
@@ -734,8 +755,11 @@ you can't delete item that related with maintenance issue, so ther server will r
 
 ```json
 {
-  "errors": [ {
-      "message": "Cann't delete this item becuase it is related to other data, delete the related data first" } ],
+  "errors": [
+    {
+      "message": "Cann't delete this item becuase it is related to other data, delete the related data first"
+    }
+  ],
   "data": {
     "deleteProductItemOnClientByAuth": null
   }
@@ -743,6 +767,7 @@ you can't delete item that related with maintenance issue, so ther server will r
 ```
 
 ## orders
+
 after login, you can check your orders using this schema:
 
 ```bash
@@ -780,7 +805,7 @@ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { ordersBy
 the result is same response of previous query.
 if you don't have any order yet, the system will return empty set:
 
-```json
+````json
 {
   "data": {
     "ordersByAuth": []
@@ -790,12 +815,13 @@ if you don't have any order yet, the system will return empty set:
 to create new order, you can use this api:
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOrderByAuth(input: {productId: 5, count: 5, totalPrice: 500, isOfferRequest: true, address: \"edge of word\", note: \"no note\"}) {id count totalPrice status createdAt  }}"}' http://localhost:4000/graphql | jq 
-```
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOrderByAuth(input: {productId: 5, count: 5, totalPrice: 500, isOfferRequest: true, address: \"edge of word\", note: \"no note\"}) {id count totalPrice status createdAt  }}"}' http://localhost:4000/graphql | jq
+````
+
 the values of isOfferRequest means the user wants offer, else user is just creating an order.
 if the operation success, the server returns this object
 
-```json
+````json
 
   "data": {
     "createOrderByAuth": {
@@ -812,18 +838,18 @@ to save the order as a draft, we will just use isDraft parameter, the query shou
 
 ```bash
 curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createOrderByAuth(input: {isDraft: true, productId: 5, count: 5, totalPrice: 500, address: \"edge of word\", note: \"no note\"}) {id count totalPrice status createdAt  }}"}' http://localhost:4000/graphql | jq
-```
+````
 
 and the result is the same of previous result to create normal order.
 
-```
 to delete te order, we will use the id of the order within this schema:
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteOrderByAuth(id: 11) { count  }}"}' http://localhost:4000/graphql | jq 
-```
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { deleteOrderByAuth(id: 11) { count  }}"}' http://localhost:4000/graphql | jq
+````
 
 if the operation is succes, the server return this object:
+
 ```json
 {
   "data": {
@@ -837,15 +863,17 @@ if the operation is succes, the server return this object:
 if the id not exists, or you don't have permission to delete the order, the result object is:
 
 {
-  "data": {
-    "deleteOrderByAuth": {
-      "count": 0
-    }
-  }
+"data": {
+"deleteOrderByAuth": {
+"count": 0
 }
+}
+}
+
 ---
 
 ## maintenance
+
 to display your maintanance request, you can use this graphql schema:
 
 ```bash
@@ -877,6 +905,7 @@ the result is an array of your historical maintenance reqests and status of each
   }
 }
 ```
+
 if you didn't have any maintenance request, the system will return an empty array:
 
 ```json
@@ -890,10 +919,11 @@ if you didn't have any maintenance request, the system will return an empty arra
 to schedule new maintenance request, you should use this schema:
 
 ```bash
-curl -H 'Content-Type: application/json' -X  POST -d '{"query": "mutation { createMaintenance(input: {productSn: \"241784196\", description: \"extra heat\", propertyType: \"HOME\", address: \"Muhajreen - Damascus\", bookedAt: \"2023-6-22\"}) {id address status propertyType bookedAt productItem {sn} }}"}' http://localhost:4000/graphql | jq 
+curl -H 'Content-Type: application/json' -X  POST -d '{"query": "mutation { createMaintenance(input: {productSn: \"241784196\", description: \"extra heat\", propertyType: \"HOME\", address: \"Muhajreen - Damascus\", bookedAt: \"2023-6-22\"}) {id address status propertyType bookedAt productItem {sn} }}"}' http://localhost:4000/graphql | jq
 ```
 
 and if the operation success, the server returns this object:
+
 ```json
 {
   "data": {
@@ -941,4 +971,3 @@ and if the operation succss:
   }
 }
 ```
-

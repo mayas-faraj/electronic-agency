@@ -31,6 +31,7 @@ const typeDefs = `#graphql
 		descriptionTranslated: String
 		specification: String
 		specificationTranslated: String
+		specificationImage: String
 		catalogFile: String
 		price: Float
 		isDisabled: Boolean
@@ -51,6 +52,7 @@ const typeDefs = `#graphql
 		descriptionTranslated: String
 		specification: String
 		specificationTranslated: String
+		specificationImage: String
 		catalogFile: String,
 		price: Float
 		isDisabled: Boolean
@@ -66,6 +68,7 @@ const typeDefs = `#graphql
 		descriptionTranslated: String
 		specification: String
 		specificationTranslated: String
+		specificationImage: String
 		catalogFile: String
 		price: Float
 	}
@@ -80,6 +83,7 @@ const typeDefs = `#graphql
 		descriptionTranslated: String
 		specification: String
 		specificationTranslated: String
+		specificationImage: String
 		catalogFile: String
 		price: Float
 		isDisabled: Boolean

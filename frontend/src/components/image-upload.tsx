@@ -9,10 +9,11 @@ interface IImageUploadProps {
     uploadUrl: string
     formName: string
     value: string
+    name?: string
     onChange: (url: string) => void
 }
 
-const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName, value, onChange }) => {
+const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName, value, name, onChange }) => {
     const [imageSrc, setImageSrc] = React.useState<string>(value);
     const [isUpload, setIsUpload] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -50,9 +51,9 @@ const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName
 
     return (
         <div className={styles.wrapper}>
-            <img className="side-image side-image--product" src={imageSrc ? data["site-url"] + imageSrc : ""} alt="product" />
-            <input id="file-upload" accept="image/*" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
-            <label htmlFor="file-upload" className="button button--large">Upload {isUpload && <HourglassBottom />}</label>
+            <img className="side-image side-image--product" src={imageSrc ? data["site-url"] + imageSrc : ""} alt={`${formName} is empty`} />
+            <input id={name ?? "file-upload"} accept="image/png, image/jpeg" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
+            <label htmlFor={name ?? "file-upload"} className="button button--large">Upload {isUpload && <HourglassBottom />}</label>
             <Snackbar open={errorMessage !== ""} onClose={() => { setErrorMessage("") }} autoHideDuration={6000}>
                 <Alert severity="error">{errorMessage}</Alert>
             </Snackbar>

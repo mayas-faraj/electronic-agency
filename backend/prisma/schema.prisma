@@ -13,7 +13,8 @@ datasource db {
 // name, phone 40
 // sn, email, password 50
 // link 400
-// address, note, comment, description  500
+// address, note, comment 500
+// description  1500
 
 model Client {
   id          Int                     @id @default(autoincrement())
@@ -101,8 +102,8 @@ model Product {
   nameTranslated          String          @map("name_translated") @db.VarChar(40)
   model                   String?         @db.VarChar(40)
   image                   String?         @db.VarChar(400)
-  description             String?         @db.VarChar(500)
-  descriptionTranslated   String?         @map("description_translated") @db.VarChar(500)
+  description             String?         @db.VarChar(1500)
+  descriptionTranslated   String?         @map("description_translated") @db.VarChar(1500)
   specification           String?         @db.LongText
   specificationTranslated String?         @map("specification_translated") @db.LongText
   specificationImage      String?         @db.VarChar(400)

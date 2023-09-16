@@ -23,5 +23,5 @@ export const clientFormatError = ((formattedError: GraphQLFormattedError, error:
     else if (msg.includes("update()")) resultMsg = 'error while saving data';
     else if (msg.includes("upsert()")) resultMsg = 'error while manipulating data';
     if (resultMsg == "") resultMsg = formattedError.message;
-    return { message: resultMsg + " : " + formattedError.message  };
+    return { message: resultMsg  };
   })

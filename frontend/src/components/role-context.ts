@@ -11,6 +11,8 @@ export interface Privileges {
   writeProduct: boolean;
   readProductItem: boolean;
   writeProductItem: boolean;
+  readAdvertisement: boolean;
+  writeAdvertisement: boolean;
   readOrder: boolean;
   writeOrder: boolean;
   readOffer: boolean;
@@ -32,6 +34,8 @@ export const noPrivileges: Privileges = {
   writeProduct: false,
   readProductItem: false,
   writeProductItem: false,
+  readAdvertisement: false,
+  writeAdvertisement: false,
   readOrder: false,
   writeOrder: false,
   readOffer: false,
@@ -58,6 +62,8 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeProduct: true,
         readProductItem: true,
         writeProductItem: true,
+        readAdvertisement: true,
+        writeAdvertisement: true,
         readOrder: true,
         writeOrder: true,
         readOffer: true,
@@ -79,6 +85,8 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeProduct: true,
         readProductItem: true,
         writeProductItem: true,
+        readAdvertisement: false,
+        writeAdvertisement: false,
         readOrder: false,
         writeOrder: false,
         readOffer: false,
@@ -100,6 +108,8 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeProduct: false,
         readProductItem: true,
         writeProductItem: false,
+        readAdvertisement: true,
+        writeAdvertisement: true,
         readOrder: true,
         writeOrder: true,
         readOffer: true,
@@ -121,6 +131,8 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeProduct: false,
         readProductItem: true,
         writeProductItem: false,
+        readAdvertisement: false,
+        writeAdvertisement: false,
         readOrder: false,
         writeOrder: false,
         readOffer: false,

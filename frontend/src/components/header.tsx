@@ -10,7 +10,7 @@ import logoImage from "../assets/imgs/logo.png";
 import RoleContext from "./role-context";
 import { Divider, IconButton } from "@mui/material";
 import styles from "../styles/header.module.scss";
-import { AccountCircle, AdminPanelSettings, Category, ListAlt, RoomPreferences, Redeem } from "@mui/icons-material";
+import { AccountCircle, AdminPanelSettings, Category, ListAlt, RoomPreferences, Redeem, BurstModeRounded } from "@mui/icons-material";
 
 const Header: FunctionComponent = () => {
   // privileges
@@ -35,6 +35,7 @@ const Header: FunctionComponent = () => {
   if (privileges.readClient) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
   if (privileges.readCategory) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
   if (privileges.readProduct) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
+  if (privileges.readAdvertisement) links.push({ title: "Advertisements", to: "/advertisements", icon: <BurstModeRounded /> });
   if (privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
   if (privileges.readMaintenance) links.push({ title: "Maintenances", to: "/maintenances", icon: <RoomPreferences /> });
 

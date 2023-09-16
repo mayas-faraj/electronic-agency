@@ -31,7 +31,7 @@ const apolloServer = new ApolloServer<AppContext>({
   resolvers,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   introspection: isDevelopment,
-  formatError: !isDevelopment ? clientFormatError : undefined
+  formatError: true || isDevelopment ? clientFormatError : undefined
 });
 
 // start apollo server

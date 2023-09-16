@@ -40,6 +40,15 @@ model Client {
   @@map("client")
 }
 
+model Advertisement {
+  id         Int      @id @default(autoincrement())
+  imageUrl   String   @map("image_url") @db.VarChar(400)
+  imageOrder Int      @default(0) @map("image_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("advertisment")
+}
+
 model Code {
   clientId  Int      @id
   text      String?  @db.Char(4)

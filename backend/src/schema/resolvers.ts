@@ -4,7 +4,7 @@ import categoryResolvers from "./category/resolvers.js";
 import productResolvers from "./product/resolvers.js";
 import orderResolvers from "./order/resolvers.js";
 import maintenanceResolvers from "./maintenance/resolvers.js";
-
+import advertisementResolvers from "./advertisment/resolver.js";
 
 export default {
   Query: {
@@ -14,6 +14,7 @@ export default {
     ...productResolvers.Query,
     ...orderResolvers.Query,
     ...maintenanceResolvers.Query,
+    ...advertisementResolvers.Query,
   },
   Mutation: {
     ...adminResolvers.Mutation,
@@ -22,5 +23,6 @@ export default {
     ...productResolvers.Mutation,
     ...orderResolvers.Mutation,
     ...maintenanceResolvers.Mutation,
+    ...advertisementResolvers.Mutation,
   },
 };

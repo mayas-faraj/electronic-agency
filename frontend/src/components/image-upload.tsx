@@ -3,6 +3,7 @@ import data from "./../data.json";
 import styles from "../styles/image-upload.module.scss";
 import { HourglassBottom } from "@mui/icons-material";
 import { Alert, Snackbar } from "@mui/material";
+import emptyImage from "../assets/imgs/empty.png";
 
 // type defintion
 interface IImageUploadProps {
@@ -51,7 +52,7 @@ const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName
 
     return (
         <div className={styles.wrapper}>
-            <img className="side-image side-image--product" src={imageSrc ? data["site-url"] + imageSrc : ""} alt={`${formName} is empty`} />
+            <img className="side-image side-image--product" src={imageSrc ? data["site-url"] + imageSrc : emptyImage} alt={`${formName} is empty`} />
             <input id={name ?? "file-upload"} accept="image/png, image/jpeg" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
             <label htmlFor={name ?? "file-upload"} className="button button--large">Upload {isUpload && <HourglassBottom />}</label>
             <Snackbar open={errorMessage !== ""} onClose={() => { setErrorMessage("") }} autoHideDuration={6000}>

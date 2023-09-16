@@ -52,6 +52,7 @@ function App() {
   const LoginPage = React.lazy(() => import("./pages/login"));
   const HomePage = React.lazy(() => import("./pages/home"));
   const ProductsPage = React.lazy(() => import("./pages/products"));
+  const AdvertisementsPage = React.lazy(() => import("./pages/advertisements"));
   const CategoriessPage = React.lazy(() => import("./pages/categories"));
   const SubCategoriesPage = React.lazy(() => import("./pages/sub-categories"));
   const ClientsPage = React.lazy(() => import("./pages/clients"));
@@ -75,6 +76,7 @@ function App() {
     },
     { path: "/login", element: <LoginPage /> },
     { path: "/products", element: <ProductsPage /> },
+    { path: "/advertisements", element: <AdvertisementsPage /> },
     { path: "/categories", element: <CategoriessPage /> },
     { path: "/sub-categories/:categoryid", element: <SubCategoriesPage /> },
     { path: "/clients", element: <ClientsPage /> },
@@ -86,6 +88,7 @@ function App() {
     { path: "/add-product", element: <AddProductPage /> },
     { path: "/add-category", element: <AddCategoryPage /> },
     { path: "/add-sub-category/:categoryid", element: <AddSubCategoryPage /> },
+
     { path: "*", element: <NotFoundPage /> },
   ];
 

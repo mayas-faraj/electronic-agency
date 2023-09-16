@@ -328,6 +328,35 @@ each subcateroy contains id, name and image, and then you can find products by s
 }
 ```
 
+## Ads
+
+each cateroy contains id, name and image, to display all categories, you can use this api:
+
+```bash
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { advertisements { id imageUrl }}"}' http://localhost:4000/graphql | jq
+```
+
+```json
+{
+  "data": {
+    "advertisements": [
+      {
+        "id": 1,
+        "imageUrl": "/uploads/imgs/slider1.jpg"
+      },
+      {
+        "id": 2,
+        "imageUrl": "/uploads/imgs/slider2.jpg"
+      },
+      {
+        "id": 3,
+        "imageUrl": "/uploads/imgs/slider3.jpg"
+      }
+    ]
+  }
+}
+```
+
 ---
 
 ## products

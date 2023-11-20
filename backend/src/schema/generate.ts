@@ -1,5 +1,5 @@
 export const generateVerificationCode = () => {
-    return '1988';
+    Math.floor(Math.random() * 10000).toString().padStart(4, "0");
 }
 
 export const generateName = (email: string, firstName: string, lastName: string) => {

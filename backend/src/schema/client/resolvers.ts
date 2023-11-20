@@ -7,6 +7,7 @@ import {
 } from "../../auth.js";
 import filter from "../filter.js";
 import { generateName, generateVerificationCode } from "../generate.js";
+import { sendSms } from "../../sms.js";
 
 const resolvers = {
   Query: {
@@ -301,6 +302,8 @@ const resolvers = {
       // generate code text
       const codeText = generateVerificationCode();
 
+      // send sms
+      await sendSms(args.phone, codeText, (result) => console.log("smsresult: ", result));
       // get client id
       const client = await app.prismaClient.client.findUnique({
         where: {

@@ -14,7 +14,7 @@ interface Order {
     count: string
     totalPrice: string
     status: string
-    createdAt: Date
+    createdAt: string
     isOfferRequest: boolean
     isRead: boolean
     product?: {
@@ -38,6 +38,7 @@ const Orders: FunctionComponent = () => {
         { key: "image", title: "Product Image", isSpecialType: true },
         { key: "product", title: "Product" },
         { key: "count", title: "Count" },
+        { key: "createdAt", title: "Order Date" },
         { key: "totalPrice", title: "Total price" },
         { key: "view", title: "Open", isSpecialType: true },
         { key: "status", title: "Status" },
@@ -64,6 +65,7 @@ const Orders: FunctionComponent = () => {
                     image: <img src={data["site-url"] + order.product?.image} alt={order.product?.name} />,
                     product: order.product?.name + '\n' + order.product?.model,
                     count: order.count,
+                    createdAt: new Date(parseInt(order.createdAt)).toLocaleString(),
                     totalPrice: order.isOfferRequest ? "Offer Request" : order.totalPrice,
                     view: <Button variant="text" color="info" onClick={() => setOpenId(order.id)}>{order.isRead ? <Drafts /> : <Email />}</Button>,
                     status: order.status,

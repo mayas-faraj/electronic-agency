@@ -1,24 +1,24 @@
 const typeDefs = `#graphql
 	extend type Query {
         products(subCategoryId: Int, pagination: Pagination, filter: SearchFilter): [ProductBasic]
-		productsCount: AggregateResult
-		product(id: Int!): Product
-		productItem(sn: String!): ProductItem
-		productItemsByAuth: [ProductItem]
+				productsCount: AggregateResult
+				product(id: Int!): Product
+				productItem(sn: String!): ProductItem
+				productItemsByAuth: [ProductItem]
     }
 
     extend type Mutation {
         createProduct(input: ProductInput!): ProductBasic
-		updateProduct(id: Int!, input: ProductUpdate!): ProductBasic
-		deleteProduct(id: Int!): ProductBasic
-		createProductItem(productId: Int!, sn: String!): ProductItemBasic
-		updateProductItem(sn: String!, newSn: String!): ProductItemBasic
-		deleteProductItem(sn: String!): ProductItemBasic
-		updateProductItemSold(sn: String!, isSold: Boolean!): ProductItemBasic
-		createProductItemOnClientByAuth(sn: String!): ProductItemOnClient
-		deleteProductItemOnClientByAuth(sn: String!): ProductItemOnClient
-		createProductReviewByAuth(productId: Int!, input: ProductReviewInput!): ProductReviewBasic
-		deleteProductReview(id: Int!): ProductReviewBasic
+				updateProduct(id: Int!, input: ProductUpdate!): ProductBasic
+				deleteProduct(id: Int!): ProductBasic
+				createProductItem(productId: Int!, sn: String!): ProductItemBasic
+				updateProductItem(sn: String!, newSn: String!): ProductItemBasic
+				deleteProductItem(sn: String!): ProductItemBasic
+				updateProductItemSold(sn: String!, isSold: Boolean!): ProductItemBasic
+				createProductItemOnClientByAuth(sn: String!): ProductItemOnClient
+				deleteProductItemOnClientByAuth(sn: String!): ProductItemOnClient
+				createProductReviewByAuth(productId: Int!, input: ProductReviewInput!): ProductReviewBasic
+				deleteProductReview(id: Int!): ProductReviewBasic
     }
 
     type Product {

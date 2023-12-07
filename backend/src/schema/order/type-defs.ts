@@ -1,19 +1,19 @@
 const typeDefs = `#graphql
 	extend type Query {
         orders(filter: StatusFilter): [OrderBasic]
-		order(id: Int!): Order
-		ordersByAuth(isDraft: Boolean): [OrderBasic]
-		ordersCount: AggregateResult
-		ordersUnreadCount: AggregateResult
+				order(id: Int!): Order
+				ordersByAuth(isDraft: Boolean): [OrderBasic]
+				ordersCount: AggregateResult
+				ordersUnreadCount: AggregateResult
     }
 
     extend type Mutation {
         createOrderByAuth(input: OrderInput!): OrderBasic
-		updateOrderStatus(id: Int!, status: String!): OrderBasic
-		deleteOrderByAuth(id: Int!): BatchResult
-		createOfferByAuth(input: OfferInput!): OfferBasic
-		updateOfferByAuth(id: Int!, input: OfferUpdate!): OfferBasic
-		deleteOffer(id: Int!): OfferBasic
+				updateOrderStatus(id: Int!, status: String!): OrderBasic
+				deleteOrderByAuth(id: Int!): BatchResult
+				createOfferByAuth(input: OfferInput!): OfferBasic
+				updateOfferByAuth(id: Int!, input: OfferUpdate!): OfferBasic
+				deleteOffer(id: Int!): OfferBasic
     }
 
     type Order {

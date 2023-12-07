@@ -31,6 +31,9 @@ const resolvers = {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc"
+        },
         where: {
           AND: [
             { isDraft: false },

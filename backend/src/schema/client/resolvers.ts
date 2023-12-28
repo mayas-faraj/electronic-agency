@@ -19,9 +19,12 @@ const resolvers = {
       const result = await app.prismaClient.client.findMany({
         skip: args.pagination?.id != null ? 1 : undefined,
         take: args.pagination?.take,
-        cursor: args.pagination?.id != null ? {
-          id: args.pagination?.id
-        } : undefined,
+        cursor:
+          args.pagination?.id != null
+            ? {
+                id: args.pagination?.id,
+              }
+            : undefined,
         select: {
           id: true,
           user: true,
@@ -39,7 +42,7 @@ const resolvers = {
           AND: [
             {
               isDisabled:
-              args.filter?.showDisabled === true ? undefined : false
+                args.filter?.showDisabled === true ? undefined : false,
             },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
@@ -54,8 +57,8 @@ const resolvers = {
           ],
         },
         orderBy: {
-          id: "desc"
-        }
+          id: "desc",
+        },
       });
 
       return result;
@@ -160,7 +163,7 @@ const resolvers = {
           },
           data: {
             isVerified: true,
-            lastLoginAt: new Date()
+            lastLoginAt: new Date(),
           },
         });
         return {
@@ -278,7 +281,7 @@ const resolvers = {
       // generate code text
       const codeText = generateVerificationCode();
 
-      // return result
+      // save code
       const result = await app.prismaClient.code.upsert({
         where: {
           clientId: args.clientId,
@@ -293,9 +296,20 @@ const resolvers = {
         select: {
           clientId: true,
           createdAt: true,
+          client: {
+            select: {
+              phone: true,
+            },
+          },
         },
       });
 
+      // send sms
+      await sendSms(result.client.phone, codeText, (result) =>
+        console.log("smsresult: ", result)
+      );
+
+      // return result
       return result;
     },
     upsertCodeByPhone: async (parent: any, args: any, app: AppContext) => {
@@ -303,7 +317,9 @@ const resolvers = {
       const codeText = generateVerificationCode();
 
       // send sms
-      await sendSms(args.phone, codeText, (result) => console.log("smsresult: ", result));
+      await sendSms(args.phone, codeText, (result) =>
+        console.log("smsresult: ", result)
+      );
       // get client id
       const client = await app.prismaClient.client.findUnique({
         where: {

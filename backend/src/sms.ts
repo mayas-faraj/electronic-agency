@@ -18,7 +18,7 @@ const sendSms = async (
       "X-Mitto-API-Key": "Rw2er96S6h8tmOGwGtDRyj2e5barmKcH",
     }),
     body: JSON.stringify({
-      from: "spacetech1",
+      from: "ArdhElSalba",
       to: phone,
       text: messageText
     }),

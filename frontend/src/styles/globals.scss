@@ -90,6 +90,10 @@ td {
     gap: 20px;
     height: 55px;
     margin: 15px 0;
+
+    & > * {
+        flex-grow: 1;
+    }
 }
 
 .side-image {

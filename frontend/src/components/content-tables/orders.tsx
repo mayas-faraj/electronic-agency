@@ -10,75 +10,91 @@ import data from "../../data.json";
 
 // types
 interface Order {
-    id: number
-    count: string
-    totalPrice: string
-    status: string
-    createdAt: string
-    isOfferRequest: boolean
-    isRead: boolean
-    product?: {
-        name: string
-        model: string
-        image: string
-    }
+  id: number;
+  count: string;
+  totalPrice: string;
+  status: string;
+  createdAt: string;
+  isOfferRequest: boolean;
+  isRead: boolean;
+  product?: {
+    name: string;
+    model: string;
+    image: string;
+  };
 }
 
 // main component
 const Orders: FunctionComponent = () => {
-    // order state
-    const [orders, setOrders] = React.useState<Order[]>([]);
-    const [openId, setOpenId] = React.useState(0);
+  // order state
+  const [orders, setOrders] = React.useState<Order[]>([]);
+  const [openId, setOpenId] = React.useState(0);
 
-    // context
-    const privileges = React.useContext(RoleContext);
+  // context
+  const privileges = React.useContext(RoleContext);
 
-    // order schema
-    const tableHeader: ITableHeader[] = [
-        { key: "image", title: "Product Image", isSpecialType: true },
-        { key: "product", title: "Product" },
-        { key: "count", title: "Count" },
-        { key: "createdAt", title: "Order Date" },
-        { key: "totalPrice", title: "Total price" },
-        { key: "view", title: "Open", isSpecialType: true },
-        { key: "status", title: "Status" },
-        { key: "delete", title: "Delete", isControlType: true },
-    ];
+  // order schema
+  const tableHeader: ITableHeader[] = [
+    { key: "image", title: "Product Image", isSpecialType: true },
+    { key: "product", title: "Product" },
+    { key: "count", title: "Count" },
+    { key: "createdAt", title: "Order Date" },
+    { key: "totalPrice", title: "Total price" },
+    { key: "view", title: "Open", isSpecialType: true },
+    { key: "status", title: "Status" },
+    { key: "delete", title: "Delete", isControlType: true }
+  ];
 
-    // on load
-    const action = async () => {
-        const result = await getServerData(`query { orders { id count totalPrice isOfferRequest isRead status createdAt product{name image model}}}`)
-        setOrders(result.data.orders);
-    };
+  // on load
+  const action = async () => {
+    const result = await getServerData(`query { orders { id count totalPrice isOfferRequest isRead status createdAt product{name image model}}}`);
+    setOrders(result.data.orders);
+  };
 
+  React.useEffect(() => {
+    action();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    React.useEffect(() => {
-        action();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // render
-    return (
-        <div>
-            <ContentTable name="order" headers={tableHeader} canRead={privileges.readOrder} canWrite={privileges.writeOrder} data={
-                orders.map(order => ({
-                    image: <img src={data["site-url"] + order.product?.image} alt={order.product?.name} />,
-                    product: order.product?.name + '\n' + order.product?.model,
-                    count: order.count,
-                    createdAt: new Date(parseInt(order.createdAt)).toLocaleString(),
-                    totalPrice: order.isOfferRequest ? "Offer Request" : order.totalPrice,
-                    view: <Button variant="text" color="info" onClick={() => setOpenId(order.id)}>{order.isRead ? <Drafts /> : <Email />}</Button>,
-                    status: order.status,
-                    delete: <Management onUpdate={() => action()} type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteOrder(id: ${order.id})  {id}}`} />
-                }))
-            } />
-            <Modal open={openId !== 0} onClose={() => setOpenId(0)} >
-                <div className="modal">
-                    <OrderForm id={openId} onUpdate={action}/>
-                </div>
-            </Modal>
+  // render
+  return (
+    <div>
+      <ContentTable
+        name="order"
+        headers={tableHeader}
+        canRead={privileges.readOrder}
+        canWrite={privileges.writeOrder}
+        addNewLink="/add-order"
+        data={orders.map((order) => ({
+          image: <img src={data["site-url"] + order.product?.image} alt={order.product?.name} />,
+          product: order.product?.name + "\n" + order.product?.model,
+          count: order.count,
+          createdAt: new Date(parseInt(order.createdAt)).toLocaleString(),
+          totalPrice: order.isOfferRequest ? "Offer Request" : order.totalPrice,
+          view: (
+            <Button variant="text" color="info" onClick={() => setOpenId(order.id)}>
+              {order.isRead ? <Drafts /> : <Email />}
+            </Button>
+          ),
+          status: order.status,
+          delete: (
+            <Management
+              onUpdate={() => action()}
+              type={ManagementType.button}
+              hasConfirmModal={true}
+              operation={Operation.delete}
+              command={`mutation { deleteOrder(id: ${order.id})  {id}}`}
+            />
+          )
+        }))}
+      />
+      <Modal open={openId !== 0} onClose={() => setOpenId(0)}>
+        <div className="modal">
+          <OrderForm id={openId} onUpdate={action} />
         </div>
-    );
+      </Modal>
+    </div>
+  );
 };
 
 export default Orders;

@@ -32,7 +32,7 @@ const resolvers = {
           },
         },
         orderBy: {
-          createdAt: "desc"
+          createdAt: "desc",
         },
         where: {
           AND: [
@@ -210,15 +210,33 @@ const resolvers = {
 
       return result;
     },
+    createOrder: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.order.create({
+        data: {
+          clientId: args.clientId,
+          productId: args.input.productId,
+          count: args.input.count,
+          totalPrice: args.input.totalPrice,
+          address: args.input.address,
+          note: args.input.note,
+          isDraft: args.input.isDraft,
+          isOfferRequest: args.input.isOfferRequest,
+          status: "CLOSED"
+        },
+      });
+
+      return result;
+    },
     updateOrderStatus: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.order.update({
         where: {
-          id: args.id
+          id: args.id,
         },
         data: {
-          status: args.status
-        }
+          status: args.status,
+        },
       });
 
       return result;

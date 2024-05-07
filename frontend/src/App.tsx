@@ -54,6 +54,8 @@ function App() {
   const MaintenancesPage = React.lazy(() => import("./pages/maintenances"));
   const PasswordPage = React.lazy(() => import("./pages/password"));
   const AddAdminPage = React.lazy(() => import("./pages/add-admin"));
+  const AddClientPage = React.lazy(() => import("./pages/add-client"));
+  const AddOrderPage = React.lazy(() => import("./pages/add-order"));
   const AddProductPage = React.lazy(() => import("./pages/add-product"));
   const AddCategoryPage = React.lazy(() => import("./pages/add-category"));
   const AddSubCategoryPage = React.lazy(() => import("./pages/add-sub-category"));
@@ -76,7 +78,9 @@ function App() {
     { path: "/maintenances", element: <MaintenancesPage /> },
     { path: "/password", element: <PasswordPage /> },
     { path: "/add-admin", element: <AddAdminPage /> },
+    { path: "/add-client", element: <AddClientPage /> },
     { path: "/add-product", element: <AddProductPage /> },
+    { path: "/add-order", element: <AddOrderPage /> },
     { path: "/add-category", element: <AddCategoryPage /> },
     { path: "/add-sub-category/:categoryid", element: <AddSubCategoryPage /> },
 

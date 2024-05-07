@@ -55,7 +55,7 @@ export const getPrivileges = (role?: Role): Privileges => {
         readAdmin: true,
         writeAdmin: true,
         readClient: true,
-        writeClient: false,
+        writeClient: true,
         readCategory: true,
         writeCategory: true,
         readProduct: true,

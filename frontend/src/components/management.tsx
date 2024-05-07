@@ -27,7 +27,7 @@ interface IManagementProps {
   hasButtonText?: boolean;
   hasConfirmModal?: boolean;
   initialValue?: any;
-  onUpdate?: () => void;
+  onUpdate?: (result: any) => void;
   className?: string;
   isDisabled?: boolean;
   hasButtonClass?: boolean;
@@ -105,7 +105,7 @@ const Management: FunctionComponent<IManagementProps> = ({
       } else {
         setSuccessMessage(`${Operation[operation]} ${name} has been completed successfully.`);
         setModalOpen(false);
-        if (onUpdate != null) onUpdate();
+        if (onUpdate != null) onUpdate(result);
       }
     } else setErrorMessage(commandDisabledMessage != null ? commandDisabledMessage : "Command is disabled");
   };

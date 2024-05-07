@@ -53,7 +53,7 @@ interface IContentForm {
   command: string;
   commandDisabled?: boolean;
   commandDisabledMessage?: string;
-  onUpdate?: () => void;
+  onUpdate?: (result: any) => void;
   children: ReactNode;
 }
 

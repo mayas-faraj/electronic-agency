@@ -1,7 +1,7 @@
 import { GraphQLFormattedError } from "graphql";
 
 export const clientFormatError = ((formattedError: GraphQLFormattedError, error: unknown) => {
-    let resultMsg = 'unknown error';
+    let resultMsg = '';
     const msg = formattedError.message.toLowerCase();
 
     // unique key constainer

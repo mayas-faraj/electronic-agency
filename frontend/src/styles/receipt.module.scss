@@ -1,0 +1,88 @@
+.logo {
+    max-width: 160px;
+    margin-left: 40px;
+}
+
+.title {
+    text-align: center;
+}
+
+.id {
+    text-align: right;
+}
+
+.schemaTable td:nth-child(odd), p, title, .notes {
+    font-weight: bold;
+}
+
+.schemaTable td:nth-child(even) {
+    text-align: right;
+}
+
+.productsTable {
+    border-spacing: 0;
+}
+
+.productsTable td,
+.productsTable th {
+    padding: 8px;
+}
+
+.productsTable th {
+    background-color: #27716d;
+    color: #fff;
+    font-weight: normal;
+}
+
+.productsTable td {
+    border-bottom: 1px solid;
+    text-align: center;
+}
+
+.summary {
+    width: 50%;
+    margin: 50px 0 50px 50%;
+}
+
+.notesTable td,
+.summaryTable td {
+    padding: 10px 5px;
+}
+
+.summaryTable tr:last-child {
+    background-color: grey;
+}
+
+.footer {
+    margin-top: 160px;
+    display: flex;
+    flex-flow: row wrap;
+    color: #27716d;
+    font-size: 0.7rem;
+}
+
+.footerLogo {
+    max-width: 100px;
+    margin: auto;
+    display: flex;
+}
+.footer > * {
+    flex-grow: 1;
+    flex-basis: 100px;
+}
+
+.footer > *:nth-child(1) {
+    text-align: left;
+}
+
+.footer > *:nth-child(2) {
+    text-align: center;
+}
+
+.footer > *:nth-child(3) {
+    text-align: right;
+}
+
+.schemaTable, .productsTable, .summaryTable  {
+    width: 100%;
+}

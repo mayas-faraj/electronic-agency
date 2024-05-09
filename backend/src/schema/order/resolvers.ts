@@ -222,7 +222,7 @@ const resolvers = {
           note: args.input.note,
           isDraft: args.input.isDraft,
           isOfferRequest: args.input.isOfferRequest,
-          status: "CLOSED"
+          status: "CLOSED",
         },
       });
 
@@ -241,9 +241,12 @@ const resolvers = {
 
       return result;
     },
-    deleteOrderByAuth: async (parent: any, args: any, app: AppContext) => {
+    deleteOrder: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      
       // return result
-      const result = await app.prismaClient.order.deleteMany({
+      const result = await app.prismaClient.order.delete({
         where: {
           id: args.id,
         },

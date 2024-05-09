@@ -11,7 +11,7 @@ const typeDefs = `#graphql
         createOrderByAuth(input: OrderInput!): OrderBasic
 		createOrder(clientId: Int!, input: OrderInput!): OrderBasic
 				updateOrderStatus(id: Int!, status: String!): OrderBasic
-				deleteOrderByAuth(id: Int!): BatchResult
+				deleteOrder(id: Int!): OrderBasic
 				createOfferByAuth(input: OfferInput!): OfferBasic
 				updateOfferByAuth(id: Int!, input: OfferUpdate!): OfferBasic
 				deleteOffer(id: Int!): OfferBasic

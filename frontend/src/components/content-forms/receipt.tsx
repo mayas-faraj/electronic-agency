@@ -13,8 +13,8 @@ const initialInfo = {
   phone: "",
   email: "",
   count: 0,
-  totalPrice: 0,
-  validationDays: 0,
+  offerPrice: 0,
+  validationDays: 1,
   address: "",
   note: "",
   productName: "",
@@ -48,7 +48,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadReceipt = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id count totalPrice address note createdAt product { id name model } client { id user phone email } offer { id price validationDays } } }`
+        `query { order(id: ${id}) { id count address note createdAt product { id name model } client { id user phone email } offer { id price validationDays } } }`
       );
 
       dispatch({ type: "set", key: "phone", value: result.data.order.client.phone });
@@ -56,13 +56,12 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
       dispatch({ type: "set", key: "user", value: result.data.order.user });
       dispatch({ type: "set", key: "count", value: result.data.order.count });
       dispatch({ type: "set", key: "createdAt", value: result.data.order.createdAt });
-      dispatch({ type: "set", key: "totalPrice", value: result.data.order.totalPrice });
-      dispatch({ type: "set", key: "validationDays", value: result.data.order.validationDays });
+      dispatch({ type: "set", key: "offerPrice", value: result.data.order.offer.price });
+      dispatch({ type: "set", key: "validationDays", value: result.data.order.offer.validationDays ?? 1});
       dispatch({ type: "set", key: "address", value: result.data.order.address });
       dispatch({ type: "set", key: "note", value: result.data.order.note });
       dispatch({ type: "set", key: "productName", value: result.data.order.product.name });
       dispatch({ type: "set", key: "OfferPrice", value: result.data.order.product.offer?.price ?? 0 });
-      dispatch({ type: "set", key: "validationDays", value: result.data.order.product.offer?.validationDays ?? 0 });
 
       if (onUpdate != null) onUpdate();
     };
@@ -119,15 +118,15 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
             <td>{info.productName as string}</td>
             <td>{info.productModel as string}</td>
             <td>{info.count as number}</td>
-            <td>{Math.ceil((info.totalPrice as number) / (info.count as number))}</td>
-            <td>{info.totalPrice as number}</td>
+            <td>{info.offerPrice as number}</td>
+            <td>{(info.offerPrice as number) * (info.count as number)}</td>
           </tr>
         </table>
         <div className={styles.summary}>
           <table className={styles.summaryTable}>
             <tr>
               <td>Sub total</td>
-              <td>{info.totalPrice as number} $</td>
+              <td>{(info.offerPrice as number) * (info.count as number)} $</td>
             </tr>
             <tr>
               <td>Discount:</td>
@@ -135,7 +134,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
             </tr>
             <tr className={styles.strong}>
               <td>Total</td>
-              <td>{info.totalPrice as number} $</td>
+              <td>{(info.offerPrice as number) * (info.count as number)} $</td>
             </tr>
           </table>
         </div>

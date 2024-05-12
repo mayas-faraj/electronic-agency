@@ -18,7 +18,7 @@ interface IClient {
 
 interface IClientsType {
   isSelectable?: boolean;
-  onUpdate?: (id: number, email: string) => void;
+  onUpdate?: (id: number, email: string, phone: string) => void;
 }
 
 // main component
@@ -106,7 +106,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, onUpdate }) =>
           ),
           select:
             isSelectable && onUpdate !== undefined ? (
-              <Button variant="text" color="info" onClick={() => onUpdate(client.id, client.email)}>
+              <Button variant="text" color="info" onClick={() => onUpdate(client.id, client.email, client.phone)}>
                 <CheckCircle />
               </Button>
             ) : undefined

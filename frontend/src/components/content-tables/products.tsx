@@ -24,7 +24,7 @@ interface IProduct {
 }
 interface IProductsType {
   isSelectable?: boolean;
-  onUpdate?: (id: number) => void;
+  onUpdate?: (id: number, name: string, price: number | null, image?: string) => void;
 }
 
 // main component
@@ -139,7 +139,7 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) 
             ) : undefined,
           select:
             isSelectable && onUpdate !== undefined ? (
-              <Button variant="text" color="info" onClick={() => onUpdate(product.id)}>
+              <Button variant="text" color="info" onClick={() => onUpdate(product.id, product.name, product.price, product.image)}>
                 <CheckCircle />
               </Button>
             ) : undefined

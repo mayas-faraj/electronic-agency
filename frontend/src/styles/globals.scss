@@ -2,113 +2,138 @@
 @import "sizes";
 
 html {
-    background-color: $primary-color;
-    color: $text-color;
+  background-color: $primary-color;
+  color: $text-color;
 }
 
 body {
-    margin: 0;
+  margin: 0;
 }
 
 .full-height {
-    height: 100vh;
+  height: 100vh;
 }
 
 .button {
-    background-color: $secondary-color;
-    color: $primary-color;
-    padding: 10px;
-    text-decoration: none;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: $secondary-color;
+  color: $primary-color;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
 
-    svg {
-        margin-right: 10px;
-        vertical-align: middle;
-    }
+  svg {
+    margin-right: 10px;
+    vertical-align: middle;
+  }
 }
 
 .button--large {
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .button-wide-wrapper button {
-	width: 100%;
-	padding: 16px;
-	background: $secondary-color;
+  width: 100%;
+  padding: 16px;
+  background: $secondary-color;
 }
 
-
 td {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 
-    &>img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-    }
+  & > img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
 }
 
 .full-height {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 900px;
-    max-height: 86vh;
-    overflow: auto;
-    background-color: $primary-color;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px #000;
-    color: $secondary-color;
-    border: 2px solid $secondary-color;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 900px;
+  max-height: 86vh;
+  overflow: auto;
+  background-color: $primary-color;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #000;
+  color: $secondary-color;
+  border: 2px solid $secondary-color;
 }
 
 .column-double {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: revert;
-    gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: revert;
+  gap: 20px;
 
-    &>* {
-        flex-basis: 330px;
-        flex-grow: 1;
-    }
+  & > * {
+    flex-basis: 200px;
+    flex-grow: 1;
+  }
+}
+
+.column-one-tow {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 20px;
+
+  img {
+    margin-top: 20px;
+    width: 99%;
+    height: 180px;
+    object-fit: contain;
+    border: 2px solid;
+  }
+}
+
+.column-one-tow > * {
+  flex-basis: 200px;
+}
+
+.column-one-tow > *:first-child {
+  flex-grow: 1;
+}
+
+.column-one-tow > *:last-child {
+  flex-grow: 2;
 }
 
 .row-flex {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    height: 55px;
-    margin: 15px 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  height: 55px;
+  margin: 15px 0;
 
-    & > * {
-        flex-grow: 1;
-    }
+  & > * {
+    flex-grow: 1;
+  }
 }
 
 .side-image {
-    background-color: $primary-color;
-    margin: 15px 0;
-    width: 100%;
-    object-fit: contain;
-    border: 2px solid;
-    display: block;
+  background-color: $primary-color;
+  margin: 15px 0;
+  width: 100%;
+  object-fit: contain;
+  border: 2px solid;
+  display: block;
 }
 
 .side-image--product {
-    height: 230px;
+  height: 230px;
 }
 
 .center-text {
-    text-align: center;
+  text-align: center;
 }

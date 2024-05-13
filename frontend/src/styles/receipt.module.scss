@@ -1,3 +1,7 @@
+.wrapper {
+    font-size: .7rem;
+}
+
 .logo {
     max-width: 160px;
     margin-left: 40px;
@@ -5,10 +9,11 @@
 
 .title {
     text-align: center;
+    font-size: 1rem;
 }
 
 .id {
-    text-align: right;
+    text-align: end;
 }
 
 .schemaTable td:nth-child(odd), p, title, .notes {
@@ -41,7 +46,10 @@
 
 .summary {
     width: 50%;
-    margin: 50px 0 50px 50%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-inline-start: 50%;
+    margin-inline-end: 0;
 }
 
 .notesTable td,

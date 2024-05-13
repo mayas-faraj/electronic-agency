@@ -41,6 +41,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
   const [viewProduct, setViewProduct] = React.useState(false);
   const [selectProduct, setSelectProduct] = React.useState(false);
   const [viewReceipt, setViewReceipt] = React.useState(false);
+  const [viewReceiptAr, setViewReceiptAr] = React.useState(false);
 
   // process form type (create or update)
   const orderCommand = `mutation { createOrder(clientId: ${info.clientId}, input: {productId: ${info.productId}, count: ${parseInt(
@@ -205,7 +206,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
         <Button variant="contained" color="primary" disabled={info.orderId === 0} onClick={() => setViewReceipt(true)}>
           <ReceiptLong /> View Receipt (English)
         </Button>
-        <Button variant="contained" color="primary" disabled={true}>
+        <Button variant="contained" color="primary" disabled={info.orderId === 0} onClick={() => setViewReceiptAr(true)}>
           <ReceiptLong /> View Receipt (Arabic)
         </Button>
       </div>
@@ -235,6 +236,11 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
       <Modal open={viewReceipt} onClose={() => setViewReceipt(false)}>
         <div className="modal">
           <Receipt id={info.orderId as number} />
+        </div>
+      </Modal>
+      <Modal open={viewReceiptAr} onClose={() => setViewReceiptAr(false)}>
+        <div className="modal">
+          <Receipt id={info.orderId as number} isArabic={true} />
         </div>
       </Modal>
     </ContentForm>

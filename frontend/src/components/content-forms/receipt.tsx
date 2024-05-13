@@ -1,12 +1,13 @@
 import React, { FunctionComponent } from "react";
 import jsPDF from "jspdf";
+import { Button } from "@mui/material";
+import { CloudDownload, Send } from "@mui/icons-material";
 import { reducer } from "../content-form";
 import logoImage from "../../assets/imgs/logo-receipt.png";
 import greeImage from "../../assets/imgs/gree-logo.webp";
 import getServerData from "../../libs/server-data";
+import { font } from "../../libs/font";
 import styles from "../../styles/receipt.module.scss";
-import { CloudDownload, Send } from "@mui/icons-material";
-import { Button } from "@mui/material";
 
 const initialInfo = {
   user: "",
@@ -23,10 +24,11 @@ const initialInfo = {
 
 interface IReceiptProps {
   id: number;
+  isArabic?: boolean;
   onUpdate?: () => void;
 }
 
-const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
+const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) => {
   // component reducer
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
 
@@ -38,9 +40,16 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
     jsPdf.html(document.getElementById("print") ?? "no data", {
       x: 20,
       y: 20,
+      fontFaces: [{ family: "NotoNaskhArabic", src: [{ url: "/alardh-alsalba/noto-font.ttf", format: "truetype" }] }],
       width: 400,
       windowWidth: 650,
-      callback: (doc) => doc.save("receipt.pdf")
+      callback: (doc) => {
+        doc.addFileToVFS("NotoNaskhArabic.ttf", font);
+        doc.addFont("NotoNaskhArabic.ttf", "NotoNaskhArabic", "normal");
+        doc.addFont("NotoNaskhArabic.ttf", "NotoNaskhArabic", "bold");
+        doc.setFont("NotoNaskhArabic");
+        doc.save("receipt.pdf");
+      }
     });
   };
 
@@ -57,7 +66,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
       dispatch({ type: "set", key: "count", value: result.data.order.count });
       dispatch({ type: "set", key: "createdAt", value: result.data.order.createdAt });
       dispatch({ type: "set", key: "offerPrice", value: result.data.order.offer.price });
-      dispatch({ type: "set", key: "validationDays", value: result.data.order.offer.validationDays ?? 1});
+      dispatch({ type: "set", key: "validationDays", value: result.data.order.offer.validationDays ?? 1 });
       dispatch({ type: "set", key: "address", value: result.data.order.address });
       dispatch({ type: "set", key: "note", value: result.data.order.note });
       dispatch({ type: "set", key: "productName", value: result.data.order.product.name });
@@ -71,47 +80,53 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
   // render component
   return (
     <>
-      <div className={styles.wrapper} id="print">
+      <div className={`${styles.wrapper} ${isArabic ? "rtl" : ""}`} id="print">
         <div>
           <img src={logoImage} alt="logo" className={styles.logo} />
         </div>
-        <h1 className={styles.title}>Offer</h1>
-        <div className={styles.id}>Offer #EST-{id}</div>
+        <h1 className={styles.title}>{!isArabic ? "Price offer" : "عرض سعر"}</h1>
+        <div className={styles.id}>
+          {!isArabic ? "Offer" : "عرض"} #EST-${id}
+        </div>
         <table className={styles.schemaTable}>
           <tr>
-            <td>Company name:</td>
+            <td>{!isArabic ? "Compay:" : "السادة:"}</td>
             <td>{info.user as string}</td>
             <td></td>
             <td></td>
-            <td>Offer Date:</td>
+            <td>{!isArabic ? "Offer Date:" : "تاريخ التقديم:"}</td>
             <td>{new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
           </tr>
           <tr>
-            <td>Att:</td>
+            <td>{!isArabic ? "Att:" : "حضرة السيد:"}</td>
             <td></td>
             <td></td>
             <td></td>
-            <td>Expiry Date:</td>
+            <td>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</td>
             <td>{new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}</td>
           </tr>
           <tr>
-            <td>Mobile:</td>
+            <td>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</td>
             <td>{info.phone as string}</td>
             <td></td>
             <td></td>
-            <td>Reference #</td>
+            <td>{!isArabic ? "Reference #:" : "رقم المشروع:"}</td>
             <td>{id}</td>
           </tr>
         </table>
-        <p>We are glad to submit you with commerical price quotation for the products detailed below:</p>
+        <p>
+          {!isArabic
+            ? "We are glad to submit you with commerical price quotation for the products detailed below"
+            : "يسرنا أن نقدم لكم عرض السعر التجاري للمنتجات المبينة تفاصيلها أدناه"}
+        </p>
         <table className={styles.productsTable}>
           <tr>
-            <th>#</th>
-            <th>Item</th>
-            <th>Description</th>
-            <th>QTY</th>
-            <th>Unit Price</th>
-            <th>Amount</th>
+            <th>{!isArabic ? "#" : "بند"}</th>
+            <th>{!isArabic ? "Item" : "رمز الجهاز"}</th>
+            <th>{!isArabic ? "Description" : "الوصف"}</th>
+            <th>{!isArabic ? "QTY" : "الكمية"}</th>
+            <th>{!isArabic ? "Unit Price" : "السعر"}</th>
+            <th>{!isArabic ? "Amount" : "المبلغ"}</th>
           </tr>
           <tr>
             <td>1</td>
@@ -125,15 +140,15 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
         <div className={styles.summary}>
           <table className={styles.summaryTable}>
             <tr>
-              <td>Sub total</td>
+              <td>{!isArabic ? "Sub total:" : "المجموع الفرعي:"}</td>
               <td>{(info.offerPrice as number) * (info.count as number)} $</td>
             </tr>
             <tr>
-              <td>Discount:</td>
+              <td>{!isArabic ? "Discount:" : "الخصم:"}:</td>
               <td></td>
             </tr>
             <tr className={styles.strong}>
-              <td>Total</td>
+              <td>{!isArabic ? "Total:" : "الإجمالي:"}</td>
               <td>{(info.offerPrice as number) * (info.count as number)} $</td>
             </tr>
           </table>
@@ -141,19 +156,19 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
         <div className={styles.notes}>
           <table className={styles.notesTable}>
             <tr>
-              <td>Notes</td>
+              <td>{!isArabic ? "Notes" : "ملاحظات:"}</td>
               <td>{info.note as string}</td>
             </tr>
             <tr>
-              <td>Payment terms:</td>
+              <td>{!isArabic ? "Payment terms:" : "شروط الدفع:"}</td>
               <td></td>
             </tr>
             <tr>
-              <td>Delivery:</td>
+              <td>{!isArabic ? "Delivery:" : "التسليم:"}</td>
               <td></td>
             </tr>
             <tr>
-              <td>Warranty:</td>
+              <td>{!isArabic ? "Warranty:" : "الضمان:"}</td>
               <td></td>
             </tr>
           </table>

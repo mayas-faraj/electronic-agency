@@ -75,15 +75,15 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, onUpdate }) => {
         <div>
           <img src={logoImage} alt="logo" className={styles.logo} />
         </div>
-        <h1 className={styles.title}>Estimate</h1>
-        <div className={styles.id}>Estimate #EST-{id}</div>
+        <h1 className={styles.title}>Offer</h1>
+        <div className={styles.id}>Offer #EST-{id}</div>
         <table className={styles.schemaTable}>
           <tr>
             <td>Company name:</td>
             <td>{info.user as string}</td>
             <td></td>
             <td></td>
-            <td>Estimate Date:</td>
+            <td>Offer Date:</td>
             <td>{new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
           </tr>
           <tr>

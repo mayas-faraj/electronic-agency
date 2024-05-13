@@ -12,16 +12,16 @@ import getServerData from "../../libs/server-data";
 
 const initialInfo = {
   orderId: 0,
-  count: 1,
-  totalPrice: 0,
+  count: "1",
+  totalPrice: "0",
   address: "",
   note: "",
   productId: 0,
   productName: "",
-  productPrice: 0,
+  productPrice: "0",
   productImage: "",
-  offerPrice: 0,
-  validationDays: 1,
+  offerPrice: "0",
+  validationDays: "1",
   clientId: 0,
   clientEmail: "",
   clientPhone: ""
@@ -58,6 +58,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
     dispatch({ type: "set", key: "productId", value: productId });
     dispatch({ type: "set", key: "productName", value: name });
     dispatch({ type: "set", key: "productPrice", value: price ?? 0 });
+    dispatch({ type: "set", key: "offerPrice", value: price ?? 0 });
     dispatch({ type: "set", key: "productImage", value: image ?? "" });
     console.log(name, price);
     setSelectProduct(false);
@@ -67,7 +68,9 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
     if (result?.data?.createOrder?.id != null) {
       dispatch({ type: "set", key: "orderId", value: result.data.createOrder.id });
       await getServerData(
-        `mutation { createOfferByAuth(input: {orderId: ${result.data.createOrder.id}, price: ${info.offerPrice}, validationDays: ${info.validationDays}}) { id } }`
+        `mutation { createOfferByAuth(input: {orderId: ${result.data.createOrder.id}, price: ${parseInt(
+          info.offerPrice as string
+        )}, validationDays: ${parseInt(info.validationDays as string)}}) { id } }`
       );
     }
     // dispatch({ type: "set", key: "note", value: initialInfo.note });
@@ -90,7 +93,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
       title="Order Info"
       command={orderCommand}
       onUpdate={(result) => handleSave(result)}
-      commandDisabled={info.productId === 0 || info.clientId === 0}
+      commandDisabled={info.productId === 0 || info.clientId === 0 || parseInt(info.offerPrice as string) === 0}
     >
       <div className="column-one-tow">
         <div>

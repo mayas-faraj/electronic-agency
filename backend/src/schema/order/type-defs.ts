@@ -23,6 +23,10 @@ const typeDefs = `#graphql
 		totalPrice: Float
 		address: String!
 		note: String
+		company: String
+		delivery: String
+		warranty: String
+		terms: String
 		status: String
 		isRead: Boolean
 		isOfferRequest: Boolean
@@ -49,6 +53,10 @@ const typeDefs = `#graphql
 		totalPrice: Float
 		address: String!
 		note: String
+		company: String
+		delivery: String
+		warranty: String
+		terms: String
 		isDraft: Boolean
 		isOfferRequest: Boolean
 	}

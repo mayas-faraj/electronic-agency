@@ -173,6 +173,10 @@ model Order {
   totalPrice     Float?      @map("total_price")
   address        String      @db.VarChar(500)
   note           String?     @db.VarChar(500)
+  company        String?     @db.VarChar(100)
+  delivery       String?     @db.VarChar(100)
+  warranty       String?     @db.VarChar(100)
+  terms          String?     @map("payment_terms") @db.VarChar(500)
   status         OrderStatus @default(PENDING)
   isRead         Boolean     @default(false) @map("is_read") @db.TinyInt
   isDraft        Boolean     @default(false) @map("is_draft") @db.TinyInt

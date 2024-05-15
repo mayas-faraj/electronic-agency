@@ -1,96 +1,106 @@
 .wrapper {
-    font-size: .7rem;
+  font-size: 0.7rem;
+  word-spacing: 3px;
+}
+
+.rtl {
+  direction: rtl;
 }
 
 .logo {
-    max-width: 160px;
-    margin-left: 40px;
+  max-width: 160px;
+  margin-left: 40px;
 }
 
 .title {
-    text-align: center;
-    font-size: 1rem;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .id {
-    text-align: end;
+  text-align: end;
 }
 
-.schemaTable td:nth-child(odd), p, title, .notes {
-    font-weight: bold;
+.schemaTable td:nth-child(odd),
+p,
+title,
+.notes {
+  font-weight: bold;
 }
 
 .schemaTable td:nth-child(even) {
-    text-align: right;
+  text-align: right;
 }
 
 .productsTable {
-    border-spacing: 0;
+  border-spacing: 0;
 }
 
 .productsTable td,
 .productsTable th {
-    padding: 8px;
+  padding: 8px;
 }
 
 .productsTable th {
-    background-color: #27716d;
-    color: #fff;
-    font-weight: normal;
+  background-color: #27716d;
+  color: #fff;
+  font-weight: normal;
 }
 
 .productsTable td {
-    border-bottom: 1px solid;
-    text-align: center;
+  border-bottom: 1px solid;
+  text-align: center;
 }
 
 .summary {
-    width: 50%;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    margin-inline-start: 50%;
-    margin-inline-end: 0;
+  width: 50%;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-inline-start: 50%;
+  margin-inline-end: 0;
 }
 
 .notesTable td,
 .summaryTable td {
-    padding: 10px 5px;
+  padding: 10px 5px;
 }
 
 .summaryTable tr:last-child {
-    background-color: grey;
+  background-color: grey;
 }
 
 .footer {
-    margin-top: 160px;
-    display: flex;
-    flex-flow: row wrap;
-    color: #27716d;
-    font-size: 0.7rem;
+  margin-top: 160px;
+  display: flex;
+  flex-flow: row wrap;
+  color: #27716d;
+  font-size: 0.7rem;
 }
 
 .footerLogo {
-    max-width: 100px;
-    margin: auto;
-    display: flex;
+  max-width: 100px;
+  margin: auto;
+  display: flex;
 }
 .footer > * {
-    flex-grow: 1;
-    flex-basis: 100px;
+  flex-grow: 1;
+  flex-basis: 100px;
 }
 
 .footer > *:nth-child(1) {
-    text-align: left;
+  text-align: left;
 }
 
 .footer > *:nth-child(2) {
-    text-align: center;
+  text-align: center;
 }
 
 .footer > *:nth-child(3) {
-    text-align: right;
+  text-align: right;
 }
 
-.schemaTable, .productsTable, .summaryTable  {
-    width: 100%;
+.schemaTable,
+.productsTable,
+.summaryTable {
+  width: 100%;
 }

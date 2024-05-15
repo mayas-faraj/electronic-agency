@@ -16,9 +16,13 @@ const initialInfo = {
   totalPrice: "0",
   address: "",
   note: "",
+  company: "",
+  delivery: "",
+  warranty: "",
+  terms: "",
   productId: 0,
   productName: "",
-  productPrice: "0",
+  productPrice: 0,
   productImage: "",
   offerPrice: "0",
   validationDays: "1",
@@ -46,7 +50,9 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
   // process form type (create or update)
   const orderCommand = `mutation { createOrder(clientId: ${info.clientId}, input: {productId: ${info.productId}, count: ${parseInt(
     info.count as string
-  )}, totalPrice: ${parseInt(info.totalPrice as string)}, address: "${info.address}", note: "${info.note}", isOfferRequest: true}) { id status } }`;
+  )}, totalPrice: ${parseInt(info.totalPrice as string)}, address: "${info.address}", note: "${info.note}", company: "${info.company}", delivery: "${
+    info.delivery
+  }", warranty: "${info.warranty}", terms: "${info.terms}", isOfferRequest: true}) { id status } }`;
 
   const handleSelectClient = (clientId: number, clientEmail: string, clientPhone: string) => {
     dispatch({ type: "set", key: "clientId", value: clientId });
@@ -105,12 +111,12 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
           </FormControl>
           {info.clientEmail !== "" && (
             <FormControl fullWidth margin="normal">
-              <TextField variant="outlined" label="client email" value={info.clientEmail} inputProps={{ readonly: true }} />
+              <TextField variant="outlined" label="client email" value={info.clientEmail} inputProps={{ readOnly: true }} />
             </FormControl>
           )}
           {info.clientPhone !== "" && (
             <FormControl fullWidth margin="normal">
-              <TextField variant="outlined" label="client phone" value={info.clientPhone} inputProps={{ readonly: true }} />
+              <TextField variant="outlined" label="client phone" value={info.clientPhone} inputProps={{ readOnly: true }} />
             </FormControl>
           )}
           <FormControl fullWidth margin="normal">
@@ -120,7 +126,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
           </FormControl>
           {info.productName && (
             <FormControl fullWidth margin="normal">
-              <TextField variant="outlined" label="product name" value={info.productName} inputProps={{ readonly: true }} />
+              <TextField variant="outlined" label="product name" value={info.productName} inputProps={{ readOnly: true }} />
             </FormControl>
           )}
           {info.productImage && <img src={data["site-url"] + info.productImage} alt={info.productName as string} />}
@@ -129,36 +135,17 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
-              multiline={true}
-              rows={3}
-              label="Client Address"
-              value={info.address}
-              onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value })}
-            />
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <TextField
-              variant="outlined"
-              multiline={true}
-              rows={3}
-              label="Client Note"
-              value={info.note}
-              onChange={(e) => dispatch({ type: "set", key: "note", value: e.target.value })}
-            />
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <TextField
-              variant="outlined"
               label="Count"
               value={info.count}
               type="number"
               onChange={(e) => dispatch({ type: "set", key: "count", value: e.target.value })}
+              inputProps={{ min: 0 }}
             />
           </FormControl>
           {info.productPrice !== 0 && (
             <div className="column-double">
               <FormControl fullWidth margin="normal">
-                <TextField variant="outlined" label="price" value={info.productPrice} type="number" inputProps={{ readonly: true }} />
+                <TextField variant="outlined" label="price" value={info.productPrice} type="number" inputProps={{ readOnly: true }} />
               </FormControl>
               <FormControl fullWidth margin="normal">
                 <TextField
@@ -166,7 +153,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
                   label="Total price"
                   type="number"
                   value={(info.productPrice as number) * parseInt(info.count as string) ?? "0"}
-                  inputProps={{ readonly: true }}
+                  inputProps={{ readOnly: true }}
                 />
               </FormControl>
             </div>
@@ -179,6 +166,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
                 value={info.offerPrice}
                 type="number"
                 onChange={(e) => dispatch({ type: "set", key: "offerPrice", value: e.target.value })}
+                inputProps={{ min: 0 }}
               />
             </FormControl>
             <FormControl fullWidth margin="normal">
@@ -187,7 +175,7 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
                 label="Total offer price"
                 type="number"
                 value={(info.offerPrice as number) * parseInt(info.count as string) ?? "0"}
-                inputProps={{ readonly: true }}
+                inputProps={{ readOnly: true }}
               />
             </FormControl>
           </div>
@@ -198,10 +186,63 @@ const Order: FunctionComponent<IOrderProps> = ({ onUpdate }) => {
               value={info.validationDays}
               type="number"
               onChange={(e) => dispatch({ type: "set", key: "validationDays", value: e.target.value })}
+              inputProps={{ min: 0 }}
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              label="company"
+              value={info.company}
+              onChange={(e) => dispatch({ type: "set", key: "company", value: e.target.value })}
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              label="warranty"
+              value={info.warranty}
+              onChange={(e) => dispatch({ type: "set", key: "warranty", value: e.target.value })}
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              label="terms"
+              value={info.terms}
+              onChange={(e) => dispatch({ type: "set", key: "terms", value: e.target.value })}
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              label="delivery"
+              value={info.delivery}
+              onChange={(e) => dispatch({ type: "set", key: "delivery", value: e.target.value })}
             />
           </FormControl>
         </div>
       </div>
+      <FormControl fullWidth margin="normal">
+        <TextField
+          variant="outlined"
+          multiline={true}
+          rows={3}
+          label="Client Address"
+          value={info.address}
+          onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value })}
+        />
+      </FormControl>
+      <FormControl fullWidth margin="normal">
+        <TextField
+          variant="outlined"
+          multiline={true}
+          rows={3}
+          label="Client Note"
+          value={info.note}
+          onChange={(e) => dispatch({ type: "set", key: "note", value: e.target.value })}
+        />
+      </FormControl>
       <div className="row-flex">
         <Button variant="contained" color="primary" disabled={info.orderId === 0} onClick={() => setViewReceipt(true)}>
           <ReceiptLong /> View Receipt (English)

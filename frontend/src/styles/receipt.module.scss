@@ -21,6 +21,10 @@
   text-align: end;
 }
 
+.schemaTable {
+  table-layout: fixed;
+}
+
 .schemaTable td:nth-child(odd),
 p,
 title,
@@ -28,8 +32,12 @@ title,
   font-weight: bold;
 }
 
-.schemaTable td:nth-child(even) {
-  text-align: right;
+.schemaTable td:nth-child(1) {
+  width: 60px;
+}
+
+.schemaTable td:nth-child(3) {
+  width: 100px;
 }
 
 .productsTable {
@@ -70,11 +78,15 @@ title,
 }
 
 .footer {
-  margin-top: 160px;
+  margin-top: 280px;
   display: flex;
   flex-flow: row wrap;
   color: #27716d;
   font-size: 0.7rem;
+}
+
+.rtl .footer {
+  margin-top: 100px;
 }
 
 .footerLogo {

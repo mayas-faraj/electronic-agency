@@ -17,10 +17,12 @@ const initialInfo = {
   lastName: "",
   count: 0,
   offerPrice: 0,
+  productPrice: 0,
   validationDays: 1,
   address: "",
   note: "",
   productName: "",
+  productNameTranslated: "",
   productModel: ""
 };
 
@@ -59,7 +61,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   React.useEffect(() => {
     const loadReceipt = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id count address note company warranty delivery terms createdAt product { id name model } client { id user phone email firstName lastName } offer { id price validationDays } } }`
+        `query { order(id: ${id}) { id count address note company warranty delivery terms createdAt product { id name nameTranslated model price } client { id user phone email firstName lastName } offer { id price validationDays } } }`
       );
 
       dispatch({ type: "set", key: "phone", value: result.data.order.client.phone });
@@ -69,16 +71,18 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
       dispatch({ type: "set", key: "user", value: result.data.order.user });
       dispatch({ type: "set", key: "count", value: result.data.order.count });
       dispatch({ type: "set", key: "createdAt", value: result.data.order.createdAt });
-      dispatch({ type: "set", key: "offerPrice", value: result.data.order.offer.price });
-      dispatch({ type: "set", key: "validationDays", value: result.data.order.offer.validationDays ?? 1 });
       dispatch({ type: "set", key: "address", value: result.data.order.address });
       dispatch({ type: "set", key: "note", value: result.data.order.note });
       dispatch({ type: "set", key: "company", value: result.data.order.company });
       dispatch({ type: "set", key: "delivery", value: result.data.order.delivery });
       dispatch({ type: "set", key: "warranty", value: result.data.order.warranty });
       dispatch({ type: "set", key: "terms", value: result.data.order.terms });
+      dispatch({ type: "set", key: "productModel", value: result.data.order.product.model });
       dispatch({ type: "set", key: "productName", value: result.data.order.product.name });
-      dispatch({ type: "set", key: "OfferPrice", value: result.data.order.product.offer?.price ?? 0 });
+      dispatch({ type: "set", key: "productNameTranslated", value: result.data.order.product.nameTranslated });
+      dispatch({ type: "set", key: "productPrice", value: result.data.order.product.price });
+      dispatch({ type: "set", key: "offerPrice", value: result.data.order.offer.price });
+      dispatch({ type: "set", key: "validationDays", value: result.data.order.offer.validationDays ?? 1 });
 
       if (onUpdate != null) onUpdate();
     };
@@ -101,24 +105,18 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             <tr>
               <td>{!isArabic ? "Compay:" : "السادة:"}</td>
               <td>{info.company as string}</td>
-              <td></td>
-              <td></td>
               <td>{!isArabic ? "Offer Date:" : "تاريخ التقديم:"}</td>
               <td>{new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
             </tr>
             <tr>
               <td>{!isArabic ? "Att:" : "حضرة السيد:"}</td>
               <td>{`${info.firstName}${info.lastName && " "}${info.lastName}`}</td>
-              <td></td>
-              <td></td>
               <td>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</td>
               <td>{new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}</td>
             </tr>
             <tr>
               <td>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</td>
               <td>{info.phone as string}</td>
-              <td></td>
-              <td></td>
               <td>{!isArabic ? "Reference #:" : "رقم المشروع:"}</td>
               <td>{id}</td>
             </tr>
@@ -141,11 +139,11 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             </tr>
             <tr>
               <td>1</td>
-              <td>{info.productName as string}</td>
               <td>{info.productModel as string}</td>
+              <td>{(!isArabic ? info.productName :info.productNameTranslated) as string}</td>
               <td>{info.count as number}</td>
-              <td>{info.offerPrice as number}</td>
-              <td>{(info.offerPrice as number) * (info.count as number)}</td>
+              <td>{(info.productPrice ?? info.offerPrice) as number}</td>
+              <td>{((info.productPrice ?? info.offerPrice) as number) * (info.count as number)}</td>
             </tr>
           </tbody>
         </table>
@@ -154,11 +152,11 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             <tbody>
               <tr>
                 <td>{!isArabic ? "Sub total:" : "المجموع الفرعي:"}</td>
-                <td>{(info.offerPrice as number) * (info.count as number)} $</td>
+                <td>{((info.productPrice ?? info.offerPrice) as number) * (info.count as number)} $</td>
               </tr>
               <tr>
                 <td>{!isArabic ? "Discount:" : "الخصم:"}:</td>
-                <td></td>
+                <td>{info.productPrice ? ((info.productPrice as number) - (info.offerPrice as number)) * (info.count as number) : 0}</td>
               </tr>
               <tr className={styles.strong}>
                 <td>{!isArabic ? "Total:" : "الإجمالي:"}</td>
@@ -172,7 +170,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             <tbody>
               <tr>
                 <td>{!isArabic ? "Notes" : "ملاحظات:"}</td>
-                <td>{info.note as string}</td>
+                <td>{ info.note  as string}</td>
               </tr>
               <tr>
                 <td>{!isArabic ? "Payment terms:" : "شروط الدفع:"}</td>

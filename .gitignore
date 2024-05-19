@@ -11,3 +11,4 @@ backend/uploads
 frontend/build
 # Keep environment variables out of version control
 .env
+.ps

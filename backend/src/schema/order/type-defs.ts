@@ -9,7 +9,7 @@ const typeDefs = `#graphql
 
     extend type Mutation {
         createOrderByAuth(input: OrderInput!): OrderBasic
-		createOrder(clientId: Int!, input: OrderInput!): OrderBasic
+		createOrder(clientId: Int!, input: OrderCreate!): OrderBasic
 				updateOrderStatus(id: Int!, status: String!): OrderBasic
 				deleteOrder(id: Int!): OrderBasic
 				createOfferByAuth(input: OfferInput!): OfferBasic
@@ -19,8 +19,6 @@ const typeDefs = `#graphql
 
     type Order {
 		id: Int!
-		count: Int!
-		totalPrice: Float
 		address: String!
 		note: String
 		company: String
@@ -31,20 +29,25 @@ const typeDefs = `#graphql
 		isRead: Boolean
 		isOfferRequest: Boolean
 		createdAt: String
-		product: ProductBasic
+		products: [OrderProduct]
 		client: ClientBasic
 		offer: OfferBasic
 	}
 
 	type OrderBasic {
 		id: Int!
-		count: Int!
-		totalPrice: Float
 		status: String
 		isRead: Boolean
 		isOfferRequest: Boolean
 		createdAt: String
-		product: ProductBasic
+		products: [OrderProduct]
+	}
+
+	type OrderProduct {
+		id: Int!
+		product: ProductBasic!
+		count: Int!
+		price: Float!
 	}
 
 	input OrderInput {
@@ -59,6 +62,22 @@ const typeDefs = `#graphql
 		terms: String
 		isDraft: Boolean
 		isOfferRequest: Boolean
+	}
+
+	input OrderCreate {
+		address: String!
+		note: String
+		company: String
+		delivery: String
+		warranty: String
+		terms: String
+		products: [OrderProductCreate]
+	}
+
+	input OrderProductCreate {
+		productId: Int!
+		count: Int!
+		price: Float!
 	}
 
 	type Offer {

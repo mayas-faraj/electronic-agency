@@ -11,23 +11,27 @@ const resolvers = {
       const result = await app.prismaClient.order.findMany({
         select: {
           id: true,
-          count: true,
-          totalPrice: true,
           status: true,
           isRead: true,
           isOfferRequest: true,
           createdAt: true,
-          product: {
+          products: {
             select: {
               id: true,
-              name: true,
-              nameTranslated: true,
-              model: true,
-              image: true,
-              description: true,
-              descriptionTranslated: true,
+              count: true,
               price: true,
-              isDisabled: true,
+              product: {
+                select: {
+                  name: true,
+                  nameTranslated: true,
+                  model: true,
+                  image: true,
+                  description: true,
+                  descriptionTranslated: true,
+                  price: true,
+                  isDisabled: true,
+                },
+              },
             },
           },
         },
@@ -60,8 +64,6 @@ const resolvers = {
         },
         select: {
           id: true,
-          count: true,
-          totalPrice: true,
           address: true,
           note: true,
           company: true,
@@ -72,17 +74,24 @@ const resolvers = {
           isRead: true,
           isOfferRequest: true,
           createdAt: true,
-          product: {
+          products: {
             select: {
               id: true,
-              name: true,
-              nameTranslated: true,
-              model: true,
-              image: true,
-              description: true,
-              descriptionTranslated: true,
+              count: true,
               price: true,
-              isDisabled: true,
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  nameTranslated: true,
+                  model: true,
+                  image: true,
+                  description: true,
+                  descriptionTranslated: true,
+                  price: true,
+                  isDisabled: true,
+                },
+              },
             },
           },
           client: {
@@ -132,22 +141,27 @@ const resolvers = {
         },
         select: {
           id: true,
-          count: true,
-          totalPrice: true,
           status: true,
           isOfferRequest: true,
           createdAt: true,
-          product: {
+          products: {
             select: {
               id: true,
-              name: true,
-              nameTranslated: true,
-              model: true,
-              image: true,
-              description: true,
-              descriptionTranslated: true,
+              count: true,
               price: true,
-              isDisabled: true,
+              product: {
+                select: {
+                  id: true,
+                  name: true,
+                  nameTranslated: true,
+                  model: true,
+                  image: true,
+                  description: true,
+                  descriptionTranslated: true,
+                  price: true,
+                  isDisabled: true,
+                },
+              },
             },
           },
         },
@@ -184,15 +198,12 @@ const resolvers = {
         _max: {
           createdAt: true,
         },
-        _sum: {
-          count: true,
-        },
       });
 
       return {
         count: result._count.id,
         date: result._max.createdAt,
-        sum: result._sum.count,
+        sum: 0,
       };
     },
   },
@@ -202,9 +213,6 @@ const resolvers = {
       const result = await app.prismaClient.order.create({
         data: {
           clientId: app.user.id,
-          productId: args.input.productId,
-          count: args.input.count,
-          totalPrice: args.input.totalPrice,
           address: args.input.address,
           note: args.input.note,
           company: args.input.company,
@@ -213,6 +221,13 @@ const resolvers = {
           terms: args.input.terms,
           isDraft: args.input.isDraft,
           isOfferRequest: args.input.isOfferRequest,
+          products: {
+            create: {
+              productId: args.input.productId,
+              count: args.input.count,
+              price: args.input.totalPrice,
+            },
+          },
         },
       });
 
@@ -223,18 +238,20 @@ const resolvers = {
       const result = await app.prismaClient.order.create({
         data: {
           clientId: args.clientId,
-          productId: args.input.productId,
-          count: args.input.count,
-          totalPrice: args.input.totalPrice,
           address: args.input.address,
           note: args.input.note,
           company: args.input.company,
           delivery: args.input.delivery,
           warranty: args.input.warranty,
           terms: args.input.terms,
-          isDraft: args.input.isDraft,
-          isOfferRequest: args.input.isOfferRequest,
+          isDraft: false,
+          isOfferRequest: true,
           status: "PENDING",
+          products: {
+            createMany: {
+              data: args.input.products
+            }
+          }
         },
       });
 
@@ -256,7 +273,7 @@ const resolvers = {
     deleteOrder: async (parent: any, args: any, app: AppContext) => {
       // check permissions
       checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
-      
+
       // return result
       const result = await app.prismaClient.order.delete({
         where: {

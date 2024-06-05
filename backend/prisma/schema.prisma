@@ -191,7 +191,7 @@ model OrderProduct {
   orderId   Int     @map("order_id")
   productId Int     @map("product_id")
   count     Int     @default(1)
-  price     Float   @map("price")
+  price     Float?  @map("price")
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 

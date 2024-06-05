@@ -47,7 +47,7 @@ const typeDefs = `#graphql
 		id: Int!
 		product: ProductBasic!
 		count: Int!
-		price: Float!
+		price: Float
 	}
 
 	input OrderInput {
@@ -77,7 +77,7 @@ const typeDefs = `#graphql
 	input OrderProductCreate {
 		productId: Int!
 		count: Int!
-		price: Float!
+		price: Float
 	}
 
 	type Offer {

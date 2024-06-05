@@ -11,17 +11,19 @@ import data from "../../data.json";
 // types
 interface Order {
   id: number;
-  count: string;
-  totalPrice: string;
   status: string;
   createdAt: string;
   isOfferRequest: boolean;
   isRead: boolean;
-  product?: {
-    name: string;
-    model: string;
-    image: string;
-  };
+  products: {
+    product: {
+      name: string;
+      model: string;
+      image: string;
+    },
+    count: number;
+    price: number;
+  }[];
 }
 
 // main component
@@ -36,9 +38,9 @@ const Orders: FunctionComponent = () => {
   // order schema
   const tableHeader: ITableHeader[] = [
     { key: "image", title: "Product Image", isSpecialType: true },
-    { key: "product", title: "Product" },
-    { key: "count", title: "Count" },
+    { key: "products", title: "Products" },
     { key: "createdAt", title: "Order Date" },
+    { key: "totalCount", title: "Count" },
     { key: "totalPrice", title: "Total price" },
     { key: "view", title: "Open", isSpecialType: true },
     { key: "status", title: "Status" },
@@ -47,7 +49,7 @@ const Orders: FunctionComponent = () => {
 
   // on load
   const action = async () => {
-    const result = await getServerData(`query { orders { id count totalPrice isOfferRequest isRead status createdAt product{name image model}}}`);
+    const result = await getServerData(`query { orders { id isOfferRequest isRead status createdAt products { product { name image model } count price }}}`);
     setOrders(result.data.orders);
   };
 
@@ -66,11 +68,11 @@ const Orders: FunctionComponent = () => {
         canWrite={privileges.writeOrder}
         addNewLink="/add-order"
         data={orders.map((order) => ({
-          image: <img src={data["site-url"] + order.product?.image} alt={order.product?.name} />,
-          product: order.product?.name + "\n" + order.product?.model,
-          count: order.count,
+          image: <img src={data["site-url"] + order.products[0]?.product.image} alt={order.products[0]?.product.name} />,
+          products: order.products.map(orderProduct => `${orderProduct.product.name} (${orderProduct.product.model})`).join("\n"),
+          totalCount: order.products.reduce((acc, product) => acc + product.count, 0),
+          totalPrice: order.isOfferRequest ? "Offer Request" : order.products.reduce((acc, product) => acc + product.price, 0),
           createdAt: new Date(parseInt(order.createdAt)).toLocaleString(),
-          totalPrice: order.isOfferRequest ? "Offer Request" : order.totalPrice,
           view: (
             <Button variant="text" color="info" onClick={() => setOpenId(order.id)}>
               {order.isRead ? <Drafts /> : <Email />}

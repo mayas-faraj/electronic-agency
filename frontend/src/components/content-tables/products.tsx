@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
-import { Button, InputAdornment, Modal, TextField } from "@mui/material";
-import { Abc, CheckCircle, Search, Visibility } from "@mui/icons-material";
+import { Button, FormControl, InputAdornment, Modal, TextField } from "@mui/material";
+import { Abc, AddCircle, CheckCircle, Search, Visibility } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { ITableHeader } from "../content-table";
@@ -18,13 +18,13 @@ interface IProduct {
   model: string;
   image?: string;
   description?: string;
-  price: number;
+  price: number | null;
   isDisabled: boolean;
   createdAt: Date;
 }
 interface IProductsType {
   isSelectable?: boolean;
-  onUpdate?: (id: number, name: string, price: number | null, image?: string) => void;
+  onUpdate?: (id: number, name: string, image: string, price: number, count: number) => void;
 }
 
 // main component
@@ -33,8 +33,11 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) 
   const [products, setProducts] = React.useState<IProduct[]>([]);
   const [editId, setEditId] = React.useState(0);
   const [viewId, setViewId] = React.useState(0);
+  const [selectProduct, setSelectProduct] = React.useState<IProduct | null>(null);
   const [manageItemId, setManageItemId] = React.useState(0);
   const [keyword, setKeyword] = React.useState("");
+  const [price, setPrice] = React.useState(0);
+  const [count, setCount] = React.useState(1);
 
   // context
   const privileges = React.useContext(RoleContext);
@@ -70,6 +73,12 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) 
     action();
   }, [action]);
 
+  const handleSelectProduct = (product: IProduct) => {
+    setProducts([product]);
+    setPrice(product.price ?? 0);
+    setSelectProduct(product);
+  };
+
   // render
   return (
     <div>
@@ -94,7 +103,7 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) 
         canRead={privileges.readProduct}
         canWrite={privileges.writeProduct}
         hasSnColumn={true}
-        addNewLink="/add-product"
+        addNewLink={!isSelectable ? "/add-product" : undefined}
         isAddNewRight={true}
         data={products.map((product) => ({
           image: <img src={data["site-url"] + product.image} alt={product.name} />,
@@ -137,14 +146,30 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) 
                 onUpdate={action}
               />
             ) : undefined,
-          select:
-            isSelectable && onUpdate !== undefined ? (
-              <Button variant="text" color="info" onClick={() => onUpdate(product.id, product.name, product.price, product.image)}>
-                <CheckCircle />
-              </Button>
-            ) : undefined
+          select: isSelectable ? (
+            <Button variant="text" color="info" disabled={selectProduct !== null} onClick={() => handleSelectProduct(product)}>
+              <CheckCircle />
+            </Button>
+          ) : undefined
         }))}
       />
+      {selectProduct !== null && onUpdate !== undefined && (
+        <>
+          <div className="column-double">
+            <FormControl fullWidth margin="normal">
+              <TextField variant="outlined" label="count" value={count} type="number" onChange={(e) => setCount(parseInt(e.target.value))} />
+            </FormControl>
+            <FormControl fullWidth margin="normal">
+              <TextField variant="outlined" label="price" value={price} type="number" onChange={(e) => setPrice(parseInt(e.target.value))} />
+            </FormControl>
+          </div>
+          <FormControl fullWidth margin="normal">
+            <Button variant="contained" onClick={() => onUpdate(selectProduct.id, selectProduct.name, selectProduct.image ?? "", price, count)}>
+              <AddCircle /> Add Selected Product
+            </Button>
+          </FormControl>
+        </>
+      )}
       <Modal open={editId !== 0} onClose={() => setEditId(0)}>
         <div className="modal">
           <ProductForm id={editId} onUpdate={() => action()} />

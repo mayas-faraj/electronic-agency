@@ -92,8 +92,6 @@ const resolvers = {
           orders: {
             select: {
               id: true,
-              count: true,
-              totalPrice: true,
               status: true,
               createdAt: true,
             },
@@ -121,8 +119,6 @@ const resolvers = {
           orders: {
             select: {
               id: true,
-              count: true,
-              totalPrice: true,
               status: true,
               createdAt: true,
             },

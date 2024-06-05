@@ -323,7 +323,8 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	3.39/3.62
 غاز	Inch	1/2''
 المسافة القصوى	الارتفاع \ الطول	m	15/20
     `,
-    catalogFile: "https://www.fujitsu-general.com/shared/pdf-feur-support-ctlg-3ef018-1712e-01.pdf",
+    catalogFile:
+      "https://www.fujitsu-general.com/shared/pdf-feur-support-ctlg-3ef018-1712e-01.pdf",
     items: {
       createMany: {
         data: [
@@ -2208,17 +2209,28 @@ console.log("product on clients review seed result: ", result);
 result = await prismaClient.order.create({
   data: {
     clientId: 1,
-    productId: 1,
-    count: 3,
     address: "Zahera-Damascus-Syria",
-    totalPrice: 453.5,
     isDraft: false,
     status: "ACCEPTED",
     note: "no comment",
+    products: {
+      create: [
+        {
+          productId: 1,
+          count: 2,
+          price: 100,
+        },
+        {
+          productId: 2,
+          count: 1,
+          price: 150,
+        },
+      ],
+    },
     offer: {
       create: {
         adminId: 1,
-        price: 350,
+        price: 320,
         validationDays: 3,
       },
     },
@@ -2230,13 +2242,19 @@ console.log("order seed result: ", result);
 result = await prismaClient.order.create({
   data: {
     clientId: 2,
-    productId: 2,
-    count: 1,
     address: "Muhajreen-Damascus-Syria",
-    totalPrice: 773.5,
     isDraft: true,
     status: "PENDING",
     note: "no comment",
+    products: {
+      create: [
+        {
+          productId: 3,
+          count: 5,
+          price: 120,
+        },
+      ],
+    },
   },
 });
 

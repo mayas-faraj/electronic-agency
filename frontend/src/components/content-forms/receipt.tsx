@@ -151,8 +151,8 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
                 <td>{orderProduct.product.model}</td>
                 <td>{(!isArabic ? orderProduct.product.name : orderProduct.product.nameTranslated) as string}</td>
                 <td>{orderProduct.count as number}</td>
-                <td>{orderProduct.price as number}</td>
-                <td>{orderProduct.price * orderProduct.count}</td>
+                <td>{(orderProduct.price as number).toLocaleString("en-US")}</td>
+                <td>{(orderProduct.price * orderProduct.count).toLocaleString("en-US")}</td>
               </tr>
             ))}
           </tbody>
@@ -162,15 +162,15 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             <tbody>
               <tr>
                 <td>{!isArabic ? "Sub total:" : "المجموع الفرعي:"}</td>
-                <td>{totalPrice} $</td>
+                <td>{totalPrice.toLocaleString("en-US")} $</td>
               </tr>
               <tr>
                 <td>{!isArabic ? "Discount:" : "الخصم:"}:</td>
-                <td>{info.offerPrice !== 0 ? totalPrice - (info.offerPrice as number) : 0}</td>
+                <td>{info.offerPrice !== 0 ? (totalPrice - (info.offerPrice as number)).toLocaleString("en-US") : 0}</td>
               </tr>
               <tr className={styles.strong}>
                 <td>{!isArabic ? "Total:" : "الإجمالي:"}</td>
-                <td>{info.offerPrice !== 0 ? (info.offerPrice as number) : totalPrice} $</td>
+                <td>{info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")} $</td>
               </tr>
             </tbody>
           </table>

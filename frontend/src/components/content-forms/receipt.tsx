@@ -101,7 +101,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   return (
     <>
       <div className={`${styles.wrapper} ${isArabic ? styles.rtl : ""}`} id="print">
-        <div>
+        <div className={styles.logoWrapper}>
           <img src={logoImage} alt="logo" className={styles.logo} />
         </div>
         <h1 className={styles.title}>{!isArabic ? "Price offer" : "عرض سعر"}</h1>
@@ -155,26 +155,26 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
                 <td>{(orderProduct.price * orderProduct.count).toLocaleString("en-US")}</td>
               </tr>
             ))}
+            <tr className={styles.summaryRow}>
+              <td colSpan={3}></td>
+              <td>{!isArabic ? "Sub total:" : "المجموع الفرعي:"}</td>
+              <td></td>
+              <td>{totalPrice.toLocaleString("en-US")} $</td>
+            </tr>
+            <tr className={styles.summaryRow}>
+              <td colSpan={3}></td>
+              <td>{!isArabic ? "Discount:" : "الخصم:"}:</td>
+              <td></td>
+              <td>{info.offerPrice !== 0 ? (totalPrice - (info.offerPrice as number)).toLocaleString("en-US") : 0}</td>
+            </tr>
+            <tr className={`${styles.strong} ${styles.summaryRow}`}>
+              <td colSpan={3}></td>
+              <td>{!isArabic ? "Total:" : "الإجمالي:"}</td>
+              <td></td>
+              <td>{info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")} $</td>
+            </tr>
           </tbody>
         </table>
-        <div className={styles.summary}>
-          <table className={styles.summaryTable}>
-            <tbody>
-              <tr>
-                <td>{!isArabic ? "Sub total:" : "المجموع الفرعي:"}</td>
-                <td>{totalPrice.toLocaleString("en-US")} $</td>
-              </tr>
-              <tr>
-                <td>{!isArabic ? "Discount:" : "الخصم:"}:</td>
-                <td>{info.offerPrice !== 0 ? (totalPrice - (info.offerPrice as number)).toLocaleString("en-US") : 0}</td>
-              </tr>
-              <tr className={styles.strong}>
-                <td>{!isArabic ? "Total:" : "الإجمالي:"}</td>
-                <td>{info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")} $</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
         <div className={styles.notes}>
           <table className={styles.notesTable}>
             <tbody>

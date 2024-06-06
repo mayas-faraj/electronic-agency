@@ -7,9 +7,12 @@
   direction: rtl;
 }
 
+.logoWrapper {
+  text-align: left;
+}
+
 .logo {
   max-width: 160px;
-  margin-left: 40px;
 }
 
 .title {
@@ -19,6 +22,8 @@
 
 .id {
   text-align: end;
+  margin-inline-end: 3px;
+  margin-bottom: 10px;
 }
 
 .schemaTable {
@@ -32,21 +37,38 @@ title,
   font-weight: bold;
 }
 
-.schemaTable td:nth-child(1) {
-  width: 60px;
-}
-
+.schemaTable td:nth-child(1),
 .schemaTable td:nth-child(3) {
-  width: 100px;
+  width: 15%;
 }
 
-.productsTable {
-  border-spacing: 0;
+.schemaTable td:nth-child(2) {
+  width: 55%;
+}
+
+.schemaTable td:nth-child(4) {
+  width: 15%;
+  text-align: end;
 }
 
 .productsTable td,
 .productsTable th {
   padding: 8px;
+}
+
+.productsTable {
+  border-spacing: 0;
+
+  th:nth-child(3) {
+    width: 100px;
+  }
+
+  tr:not(.summaryRow) {
+    th:nth-child(4),
+    td:nth-child(4) {
+      text-align: start;
+    }
+  }
 }
 
 .productsTable th {
@@ -60,21 +82,30 @@ title,
   text-align: center;
 }
 
-.summary {
-  width: 50%;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  margin-inline-start: 50%;
-  margin-inline-end: 0;
+.summaryRow {
+  td {
+    border: 0;
+  }
+
+  td:nth-child(2) {
+    text-align: start;
+  }
+
+  &:first-child {
+    padding-top: 40px;
+  }
+
+  &:last-child {
+    td:nth-child(2),
+    td:nth-child(3),
+    td:nth-child(4) {
+      background-color: grey;
+    }
+  }
 }
 
-.notesTable td,
-.summaryTable td {
+.notesTable td {
   padding: 10px 5px;
-}
-
-.summaryTable tr:last-child {
-  background-color: grey;
 }
 
 .footer {
@@ -112,7 +143,6 @@ title,
 }
 
 .schemaTable,
-.productsTable,
-.summaryTable {
+.productsTable {
   width: 100%;
 }

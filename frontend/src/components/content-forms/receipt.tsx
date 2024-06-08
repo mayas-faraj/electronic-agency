@@ -6,7 +6,7 @@ import { reducer } from "../content-form";
 import logoImage from "../../assets/imgs/logo-receipt.png";
 import greeImage from "../../assets/imgs/gree-logo.jpg";
 import getServerData from "../../libs/server-data";
-import { font } from "../../libs/font";
+import html2canvas from "html2canvas";
 import styles from "../../styles/receipt.module.scss";
 
 const initialInfo = {
@@ -42,27 +42,21 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   // component reducer
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
   const [products, setProducts] = React.useState<OrderProduct[]>([]);
+  const htmlRef = React.useRef<HTMLDivElement>(null);
 
   const totalPrice = products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0);
 
   const print = () => {
-    const jsPdf = new jsPDF({
-      orientation: "portrait",
-      unit: "px"
-    });
-    jsPdf.html(document.getElementById("print") ?? "no data", {
-      x: 20,
-      y: 20,
-      fontFaces: [{ family: "NotoNaskhArabic", src: [{ url: "/alardh-alsalba/noto-font.ttf", format: "truetype" }] }],
-      width: 400,
-      windowWidth: 650,
-      callback: (doc) => {
-        doc.addFileToVFS("NotoNaskhArabic.ttf", font);
-        doc.addFont("NotoNaskhArabic.ttf", "NotoNaskhArabic", "normal");
-        doc.addFont("NotoNaskhArabic.ttf", "NotoNaskhArabic", "bold");
-        doc.setFont("NotoNaskhArabic");
-        doc.save("receipt.pdf");
-      }
+    if (htmlRef.current === null) return;
+
+    html2canvas(htmlRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px"
+      });
+      pdf.addImage(imgData, "PNG", 20, 20, 0, 0);
+      pdf.save("download.pdf");
     });
   };
 
@@ -100,7 +94,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   // render component
   return (
     <>
-      <div className={`${styles.wrapper} ${isArabic ? styles.rtl : ""}`} id="print">
+      <div className={`${styles.wrapper} ${isArabic ? styles.rtl : ""}`} ref={htmlRef}>
         <div className={styles.logoWrapper}>
           <img src={logoImage} alt="logo" className={styles.logo} />
         </div>
@@ -117,7 +111,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td>{new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
             </tr>
             <tr>
-              <td>{!isArabic ? "Att:" : "حضرة السيد:"}</td>
+              <td>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</td>
               <td>{`${info.firstName}${info.lastName && " "}${info.lastName}`}</td>
               <td>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</td>
               <td>{new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}</td>
@@ -157,19 +151,19 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             ))}
             <tr className={styles.summaryRow}>
               <td colSpan={3}></td>
-              <td>{!isArabic ? "Sub total:" : "المجموع الفرعي:"}</td>
+              <td>{!isArabic ? "Sub total" : "المجموع الفرعي"}:</td>
               <td></td>
               <td>{totalPrice.toLocaleString("en-US")} $</td>
             </tr>
             <tr className={styles.summaryRow}>
               <td colSpan={3}></td>
-              <td>{!isArabic ? "Discount:" : "الخصم:"}:</td>
+              <td>{!isArabic ? "Discount" : "الخصم"}:</td>
               <td></td>
               <td>{info.offerPrice !== 0 ? (totalPrice - (info.offerPrice as number)).toLocaleString("en-US") : 0}</td>
             </tr>
             <tr className={`${styles.strong} ${styles.summaryRow}`}>
               <td colSpan={3}></td>
-              <td>{!isArabic ? "Total:" : "الإجمالي:"}</td>
+              <td>{!isArabic ? "Total" : "الإجمالي"}:</td>
               <td></td>
               <td>{info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")} $</td>
             </tr>
@@ -179,19 +173,19 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
           <table className={styles.notesTable}>
             <tbody>
               <tr>
-                <td>{!isArabic ? "Notes" : "ملاحظات:"}</td>
+                <td>{!isArabic ? "Notes" : "ملاحظات"}:</td>
                 <td>{info.note as string}</td>
               </tr>
               <tr>
-                <td>{!isArabic ? "Payment terms:" : "شروط الدفع:"}</td>
+                <td>{!isArabic ? "Payment terms" : "شروط الدفع"}:</td>
                 <td>{info.terms as string}</td>
               </tr>
               <tr>
-                <td>{!isArabic ? "Delivery:" : "التسليم:"}</td>
+                <td>{!isArabic ? "Delivery" : "التسليم"}:</td>
                 <td>{info.delivery as string}</td>
               </tr>
               <tr>
-                <td>{!isArabic ? "Warranty:" : "الضمان:"}</td>
+                <td>{!isArabic ? "Warranty" : "الضمان"}:</td>
                 <td>{info.warranty as string}</td>
               </tr>
             </tbody>
@@ -199,11 +193,9 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         </div>
         <div className={styles.footer}>
           <div>
-            Office Iraq 6650
+            Office Iraq phone: 6650
             <br />
-            info@alardhalsalba.command
-            <br />
-            Lebanese Village, F1 Gldg., 3rd.F, Erbil, Iraq
+            email: info@alardhalsalba.com
             <br />
             Website: alardhalsalba.com
           </div>
@@ -212,9 +204,11 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             <img src={greeImage} alt="gree logo" className={styles.footerLogo} />
           </div>
           <div>
-            مكتب العراق: 6650
+            مكتب العراق هاتف رباعي: 6650
             <br />
-            العراق, أربيل, القرية اللبنانية, بناية F1, الطابق الثالث
+            البريد الالكتروني: info@alardhalsalba.com
+            <br />
+            الموقع: alardhalsalba.com
           </div>
         </div>
       </div>

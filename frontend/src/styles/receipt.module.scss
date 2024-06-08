@@ -1,6 +1,10 @@
 .wrapper {
   font-size: 0.7rem;
-  word-spacing: 3px;
+  font-family: "Amiri";
+  word-spacing: 0;
+  width: 730px;
+  height: 1032px;
+  position: relative;
 }
 
 .rtl {
@@ -109,15 +113,18 @@ title,
 }
 
 .footer {
-  margin-top: 280px;
   display: flex;
   flex-flow: row wrap;
   color: #27716d;
   font-size: 0.7rem;
-}
+  position: absolute;
+  bottom: 15px;
+  width: calc(100% - 40px);
+  direction: ltr;
 
-.rtl .footer {
-  margin-top: 100px;
+  & > div:first-child {
+    line-height: 1.4rem;
+  }
 }
 
 .footerLogo {

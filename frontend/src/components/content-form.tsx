@@ -54,11 +54,24 @@ interface IContentForm {
   commandDisabled?: boolean;
   commandDisabledMessage?: string;
   onUpdate?: (result: any) => void;
+  buttonIcon?: ReactNode;
+  hasButtonText?: boolean;
   children: ReactNode;
 }
 
 // main component
-const ContentForm: FunctionComponent<IContentForm> = ({ id, name, title, command, commandDisabled, commandDisabledMessage, onUpdate, children }) => {
+const ContentForm: FunctionComponent<IContentForm> = ({
+  id,
+  name,
+  title,
+  command,
+  commandDisabled,
+  commandDisabledMessage,
+  onUpdate,
+  hasButtonText,
+  buttonIcon,
+  children
+}) => {
   return (
     <div className={styles.wrapper}>
       {title != null && <h1 className={styles.title}>{title}</h1>}
@@ -72,6 +85,8 @@ const ContentForm: FunctionComponent<IContentForm> = ({ id, name, title, command
           commandDisabled={commandDisabled}
           commandDisabledMessage={commandDisabledMessage ?? "Please fill all required fields"}
           onUpdate={onUpdate}
+          buttonIcon={buttonIcon}
+          hasButtonText={hasButtonText}
         />
       </Content>
     </div>

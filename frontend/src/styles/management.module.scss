@@ -1,26 +1,31 @@
 @import "colors";
 
 .wrapper {
-    display: block;
+  display: block;
 }
 
 .modal__buttons {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .button--save {
-	background-color: $secondary-color !important;
-	color: $primary-color !important;
-	width: 100%;
-	padding: 15px 0 !important;
-	margin-top: 15px !important;
+  background-color: $secondary-color !important;
+  color: $primary-color !important;
+  width: 100%;
+  padding: 15px 0 !important;
+  margin-top: 15px !important;
+
+  svg {
+    margin-right: 10px;
+    vertical-align: middle;
+  }
 }
 
 .button--delete {
-    color: #ff6d6d !important;
+  color: #ff6d6d !important;
 }
 
 .button--edit {
-    color: #16d650 !important;
+  color: #16d650 !important;
 }

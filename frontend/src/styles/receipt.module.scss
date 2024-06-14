@@ -63,8 +63,12 @@ title,
 .productsTable {
   border-spacing: 0;
 
+  th:nth-child(2) {
+    width: 150px;
+  }
+
   th:nth-child(3) {
-    width: 100px;
+    width: 280px;
   }
 
   tr:not(.summaryRow) {

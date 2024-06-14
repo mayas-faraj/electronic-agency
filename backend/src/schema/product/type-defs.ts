@@ -11,7 +11,7 @@ const typeDefs = `#graphql
         createProduct(input: ProductInput!): ProductBasic
 				updateProduct(id: Int!, input: ProductUpdate!): ProductBasic
 				deleteProduct(id: Int!): ProductBasic
-				createProductItem(productId: Int!, sn: String!): ProductItemBasic
+				createProductItems(productId: Int!, snList: [String]!): ImportReport
 				updateProductItem(sn: String!, newSn: String!): ProductItemBasic
 				deleteProductItem(sn: String!): ProductItemBasic
 				updateProductItemSold(sn: String!, isSold: Boolean!): ProductItemBasic
@@ -127,6 +127,12 @@ const typeDefs = `#graphql
 	input ProductReviewInput {
 		rating: Int!
 		comment: String
+	}
+
+	type ImportReport {
+		acceptCount: Int!
+		errorCount: Int!
+		errorSnList: [String]!
 	}
 `;
 

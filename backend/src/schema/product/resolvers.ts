@@ -1,8 +1,4 @@
-import {
-  type AppContext,
-  checkAuthorization,
-  Role,
-} from "../../auth.js";
+import { type AppContext, checkAuthorization, Role } from "../../auth.js";
 import filter from "../filter.js";
 
 const resolvers = {
@@ -12,9 +8,12 @@ const resolvers = {
       const result = await app.prismaClient.product.findMany({
         skip: args.pagination?.id != null ? 1 : undefined,
         take: args.pagination?.take,
-        cursor: args.pagination?.id != null ? {
-          id: args.pagination.id
-        } : undefined,
+        cursor:
+          args.pagination?.id != null
+            ? {
+                id: args.pagination.id,
+              }
+            : undefined,
         select: {
           id: true,
           name: true,
@@ -33,9 +32,9 @@ const resolvers = {
             select: {
               id: true,
               categoryId: true,
-              name: true
-            }
-          }
+              name: true,
+            },
+          },
         },
         orderBy: {
           id: "desc",
@@ -45,7 +44,7 @@ const resolvers = {
             { subCategoryId: args.subCategoryId },
             {
               isDisabled:
-                args.filter?.showDisabled === true ? undefined : false
+                args.filter?.showDisabled === true ? undefined : false,
             },
             { createdAt: filter.dateFilter(args.filter?.fromDate, false) },
             { createdAt: filter.dateFilter(args.filter?.toDate, true) },
@@ -55,9 +54,17 @@ const resolvers = {
                 { nameTranslated: filter.searchFilter(args.filter?.keyword) },
                 { model: filter.searchFilter(args.filter?.keyword) },
                 { description: filter.searchFilter(args.filter?.keyword) },
-                { descriptionTranslated: filter.searchFilter(args.filter?.keyword) },
+                {
+                  descriptionTranslated: filter.searchFilter(
+                    args.filter?.keyword
+                  ),
+                },
                 { specification: filter.searchFilter(args.filter?.keyword) },
-                { specificationTranslated: filter.searchFilter(args.filter?.keyword) },
+                {
+                  specificationTranslated: filter.searchFilter(
+                    args.filter?.keyword
+                  ),
+                },
               ],
             },
           ],
@@ -138,8 +145,8 @@ const resolvers = {
               productSn: true,
               clientId: true,
               createdAt: true,
-            }
-          }
+            },
+          },
         },
       });
 
@@ -185,7 +192,7 @@ const resolvers = {
         data: {
           subCategoryId: args.input.subCategoryId,
           name: args.input.name,
-          nameTranslated: args.input.nameTranslated, 
+          nameTranslated: args.input.nameTranslated,
           model: args.input.model,
           image: args.input.image,
           description: args.input.description,
@@ -247,23 +254,37 @@ const resolvers = {
 
       return result;
     },
-    createProductItem: async (parent: any, args: any, app: AppContext) => {
+    createProductItems: async (parent: any, args: any, app: AppContext) => {
       // check permissions
       checkAuthorization(app.user.rol, Role.ADMIN, Role.PRODUCT_MANAGER);
 
-      // return result
-      const result = await app.prismaClient.productItem.create({
-        data: {
-          productId: args.productId,
-          sn: args.sn,
-        },
-        select: {
-          sn: true,
-          createdAt: true,
-        },
-      });
+      // define result
+      let acceptCount = 0;
+      let errorCount = 0;
+      let errorSnList: string[] = [];
 
-      return result;
+      // return result
+      for await (const sn of args.snList as string[]) {
+        try {
+          const result = await app.prismaClient.productItem.create({
+            data: {
+              productId: args.productId,
+              sn,
+            },
+          });
+
+          acceptCount++;
+        } catch (ex) {
+          errorCount++;
+          errorSnList.push(sn);
+        }
+      }
+
+      return {
+        acceptCount,
+        errorCount,
+        errorSnList,
+      };
     },
     updateProductItem: async (parent: any, args: any, app: AppContext) => {
       // check permissions
@@ -295,7 +316,7 @@ const resolvers = {
           sn: args.sn,
         },
         data: {
-          isSold: args.isSold
+          isSold: args.isSold,
         },
         select: {
           sn: true,

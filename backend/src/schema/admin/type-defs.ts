@@ -17,6 +17,7 @@ const typeDefs = `#graphql
     type Admin {
 		id: Int!
 		user: String!
+		level: Int!
 		isDisabled: Boolean
 		createdAt: String
 		updatedAt: String

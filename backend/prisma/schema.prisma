@@ -62,15 +62,31 @@ model Admin {
   id          Int       @id @default(autoincrement())
   user        String    @unique @db.VarChar(100)
   password    String    @db.VarChar(100)
+  level       Int       @default(1)
+  centerId    Int?
   isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   lastLoginAt DateTime? @map("last_login_at")
   role        Role      @default(SALES_MAN)
+  center      Center?   @relation(fields: [centerId], references: [id])
   offers      Offer[]
   repairs     Repair[]
 
   @@map("admin")
+}
+
+model Center {
+  id        Int       @id @default(autoincrement())
+  parentId  Int?      @map("parent_id")
+  name      String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  parent    Center?   @relation(name: "center_level", fields: [parentId], references: [id])
+  children  Center[]  @relation(name: "center_level")
+  admins    Admin[]
+
+  @@map("center")
 }
 
 model Category {

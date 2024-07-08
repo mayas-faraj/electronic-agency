@@ -11,6 +11,38 @@ await prismaClient.subCategory.deleteMany();
 await prismaClient.category.deleteMany();
 await prismaClient.client.deleteMany();
 await prismaClient.admin.deleteMany();
+await prismaClient.center.deleteMany();
+
+// seed centers
+result = await prismaClient.center.createMany({
+  data: [
+    {
+      id: 1,
+      name: "Baghdad call center",
+    },
+    {
+      id: 2,
+      name: "Erbil call center",
+    },
+    {
+      id: 3,
+      name: "Review baghdad",
+      parentId: 1,
+    },
+    {
+      id: 4,
+      name: "Review Cities",
+      parentId: 1,
+    },
+    {
+      id: 5,
+      name: "Review Ticket",
+      parentId: 2,
+    },
+  ],
+});
+
+console.log("client seed result: ", result);
 
 // seed clients
 result = await prismaClient.client.createMany({
@@ -66,21 +98,50 @@ result = await prismaClient.admin.createMany({
     },
     {
       id: 2,
-      user: "ali",
-      password: "12345",
+      user: "sara",
+      password: "Zxasqw1234",
       role: "PRODUCT_MANAGER",
+      level: 2,
+      centerId: 1,
     },
     {
       id: 3,
-      user: "alaa",
-      password: "123",
-      role: "SALES_MAN",
+      user: "hendreen",
+      password: "Zxasqw1234",
+      role: "PRODUCT_MANAGER",
+      level: 2,
+      centerId: 1,
     },
     {
       id: 4,
-      user: "feras",
-      password: "9999",
+      user: "firas",
+      password: "Zxasqw1234",
+      role: "SALES_MAN",
+      level: 3,
+      centerId: 3,
+    },
+    {
+      id: 5,
+      user: "ahmad sabtti",
+      password: "Zxasqw1234",
+      role: "SALES_MAN",
+      level: 3,
+      centerId: 4,
+    },
+    {
+      id: 6,
+      user: "mussa",
+      password: "Zxasqw1234",
+      role: "SALES_MAN",
+      level: 3,
+      centerId: 5,
+    },
+    {
+      id: 7,
+      user: "tech1",
+      password: "Zxasqw1234",
       role: "TECHNICAL",
+      centerId: 5,
     },
   ],
 });
@@ -364,7 +425,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
-    id: 2,
+    id: 4,
     subCategoryId: 1,
     name: "GUD24T/A-SE",
     nameTranslated: "GUD24T/A-SE",
@@ -458,6 +519,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 2,
     subCategoryId: 1,
     name: "GUD36T/A-SE",
     nameTranslated: "",
@@ -610,6 +672,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 3,
     subCategoryId: 1,
     name: "GUD60T/A-SE",
     nameTranslated: "GUD60T/A-SE",
@@ -702,6 +765,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 5,
     subCategoryId: 1,
     name: "GUD18T/A-KE",
     nameTranslated: "GUD18T/A-KE",

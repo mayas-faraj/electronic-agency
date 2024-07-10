@@ -33,7 +33,7 @@ export const checkAuthorization = (role: string, ...allowedRoles: Role[]) => {
 };
 
 // decode user
-export const decodeUser = (user: AuthUser) => {
+export const generateJwtToken = (user: AuthUser) => {
   return jwt.sign(user, secret);
 };
 

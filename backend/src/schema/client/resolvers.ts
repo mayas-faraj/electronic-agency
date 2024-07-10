@@ -2,7 +2,7 @@ import { GraphQLError } from "graphql";
 import {
   type AppContext,
   checkAuthorization,
-  decodeUser,
+  generateJwtToken,
   Role,
 } from "../../auth.js";
 import filter from "../filter.js";
@@ -163,7 +163,7 @@ const resolvers = {
           },
         });
         return {
-          jwt: decodeUser({ id: result.id, nam: result.user, rol: "" }),
+          jwt: generateJwtToken({ id: result.id, nam: result.user, rol: "" }),
           success: true,
         };
       } else return { jwt: "", success: false };

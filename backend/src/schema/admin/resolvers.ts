@@ -1,7 +1,7 @@
 import {
   type AppContext,
   checkAuthorization,
-  decodeUser,
+  generateJwtToken,
   Role,
 } from "../../auth.js";
 import filter from "../filter.js";
@@ -154,7 +154,7 @@ const resolvers = {
           });
 
           return {
-            jwt: decodeUser({
+            jwt: generateJwtToken({
               id: result.id,
               nam: result.user,
               rol: result.role,

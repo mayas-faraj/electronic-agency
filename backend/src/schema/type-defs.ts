@@ -5,6 +5,7 @@ import productTypeDefs from "./product/type-defs.js";
 import maintenanceTypeDefs from "./maintenance/type-defs.js";
 import orderTypeDefs from "./order/type-defs.js";
 import advertisementTypeDefs from "./advertisment/type-defs.js";
+import centerTypeDefs from "./center/type-defs.js";
 
 const typeDefs = `#graphql
 	type Query {
@@ -59,4 +60,5 @@ export default [
   maintenanceTypeDefs,
   orderTypeDefs,
   advertisementTypeDefs,
+  centerTypeDefs,
 ];

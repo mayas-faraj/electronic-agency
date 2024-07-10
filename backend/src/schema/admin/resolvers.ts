@@ -19,6 +19,8 @@ const resolvers = {
           user: true,
           isDisabled: true,
           role: true,
+          centerId: true,
+          level: true,
         },
         where: {
           AND: [
@@ -178,6 +180,8 @@ const resolvers = {
           password: args.input.password,
           role: args.input.role,
           isDisabled: args.input.isDisabled,
+          level: args.input.level,
+          centerId: args.input.centerId,
         },
       });
 
@@ -197,6 +201,8 @@ const resolvers = {
           password: args.input.password,
           role: args.input.role,
           isDisabled: args.input.isDisabled,
+          level: args.input.level,
+          centerId: args.input.centerId,
         },
       });
 

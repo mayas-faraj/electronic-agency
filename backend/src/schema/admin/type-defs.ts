@@ -18,6 +18,7 @@ const typeDefs = `#graphql
 		id: Int!
 		user: String!
 		level: Int!
+		centerId: Int
 		isDisabled: Boolean
 		createdAt: String
 		updatedAt: String
@@ -39,6 +40,8 @@ const typeDefs = `#graphql
 		password: String
 		role: String
 		isDisabled: Boolean
+		level: Int
+		centerId: Int
 	}
 
 	input AdminUpdate {
@@ -46,6 +49,8 @@ const typeDefs = `#graphql
 		password: String
 		role: String
 		isDisabled: Boolean
+		level: Int
+		centerId: Int
 	}
 `;
 

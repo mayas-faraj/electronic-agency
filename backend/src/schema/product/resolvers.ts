@@ -152,6 +152,33 @@ const resolvers = {
 
       return result;
     },
+    productItems: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.productItem.findMany({
+        where: {
+          sn: {
+            in: args.snList,
+          },
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              nameTranslated: true,
+              model: true,
+              image: true,
+              description: true,
+              descriptionTranslated: true,
+              price: true,
+              isDisabled: true,
+            },
+          },
+        },
+      });
+
+      return result;
+    },
     productItemsByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.productItem.findMany({

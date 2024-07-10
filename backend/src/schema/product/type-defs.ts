@@ -4,6 +4,7 @@ const typeDefs = `#graphql
 				productsCount: AggregateResult
 				product(id: Int!): Product
 				productItem(sn: String!): ProductItem
+				productItems(snList: [String]!): [ProductItem]
 				productItemsByAuth: [ProductItem]
     }
 

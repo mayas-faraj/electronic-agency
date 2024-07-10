@@ -3,6 +3,7 @@ import {
   type AppContext,
   checkAuthorization,
   generateJwtToken,
+  generateServiceJwtToken,
   Role,
 } from "../../auth.js";
 import filter from "../filter.js";
@@ -149,6 +150,8 @@ const resolvers = {
         select: {
           id: true,
           user: true,
+          firstName: true,
+          lastName: true,
         },
       });
 
@@ -164,6 +167,12 @@ const resolvers = {
         });
         return {
           jwt: generateJwtToken({ id: result.id, nam: result.user, rol: "" }),
+          jwt2: generateServiceJwtToken({
+            name: result.user,
+            sub: `${result.firstName} ${result.lastName}`,
+            role: "SUBSCRIBER",
+            aud: "ea",
+          }),
           success: true,
         };
       } else return { jwt: "", success: false };

@@ -2,6 +2,7 @@ import {
   type AppContext,
   checkAuthorization,
   generateJwtToken,
+  generateServiceJwtToken,
   Role,
 } from "../../auth.js";
 import filter from "../filter.js";
@@ -158,6 +159,12 @@ const resolvers = {
               id: result.id,
               nam: result.user,
               rol: result.role,
+            }),
+            jwt2: generateServiceJwtToken({
+              name: result.user,
+              sub: result.user,
+              role: result.role,
+              aud: "ea",
             }),
             message: "Login success",
             success: true,

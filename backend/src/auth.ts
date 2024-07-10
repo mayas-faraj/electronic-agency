@@ -14,6 +14,13 @@ interface AuthUser {
   nam: string;
   rol: string;
 };
+
+interface ServiceUser {
+  name: string;
+  role: string;
+  sub: string;
+  aud?: string;
+};
 export interface AppContext {
   prismaClient: PrismaClient;
   user: AuthUser;
@@ -34,6 +41,10 @@ export const checkAuthorization = (role: string, ...allowedRoles: Role[]) => {
 
 // decode user
 export const generateJwtToken = (user: AuthUser) => {
+  return jwt.sign(user, secret);
+};
+
+export const generateServiceJwtToken = (user: ServiceUser) => {
   return jwt.sign(user, secret);
 };
 

@@ -36,6 +36,7 @@ const typeDefs = `#graphql
 
 	type User {
 		jwt: String!
+		jwt2: String!
 		success: Boolean!
 		message: String!
 	}

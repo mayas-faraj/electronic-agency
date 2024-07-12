@@ -4,7 +4,6 @@ const prismaClient = new PrismaClient({ log: ["query"] });
 let result: any = null;
 
 // clear data
-await prismaClient.maintenance.deleteMany();
 await prismaClient.order.deleteMany();
 await prismaClient.product.deleteMany();
 await prismaClient.subCategory.deleteMany();
@@ -2323,36 +2322,3 @@ result = await prismaClient.order.create({
 });
 
 console.log("order seed result: ", result);
-
-// seed maintenance
-result = await prismaClient.maintenance.create({
-  data: {
-    productSn: "116983725927",
-    propertyType: "OFFICE",
-    description: "the air condition is not working at all",
-    bookedAt: new Date(2023, 5, 1),
-    address: "Jaramaran-Damascus",
-    status: "FIXED",
-    repair: {
-      create: {
-        adminId: 4,
-        price: 20,
-        description: "the power supply circuit has been replaced",
-      },
-    },
-  },
-});
-
-result = await prismaClient.maintenance.create({
-  data: {
-    productSn: "136983725927",
-    propertyType: "HOME",
-    description: "there are a sound when I trun on the condition",
-    bookedAt: new Date(2023, 6, 12),
-    address: "Mazzeh-Damascus",
-    status: "PENDING",
-    isDraft: true,
-  },
-});
-
-console.log("maintenace seed result: ", result);

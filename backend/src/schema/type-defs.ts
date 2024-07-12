@@ -2,7 +2,6 @@ import clientTypeDefs from "./client/type-defs.js";
 import adminTypeDefs from "./admin/type-defs.js";
 import categoryTypeDefs from "./category/type-defs.js";
 import productTypeDefs from "./product/type-defs.js";
-import maintenanceTypeDefs from "./maintenance/type-defs.js";
 import orderTypeDefs from "./order/type-defs.js";
 import advertisementTypeDefs from "./advertisment/type-defs.js";
 import centerTypeDefs from "./center/type-defs.js";
@@ -58,7 +57,6 @@ export default [
   adminTypeDefs,
   categoryTypeDefs,
   productTypeDefs,
-  maintenanceTypeDefs,
   orderTypeDefs,
   advertisementTypeDefs,
   centerTypeDefs,

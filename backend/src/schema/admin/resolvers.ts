@@ -72,14 +72,6 @@ const resolvers = {
               createdAt: true,
             },
           },
-          repairs: {
-            select: {
-              id: true,
-              price: true,
-              description: true,
-              createdAt: true,
-            },
-          },
         },
       });
 
@@ -97,14 +89,6 @@ const resolvers = {
               id: true,
               price: true,
               validationDays: true,
-              createdAt: true,
-            },
-          },
-          repairs: {
-            select: {
-              id: true,
-              price: true,
-              description: true,
               createdAt: true,
             },
           },

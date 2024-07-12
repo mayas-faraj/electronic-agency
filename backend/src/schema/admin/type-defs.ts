@@ -25,7 +25,6 @@ const typeDefs = `#graphql
 		lastLoginAt: String
 		role: String
 		offers: [OfferBasic]
-		repairs: [RepairBasic]
 	}
 
 	type AdminBasic {

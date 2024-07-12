@@ -7,6 +7,7 @@ const resolvers = {
       // return result
       return await app.prismaClient.center.findMany({
         where: { parentId: args.parentId },
+        include: { admins: true },
       });
     },
     center: async (_parent: any, args: any, app: AppContext) => {
@@ -15,6 +16,7 @@ const resolvers = {
         where: { id: args.id },
         include: {
           children: true,
+          admins: true,
         },
       });
     },

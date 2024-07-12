@@ -14,7 +14,7 @@ const resolvers = {
   Query: {
     clients: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.client.findMany({
@@ -66,7 +66,7 @@ const resolvers = {
     },
     clientsCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.client.aggregate({
@@ -82,7 +82,7 @@ const resolvers = {
     },
     client: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN, Role.PRODUCT_MANAGER);
 
       // return result
       const result = await app.prismaClient.client.findUnique({

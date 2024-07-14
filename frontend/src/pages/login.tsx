@@ -36,7 +36,7 @@ const LoginPage: FunctionComponent = () => {
     // verification of user
     setLoading(true);
     const action = async () => {
-      const loginResult = await getServerData(`query { verifyAdmin(user: "${user}", password: "${password}") { jwt success message } }`);
+      const loginResult = await getServerData(`query { verifyAdmin(user: "${user}", password: "${password}") { jwt jwt2 success message } }`);
 
       setUser("");
       setPassword("");
@@ -52,9 +52,12 @@ const LoginPage: FunctionComponent = () => {
 
             // save access token
             StorageManager.save(result.jwt);
+            StorageManager.save2(result.jwt2);
 
             // navigate to home
-            setTimeout(() => { window.location.href="/alardh-alsalba"; }, 1000);
+            setTimeout(() => {
+              window.location.href = "/alardh-alsalba";
+            }, 1000);
           } else setErrorMessage(result.message);
         } else setErrorMessage("Unknown error");
       }
@@ -75,14 +78,16 @@ const LoginPage: FunctionComponent = () => {
               id="userText"
               label="User"
               value={user}
-              onChange={(e) => { setUser(e.target.value) }}
+              onChange={(e) => {
+                setUser(e.target.value);
+              }}
               variant="outlined"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <AccountCircleIcon />
                   </InputAdornment>
-                ),
+                )
               }}
             />
             <TextField
@@ -90,24 +95,46 @@ const LoginPage: FunctionComponent = () => {
               label="Password"
               value={password}
               type="password"
-              onChange={(e) => { setPassword(e.target.value) }}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               variant="outlined"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
                     <LockIcon />
                   </InputAdornment>
-                ),
+                )
               }}
             />
-            <button disabled={isLoading} className="button" onClick={e => { handleClick(e) }}>Sign in {isLoading ? <HourglassBottomIcon className={styles.loading__icon} /> : undefined}</button>
+            <button
+              disabled={isLoading}
+              className="button"
+              onClick={(e) => {
+                handleClick(e);
+              }}
+            >
+              Sign in {isLoading ? <HourglassBottomIcon className={styles.loading__icon} /> : undefined}
+            </button>
           </form>
         </div>
       </div>
-      <Snackbar open={successMessage !== ""} onClose={() => { setSuccessMessage("") }} autoHideDuration={6000}>
+      <Snackbar
+        open={successMessage !== ""}
+        onClose={() => {
+          setSuccessMessage("");
+        }}
+        autoHideDuration={6000}
+      >
         <Alert severity="success">{successMessage}</Alert>
       </Snackbar>
-      <Snackbar open={errorMessage !== ""} onClose={() => { setErrorMessage("") }} autoHideDuration={6000}>
+      <Snackbar
+        open={errorMessage !== ""}
+        onClose={() => {
+          setErrorMessage("");
+        }}
+        autoHideDuration={6000}
+      >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
     </div>

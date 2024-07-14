@@ -56,6 +56,7 @@ interface IContentForm {
   onUpdate?: (result: any) => void;
   buttonIcon?: ReactNode;
   hasButtonText?: boolean;
+  isService?: boolean;
   children: ReactNode;
 }
 
@@ -70,6 +71,7 @@ const ContentForm: FunctionComponent<IContentForm> = ({
   onUpdate,
   hasButtonText,
   buttonIcon,
+  isService,
   children
 }) => {
   return (
@@ -87,6 +89,7 @@ const ContentForm: FunctionComponent<IContentForm> = ({
           onUpdate={onUpdate}
           buttonIcon={buttonIcon}
           hasButtonText={hasButtonText}
+          isService={isService}
         />
       </Content>
     </div>

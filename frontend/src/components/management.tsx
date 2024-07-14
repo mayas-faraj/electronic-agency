@@ -31,6 +31,7 @@ interface IManagementProps {
   className?: string;
   isDisabled?: boolean;
   hasButtonClass?: boolean;
+  isService?: boolean;
 }
 
 // component
@@ -47,6 +48,7 @@ const Management: FunctionComponent<IManagementProps> = ({
   hasConfirmModal,
   initialValue,
   className,
+  isService,
   onUpdate
 }) => {
   // component states
@@ -98,7 +100,7 @@ const Management: FunctionComponent<IManagementProps> = ({
   // event handler
   const action = async () => {
     if (commandDisabled !== true) {
-      const result = await getServerData(command);
+      const result = await getServerData(command, isService);
       if (result.errors != null) {
         if (result.errors.length > 0) setErrorMessage(result.errors[0].message);
         else setErrorMessage(`Error while ${Operation[operation]} ${name}`);

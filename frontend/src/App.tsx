@@ -51,7 +51,7 @@ function App() {
   const ClientsPage = React.lazy(() => import("./pages/clients"));
   const AdminsPage = React.lazy(() => import("./pages/admins"));
   const OrdersPage = React.lazy(() => import("./pages/orders"));
-  const MaintenancesPage = React.lazy(() => import("./pages/maintenances"));
+  const TicketsPage = React.lazy(() => import("./pages/tickets"));
   const PasswordPage = React.lazy(() => import("./pages/password"));
   const AddAdminPage = React.lazy(() => import("./pages/add-admin"));
   const AddClientPage = React.lazy(() => import("./pages/add-client"));
@@ -59,6 +59,7 @@ function App() {
   const AddProductPage = React.lazy(() => import("./pages/add-product"));
   const AddCategoryPage = React.lazy(() => import("./pages/add-category"));
   const AddSubCategoryPage = React.lazy(() => import("./pages/add-sub-category"));
+  const AddTicketPage = React.lazy(() => import("./pages/add-ticket"));
 
   // app router
   const routes = [
@@ -75,7 +76,7 @@ function App() {
     { path: "/clients", element: <ClientsPage /> },
     { path: "/admins", element: <AdminsPage /> },
     { path: "/orders", element: <OrdersPage /> },
-    { path: "/maintenances", element: <MaintenancesPage /> },
+    { path: "/tickets", element: <TicketsPage /> },
     { path: "/password", element: <PasswordPage /> },
     { path: "/add-admin", element: <AddAdminPage /> },
     { path: "/add-client", element: <AddClientPage /> },
@@ -83,6 +84,7 @@ function App() {
     { path: "/add-order", element: <AddOrderPage /> },
     { path: "/add-category", element: <AddCategoryPage /> },
     { path: "/add-sub-category/:categoryid", element: <AddSubCategoryPage /> },
+    { path: "/add-ticket", element: <AddTicketPage /> },
 
     { path: "*", element: <NotFoundPage /> }
   ];

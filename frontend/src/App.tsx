@@ -52,6 +52,7 @@ function App() {
   const AdminsPage = React.lazy(() => import("./pages/admins"));
   const OrdersPage = React.lazy(() => import("./pages/orders"));
   const TicketsPage = React.lazy(() => import("./pages/tickets"));
+  const CentersPage = React.lazy(() => import("./pages/centers"));
   const PasswordPage = React.lazy(() => import("./pages/password"));
   const AddAdminPage = React.lazy(() => import("./pages/add-admin"));
   const AddClientPage = React.lazy(() => import("./pages/add-client"));
@@ -60,6 +61,7 @@ function App() {
   const AddCategoryPage = React.lazy(() => import("./pages/add-category"));
   const AddSubCategoryPage = React.lazy(() => import("./pages/add-sub-category"));
   const AddTicketPage = React.lazy(() => import("./pages/add-ticket"));
+  const AddCenterPage = React.lazy(() => import("./pages/add-center"));
 
   // app router
   const routes = [
@@ -77,6 +79,7 @@ function App() {
     { path: "/admins", element: <AdminsPage /> },
     { path: "/orders", element: <OrdersPage /> },
     { path: "/tickets", element: <TicketsPage /> },
+    { path: "/centers/:parentId?", element: <CentersPage /> },
     { path: "/password", element: <PasswordPage /> },
     { path: "/add-admin", element: <AddAdminPage /> },
     { path: "/add-client", element: <AddClientPage /> },
@@ -85,6 +88,7 @@ function App() {
     { path: "/add-category", element: <AddCategoryPage /> },
     { path: "/add-sub-category/:categoryid", element: <AddSubCategoryPage /> },
     { path: "/add-ticket", element: <AddTicketPage /> },
+    { path: "/add-center", element: <AddCenterPage /> },
 
     { path: "*", element: <NotFoundPage /> }
   ];

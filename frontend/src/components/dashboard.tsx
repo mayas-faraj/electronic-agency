@@ -1,6 +1,6 @@
 import React from "react";
 import RoleContext from "../components/role-context";
-import { AdminInfoBlock, ClientInfoBlock, MaintenanceInfoBlock, OrderInfoBlock, ProductInfoBlock } from "./info-block";
+import { AdminInfoBlock, ClientInfoBlock, TicketInfoBlock, OrderInfoBlock, ProductInfoBlock } from "./info-block";
 import styles from "../styles/dashboard.module.scss";
 
 const Dashboard = () => {
@@ -11,7 +11,7 @@ const Dashboard = () => {
         { privileges.readAdmin && <AdminInfoBlock />}
         { privileges.readClient && <ClientInfoBlock />}
         { privileges.readOrder && <OrderInfoBlock />}
-        { privileges.readMaintenance && <MaintenanceInfoBlock />}
+        { privileges.readTicket && <TicketInfoBlock />}
         { privileges.readProduct && <ProductInfoBlock />}
     </div>
   )

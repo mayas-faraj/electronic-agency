@@ -12,10 +12,7 @@ interface NotificationIconProps {
 
 const interval = 12000;
 
-const NotificationIcon: FunctionComponent<NotificationIconProps> = ({
-  icon,
-  readCount,
-}) => {
+const NotificationIcon: FunctionComponent<NotificationIconProps> = ({ icon, readCount }) => {
   const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
@@ -46,27 +43,17 @@ const OrderNotificationIcon: FunctionComponent = () => {
     return result.data.ordersUnreadCount.count;
   };
 
-  return (
-    <NotificationIcon
-      icon={<ListAltIcon />}
-      readCount={readUnreadOrdersCount}
-    />
-  );
+  return <NotificationIcon icon={<ListAltIcon />} readCount={readUnreadOrdersCount} />;
 };
 
-const MaintenanceNotificationIcon: FunctionComponent = () => {
-  const readUnreadMaintenancesCount = async () => {
-    const result = await getServerData(`query { maintenancesUnreadCount { count } }`);
-    return result.data.maintenancesUnreadCount.count;
+const TicketNotificationIcon: FunctionComponent = () => {
+  const readUnreadTicketsCount = async () => {
+    const result = await getServerData(`query { ticketCount(ticketFilter: {status: OPEN}) }`, true);
+    return result.data.ticketCount;
   };
 
-  return (
-    <NotificationIcon
-      icon={<RoomPreferencesIcon />}
-      readCount={readUnreadMaintenancesCount}
-    />
-  );
+  return <NotificationIcon icon={<RoomPreferencesIcon />} readCount={readUnreadTicketsCount} />;
 };
 
-export { OrderNotificationIcon, MaintenanceNotificationIcon };
+export { OrderNotificationIcon, TicketNotificationIcon };
 export default NotificationIcon;

@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { MaintenanceNotificationIcon, OrderNotificationIcon } from "./notification-icon";
+import { TicketNotificationIcon, OrderNotificationIcon } from "./notification-icon";
 import logoImage from "../assets/imgs/logo.png";
 import RoleContext from "./role-context";
 import { Divider, IconButton } from "@mui/material";
@@ -37,7 +37,7 @@ const Header: FunctionComponent = () => {
   if (privileges.readProduct) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
   if (privileges.readAdvertisement) links.push({ title: "Advertisements", to: "/advertisements", icon: <BurstModeRounded /> });
   if (privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
-  if (privileges.readMaintenance) links.push({ title: "Maintenances", to: "/maintenances", icon: <RoomPreferences /> });
+  if (privileges.readTicket) links.push({ title: "Tickets", to: "/tickets", icon: <RoomPreferences /> });
 
   // event handlers
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -92,8 +92,8 @@ const Header: FunctionComponent = () => {
       {privileges.readOrder && (
         <MenuItem><OrderNotificationIcon />Orders</MenuItem>
       )}
-      {privileges.readMaintenance && (
-        <MenuItem><MaintenanceNotificationIcon />Maintenance</MenuItem>
+      {privileges.readTicket && (
+        <MenuItem><TicketNotificationIcon />Ticket</MenuItem>
       )}
       <MenuItem onClick={handleProfileMenuOpen}><IconButton size="large" color="inherit"><AccountCircle /></IconButton>Profile</MenuItem>
     </Menu>
@@ -115,7 +115,7 @@ const Header: FunctionComponent = () => {
               }
             </div>
             {privileges.readOrder && <OrderNotificationIcon />}
-            {privileges.readMaintenance && <MaintenanceNotificationIcon />}
+            {privileges.readTicket && <TicketNotificationIcon />}
             <IconButton size="large" edge="end" onClick={handleProfileMenuOpen} color="inherit" >
               <AccountCircle />
             </IconButton>

@@ -85,21 +85,21 @@ export const ClientInfoBlock = () => {
     return <InfoBlock {...info} />
 }
 
-export const MaintenanceInfoBlock = () => {
+export const TicketInfoBlock = () => {
     // const component state
     const [info, setInfo] = React.useState<IInfoBlockProps>(emptyInfo);
 
     // side effect compenent load
     React.useEffect(() => {
         const action = async () => {
-            const result = await getServerData(`query { maintenancesCount { count date }}`);
+            const result = await getServerData(`query { ticketCount }`, true);
             setInfo({
                 icon: <RoomPreferences />,
-                title: "Maintenances Schedule",
-                info: `${result.data.maintenancesCount.count} maintenances`,
-                url: "/maintenances",
-                description: `maintenance operations that request from user, 
-                last maintenance registered at: ${new Date(parseInt(result.data.maintenancesCount.date)).toLocaleDateString()}`
+                title: "Tickets Schedule",
+                info: `${result.data.ticketsCount} tickets`,
+                url: "/tickets",
+                description: `ticket operations that request from user, 
+                last ticket registered at: ${new Date().toLocaleDateString()}`
             });
         }
         action();

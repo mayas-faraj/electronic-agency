@@ -88,7 +88,7 @@ function App() {
     { path: "/add-category", element: <AddCategoryPage /> },
     { path: "/add-sub-category/:categoryid", element: <AddSubCategoryPage /> },
     { path: "/add-ticket", element: <AddTicketPage /> },
-    { path: "/add-center", element: <AddCenterPage /> },
+    { path: "/add-center/:parentId?", element: <AddCenterPage /> },
 
     { path: "*", element: <NotFoundPage /> }
   ];

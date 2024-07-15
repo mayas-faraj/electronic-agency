@@ -9,6 +9,7 @@ import RoleContext from "../role-context";
 import getServerData from "../../libs/server-data";
 import Password from "../content-forms/password";
 import { Link } from "react-router-dom";
+import { getRoleName } from "../../libs/role-adaper";
 
 // types
 interface IAdmin {
@@ -83,7 +84,7 @@ const Admins: FunctionComponent = () => {
         isAddNewRight={true}
         data={admins.map((admin) => ({
           user: admin.user,
-          role: admin.role.toLowerCase().replace("_", " "),
+          role: getRoleName(admin.role).toLowerCase().replace("_", " "),
           isDisabled: (
             <Management
               type={ManagementType.switch}

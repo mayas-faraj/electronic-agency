@@ -3,6 +3,7 @@ const typeDefs = `#graphql
         clients(filter: SearchFilter, pagination: Pagination): [ClientBasic]
 		clientsCount: AggregateResult
 		client(id: Int!): Client
+		clientByPhone(phone: String!): Client
 		clientByAuth: Client
 		verifyClient(clientId: Int!, codeText: String!): User
     }

@@ -17,6 +17,7 @@ export interface Privileges {
   writeOrder: boolean;
   readOffer: boolean;
   writeOffer: boolean;
+  addTicket: boolean;
   readTicket: boolean;
   writeTicket: boolean;
   readRepair: boolean;
@@ -40,10 +41,11 @@ export const noPrivileges: Privileges = {
   writeOrder: false,
   readOffer: false,
   writeOffer: false,
+  addTicket: false,
   readTicket: false,
   writeTicket: false,
   readRepair: false,
-  writeRepair: false,
+  writeRepair: false
 };
 
 export type Role = "ADMIN" | "PRODUCT_MANAGER" | "SALES_MAN" | "TECHNICAL";
@@ -68,16 +70,17 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: true,
         readOffer: true,
         writeOffer: true,
+        addTicket: true,
         readTicket: true,
         writeTicket: true,
         readRepair: true,
-        writeRepair: true,
+        writeRepair: true
       };
     case "PRODUCT_MANAGER":
       return {
         readAdmin: false,
         writeAdmin: false,
-        readClient: false,
+        readClient: true,
         writeClient: false,
         readCategory: true,
         writeCategory: true,
@@ -91,10 +94,11 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: false,
         readOffer: false,
         writeOffer: false,
-        readTicket: false,
-        writeTicket: false,
+        addTicket: true,
+        readTicket: true,
+        writeTicket: true,
         readRepair: false,
-        writeRepair: false,
+        writeRepair: false
       };
     case "SALES_MAN":
       return {
@@ -114,10 +118,11 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: true,
         readOffer: true,
         writeOffer: true,
-        readTicket: false,
-        writeTicket: false,
+        addTicket: false,
+        readTicket: true,
+        writeTicket: true,
         readRepair: false,
-        writeRepair: false,
+        writeRepair: false
       };
     case "TECHNICAL":
       return {
@@ -137,10 +142,11 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: false,
         readOffer: false,
         writeOffer: false,
+        addTicket: false,
         readTicket: true,
         writeTicket: true,
         readRepair: true,
-        writeRepair: true,
+        writeRepair: true
       };
     default:
       return noPrivileges;

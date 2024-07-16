@@ -48,7 +48,7 @@ const OrderNotificationIcon: FunctionComponent = () => {
 
 const TicketNotificationIcon: FunctionComponent = () => {
   const readUnreadTicketsCount = async () => {
-    const result = await getServerData(`query { ticketCount(ticketFilter: {status: OPEN}) }`, true);
+    const result = await getServerData(`query { ticketCount(ticketFilter: {status: NEW}) }`, true);
     return result.data.ticketCount;
   };
 

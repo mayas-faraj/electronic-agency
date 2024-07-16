@@ -156,7 +156,7 @@ const resolvers = {
         } else message = "password error";
       }
 
-      return { jwt: "", message, success };
+      return { jwt: "", jwt2: "", message, success };
     },
   },
   Mutation: {

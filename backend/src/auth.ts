@@ -58,7 +58,7 @@ export const generateServiceJwtToken = (user: ServiceUser) => {
       matchedRole = "CONTENT_WRITER";
       break;
     case "TECHNICAL":
-      matchedRole = "LOGESTICS_MANAGER";
+      matchedRole = "LOGISTICS_MANAGER";
       break;
   }
 

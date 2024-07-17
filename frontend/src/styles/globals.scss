@@ -156,3 +156,19 @@ td {
 .center-text {
   text-align: center;
 }
+
+.status-low {
+  color: deepskyblue;
+}
+
+.status-normal {
+  color: green;
+}
+
+.status-high {
+  color: orange;
+}
+
+.status-critical {
+  color: red;
+}

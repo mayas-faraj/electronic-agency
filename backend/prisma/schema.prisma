@@ -78,7 +78,7 @@ model Admin {
 model Center {
   id        Int       @id @default(autoincrement())
   parentId  Int?      @map("parent_id")
-  name      String
+  name      String    @unique
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   parent    Center?   @relation(name: "center_level", fields: [parentId], references: [id])
@@ -146,12 +146,12 @@ model Product {
 }
 
 model ProductItem {
-  sn           String                 @id
-  productId    Int                    @map("product_id")
-  createdAt    DateTime               @default(now()) @map("created_at")
-  isSold       Boolean                @default(false) @map("is_sold") @db.TinyInt
-  product      Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
-  client       ProductItemsOnClients?
+  sn        String                 @id
+  productId Int                    @map("product_id")
+  createdAt DateTime               @default(now()) @map("created_at")
+  isSold    Boolean                @default(false) @map("is_sold") @db.TinyInt
+  product   Product                @relation(fields: [productId], references: [id], onDelete: Cascade)
+  client    ProductItemsOnClients?
 
   @@map("product_item")
 }
@@ -228,6 +228,7 @@ model Offer {
 enum Role {
   ADMIN
   PRODUCT_MANAGER
+  INTERMEDIATE_CALL_CENTER
   SALES_MAN
   TECHNICAL
 }

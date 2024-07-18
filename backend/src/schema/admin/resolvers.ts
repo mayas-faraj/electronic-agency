@@ -22,6 +22,11 @@ const resolvers = {
           role: true,
           centerId: true,
           level: true,
+          center: {
+            select: {
+              name: true,
+            },
+          },
         },
         where: {
           AND: [
@@ -125,7 +130,7 @@ const resolvers = {
             id: true,
             user: true,
             role: true,
-            center: true
+            center: true,
           },
         });
 
@@ -149,7 +154,7 @@ const resolvers = {
               name: result.user,
               sub: result.user,
               role: result.role,
-              aud: result.center?.name ?? "[no-center]"
+              aud: result.center?.name ?? "[no-center]",
             }),
             message: "Login success",
             success: true,

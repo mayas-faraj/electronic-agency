@@ -32,6 +32,7 @@ const typeDefs = `#graphql
 		user: String!
 		isDisabled: Boolean
 		role: String
+		center: Center
 	}
 
 	input AdminInput {

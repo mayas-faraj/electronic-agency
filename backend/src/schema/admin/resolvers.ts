@@ -125,6 +125,7 @@ const resolvers = {
             id: true,
             user: true,
             role: true,
+            center: true
           },
         });
 
@@ -148,7 +149,7 @@ const resolvers = {
               name: result.user,
               sub: result.user,
               role: result.role,
-              aud: "ea",
+              aud: result.center?.name ?? "[no-center]"
             }),
             message: "Login success",
             success: true,

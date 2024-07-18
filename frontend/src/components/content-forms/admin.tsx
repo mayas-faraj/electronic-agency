@@ -127,36 +127,37 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
           ))}
         </Select>
       </FormControl>
+      {false && (
+        <FormControl fullWidth margin="normal">
+          <TextField
+            variant="outlined"
+            label="User level"
+            value={info.level}
+            type="number"
+            inputProps={{ min: 0 }}
+            onChange={(e) => dispatch({ type: "set", key: "level", value: e.target.value })}
+          />
+        </FormControl>
+      )}
       {info.role !== "ADMIN" && (
-        <>
-          <FormControl fullWidth margin="normal">
-            <TextField
-              variant="outlined"
-              label="User level"
-              value={info.level}
-              type="number"
-              inputProps={{ min: 0 }}
-              onChange={(e) => dispatch({ type: "set", key: "level", value: e.target.value })}
-            />
-          </FormControl>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="center-label">Center</InputLabel>
-            <Select
-              labelId="center-label"
-              variant="outlined"
-              label="Center"
-              defaultValue={info.centerId}
-              value={info.centerId}
-              onChange={(e) => dispatch({ type: "set", key: "centerId", value: e.target.value })}
-            >
-              {centers.map((center) => (
-                <MenuItem key={center.id} value={center.id}>
-                  {center.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </>
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="center-label">Center</InputLabel>
+          <Select
+            labelId="center-label"
+            variant="outlined"
+            label="Center"
+            defaultValue={info.centerId}
+            value={info.centerId}
+            onChange={(e) => dispatch({ type: "set", key: "centerId", value: e.target.value })}
+          >
+            <MenuItem value="0">[Top Center]</MenuItem>
+            {centers.map((center) => (
+              <MenuItem key={center.id} value={center.id}>
+                {center.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       )}
       {id !== undefined && (
         <FormControl fullWidth margin="normal">

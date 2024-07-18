@@ -17,6 +17,9 @@ interface IAdmin {
   user: string;
   role: string;
   isDisabled: boolean;
+  center?: {
+    name: string;
+  };
 }
 
 // main component
@@ -35,6 +38,7 @@ const Admins: FunctionComponent = () => {
   const tableHeader: ITableHeader[] = [
     { key: "user", title: "User Name" },
     { key: "role", title: "Role" },
+    { key: "center", title: "Center" },
     { key: "isDisabled", title: "Disable", isControlType: true },
     { key: "view", title: "More Info", isSpecialType: true },
     { key: "password", title: "Change Password", isControlType: true },
@@ -44,7 +48,9 @@ const Admins: FunctionComponent = () => {
 
   // on load
   const action = React.useCallback(async () => {
-    const result = await getServerData(`query { admins(filter: {showDisabled: true, keyword: "${keyword}"}) { id user role isDisabled }}`);
+    const result = await getServerData(
+      `query { admins(filter: {showDisabled: true, keyword: "${keyword}"}) { id user role center { name } isDisabled }}`
+    );
     setAdmins(result.data.admins);
   }, [keyword]);
 
@@ -85,6 +91,7 @@ const Admins: FunctionComponent = () => {
         data={admins.map((admin) => ({
           user: admin.user,
           role: getRoleName(admin.role).toLowerCase().replace("_", " "),
+          center: admin.center?.name ?? "-",
           isDisabled: (
             <Management
               type={ManagementType.switch}

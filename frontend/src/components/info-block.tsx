@@ -96,7 +96,7 @@ export const TicketInfoBlock = () => {
             setInfo({
                 icon: <RoomPreferences />,
                 title: "Tickets Schedule",
-                info: `${result.data.ticketsCount} tickets`,
+                info: `${result.data?.ticketsCount ?? 0} tickets`,
                 url: "/tickets",
                 description: `ticket operations that request from user, 
                 last ticket registered at: ${new Date().toLocaleDateString()}`

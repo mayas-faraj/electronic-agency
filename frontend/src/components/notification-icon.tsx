@@ -49,7 +49,7 @@ const OrderNotificationIcon: FunctionComponent = () => {
 const TicketNotificationIcon: FunctionComponent = () => {
   const readUnreadTicketsCount = async () => {
     const result = await getServerData(`query { ticketCount(ticketFilter: {status: NEW}) }`, true);
-    return result.data.ticketCount;
+    return result.data?.ticketCount ?? 0;
   };
 
   return <NotificationIcon icon={<RoomPreferencesIcon />} readCount={readUnreadTicketsCount} />;

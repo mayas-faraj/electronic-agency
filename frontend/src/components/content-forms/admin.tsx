@@ -77,7 +77,7 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
 
   React.useEffect(() => {
     const action = async () => {
-      const centersResponse = await getServerData(`query { centers(parentId: null) { id name admins { user } } }`);
+      const centersResponse = await getServerData(`query { centers { id name admins { user } } }`);
       setCenters(centersResponse.data.centers);
     };
     action();

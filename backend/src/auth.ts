@@ -28,9 +28,9 @@ export interface AppContext {
 // check auth function
 export enum Role {
   ADMIN,
-  PRODUCT_MANAGER,
-  SALES_MAN,
-  TECHNICAL,
+  CONTENT_WRITER,
+  CONTENT_READER,
+  LOGESTICS_MANAGER,
 }
 
 export const checkAuthorization = (role: string, ...allowedRoles: Role[]) => {
@@ -51,13 +51,13 @@ export const generateJwtToken = (user: AuthUser) => {
 export const generateServiceJwtToken = (user: ServiceUser) => {
   let matchedRole = user.role;
   switch (user.role) {
-    case "PRODUCT_MANAGER":
+    case "CONTENT_WRITER":
       matchedRole = "CONTENT_MANAGER";
       break;
-    case "SALES_MAN":
+    case "CONTENT_READER":
       matchedRole = "CONTENT_WRITER";
       break;
-    case "TECHNICAL":
+    case "LOGESTICS_MANAGER":
       matchedRole = "LOGISTICS_MANAGER";
       break;
   }

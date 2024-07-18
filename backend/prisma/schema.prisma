@@ -68,7 +68,7 @@ model Admin {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   lastLoginAt DateTime? @map("last_login_at")
-  role        Role      @default(SALES_MAN)
+  role        Role      @default(LOGISTICS_MANAGER)
   center      Center?   @relation(fields: [centerId], references: [id])
   offers      Offer[]
 
@@ -226,11 +226,12 @@ model Offer {
 }
 
 enum Role {
+  SUBSCRIBER
+  CONTENT_READER
+  CONTENT_MANAGER
+  LOGISTICS_MANAGER
   ADMIN
-  PRODUCT_MANAGER
-  INTERMEDIATE_CALL_CENTER
-  SALES_MAN
-  TECHNICAL
+  SUPER_ADMIN
 }
 
 enum OrderStatus {

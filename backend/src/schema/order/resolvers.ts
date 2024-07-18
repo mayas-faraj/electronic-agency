@@ -5,7 +5,7 @@ const resolvers = {
   Query: {
     orders: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.order.findMany({
@@ -55,7 +55,7 @@ const resolvers = {
     },
     order: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.order.findUnique({
@@ -171,7 +171,7 @@ const resolvers = {
     },
     ordersUnreadCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.order.aggregate({
@@ -188,7 +188,7 @@ const resolvers = {
     },
     ordersCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.order.aggregate({
@@ -272,7 +272,7 @@ const resolvers = {
     },
     deleteOrder: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.order.delete({
@@ -285,7 +285,7 @@ const resolvers = {
     },
     createOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.offer.create({
@@ -307,7 +307,7 @@ const resolvers = {
     },
     updateOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.offer.update({
@@ -331,7 +331,7 @@ const resolvers = {
     },
     deleteOffer: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.offer.delete({

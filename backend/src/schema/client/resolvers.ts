@@ -17,8 +17,8 @@ const resolvers = {
       checkAuthorization(
         app.user.rol,
         Role.ADMIN,
-        Role.SALES_MAN,
-        Role.PRODUCT_MANAGER
+        Role.CONTENT_READER,
+        Role.CONTENT_WRITER
       );
 
       // return result
@@ -74,8 +74,8 @@ const resolvers = {
       checkAuthorization(
         app.user.rol,
         Role.ADMIN,
-        Role.SALES_MAN,
-        Role.PRODUCT_MANAGER
+        Role.CONTENT_READER,
+        Role.CONTENT_WRITER
       );
 
       // return result
@@ -95,8 +95,8 @@ const resolvers = {
       checkAuthorization(
         app.user.rol,
         Role.ADMIN,
-        Role.SALES_MAN,
-        Role.PRODUCT_MANAGER
+        Role.CONTENT_READER,
+        Role.CONTENT_WRITER
       );
 
       // return result
@@ -130,9 +130,9 @@ const resolvers = {
       checkAuthorization(
         app.user.rol,
         Role.ADMIN,
-        Role.SALES_MAN,
-        Role.PRODUCT_MANAGER,
-        Role.TECHNICAL
+        Role.CONTENT_READER,
+        Role.CONTENT_WRITER,
+        Role.LOGESTICS_MANAGER
       );
 
       // return result
@@ -248,7 +248,7 @@ const resolvers = {
     },
     updateClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.client.update({
@@ -294,7 +294,7 @@ const resolvers = {
     },
     deleteClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.client.delete({

@@ -39,7 +39,7 @@ const resolvers = {
   Mutation: {
     createAdvertisement: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.advertisement.create({
@@ -53,7 +53,7 @@ const resolvers = {
     },
     updateAdvertisement: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.advertisement.update({
@@ -70,7 +70,7 @@ const resolvers = {
     },
     deleteAdvertisement: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.SALES_MAN);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
 
       // return result
       const result = await app.prismaClient.advertisement.delete({

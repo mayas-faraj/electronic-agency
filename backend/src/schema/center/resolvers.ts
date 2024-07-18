@@ -20,10 +20,24 @@ const resolvers = {
         },
       });
     },
-    centersByParentName: async (_parent: any, args: any, app: AppContext) => {
+    centerByName: async (_parent: any, args: any, app: AppContext) => {
       // find center
       return await app.prismaClient.center.findUnique({
-        where: { name: args.parentCenter },
+        where: { name: args.name },
+        include: {
+          children: true,
+          admins: true,
+        },
+      });
+    },
+    centersByParentName: async (_parent: any, args: any, app: AppContext) => {
+      // find center
+      return await app.prismaClient.center.findMany({
+        where: {
+          parent: {
+            name: args.parentCenter,
+          },
+        },
         include: {
           children: true,
           admins: true,

@@ -6,6 +6,8 @@ const typeDefs = `#graphql
     centersByParentName(parentCenter: String!): [Center]
     "read center"
     center(id: Int!): Center
+    "read center"
+    centerByName(name: String!): Center
   }
 
   type Mutation {

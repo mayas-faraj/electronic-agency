@@ -17,7 +17,6 @@ export interface Privileges {
   writeOrder: boolean;
   readOffer: boolean;
   writeOffer: boolean;
-  addTicket: boolean;
   readTicket: boolean;
   writeTicket: boolean;
   readRepair: boolean;
@@ -41,7 +40,6 @@ export const noPrivileges: Privileges = {
   writeOrder: false,
   readOffer: false,
   writeOffer: false,
-  addTicket: false,
   readTicket: false,
   writeTicket: false,
   readRepair: false,
@@ -70,7 +68,6 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: true,
         readOffer: true,
         writeOffer: true,
-        addTicket: true,
         readTicket: true,
         writeTicket: true,
         readRepair: true,
@@ -94,7 +91,6 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: false,
         readOffer: false,
         writeOffer: false,
-        addTicket: true,
         readTicket: true,
         writeTicket: true,
         readRepair: false,
@@ -118,9 +114,8 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: true,
         readOffer: true,
         writeOffer: true,
-        addTicket: false,
         readTicket: true,
-        writeTicket: true,
+        writeTicket: false,
         readRepair: false,
         writeRepair: false
       };
@@ -142,7 +137,6 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: false,
         readOffer: false,
         writeOffer: false,
-        addTicket: false,
         readTicket: true,
         writeTicket: true,
         readRepair: true,

@@ -131,7 +131,8 @@ const resolvers = {
         app.user.rol,
         Role.ADMIN,
         Role.SALES_MAN,
-        Role.PRODUCT_MANAGER
+        Role.PRODUCT_MANAGER,
+        Role.TECHNICAL
       );
 
       // return result

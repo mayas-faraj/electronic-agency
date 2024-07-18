@@ -20,6 +20,16 @@ const resolvers = {
         },
       });
     },
+    centersByParentName: async (_parent: any, args: any, app: AppContext) => {
+      // find center
+      return await app.prismaClient.center.findUnique({
+        where: { name: args.parentCenter },
+        include: {
+          children: true,
+          admins: true,
+        },
+      });
+    },
   },
   Mutation: {
     createCenter: async (_parent: any, args: any, app: AppContext) => {

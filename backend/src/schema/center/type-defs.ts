@@ -2,6 +2,8 @@ const typeDefs = `#graphql
   type Query {
     "read Centers"
     centers(parentId: Int): [Center]
+    "read Centers"
+    centersByParentName(parentCenter: String!): [Center]
     "read center"
     center(id: Int!): Center
   }

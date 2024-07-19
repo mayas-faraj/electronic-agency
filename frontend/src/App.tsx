@@ -16,6 +16,7 @@ interface Profile {
   id: number;
   user: string;
   role?: Role;
+  centerId?: number;
 }
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
     // on app load
     const action = async () => {
       // seting profile
-      const result = await getServerData("query { adminByAuth { id user role } }");
+      const result = await getServerData("query { adminByAuth { id user role centerId } }");
       setProfile(result.data.adminByAuth);
     };
 
@@ -38,7 +39,7 @@ function App() {
 
   React.useEffect(() => {
     // profile has changed
-    setPrivileges(getPrivileges(profile?.role));
+    setPrivileges(getPrivileges(profile?.role, profile.centerId));
   }, [profile]);
 
   // lazy load pages

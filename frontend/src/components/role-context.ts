@@ -17,6 +17,7 @@ export interface Privileges {
   writeOrder: boolean;
   readOffer: boolean;
   writeOffer: boolean;
+  addTicket: boolean;
   readTicket: boolean;
   writeTicket: boolean;
   readRepair: boolean;
@@ -40,17 +41,19 @@ export const noPrivileges: Privileges = {
   writeOrder: false,
   readOffer: false,
   writeOffer: false,
+  addTicket: false,
   readTicket: false,
   writeTicket: false,
   readRepair: false,
   writeRepair: false
 };
 
-export type Role = "ADMIN" | "PRODUCT_MANAGER" | "SALES_MAN" | "TECHNICAL";
+export type Role = "ADMIN" | "CONTENT_MANAGER" | "CONTENT_READER" | "LOGISTICS_MANAGER";
 
-export const getPrivileges = (role?: Role): Privileges => {
-  switch (role) {
-    case "ADMIN":
+export const getPrivileges = (role?: Role, centerId?: number): Privileges => {
+  const hasCenter = centerId != null && centerId !== 0;
+  switch (JSON.stringify([role, hasCenter])) {
+    case JSON.stringify(["ADMIN", false]):
       return {
         readAdmin: true,
         writeAdmin: true,
@@ -68,12 +71,13 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: true,
         readOffer: true,
         writeOffer: true,
+        addTicket: true,
         readTicket: true,
         writeTicket: true,
         readRepair: true,
         writeRepair: true
       };
-    case "PRODUCT_MANAGER":
+    case JSON.stringify(["CONTENT_MANAGER", false]):
       return {
         readAdmin: false,
         writeAdmin: false,
@@ -91,12 +95,37 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: false,
         readOffer: false,
         writeOffer: false,
+        addTicket: true,
         readTicket: true,
         writeTicket: true,
         readRepair: false,
         writeRepair: false
       };
-    case "SALES_MAN":
+    case JSON.stringify(["CONTENT_MANAGER", true]):
+      return {
+        readAdmin: false,
+        writeAdmin: false,
+        readClient: true,
+        writeClient: false,
+        readCategory: true,
+        writeCategory: true,
+        readProduct: true,
+        writeProduct: true,
+        readProductItem: true,
+        writeProductItem: true,
+        readAdvertisement: false,
+        writeAdvertisement: false,
+        readOrder: false,
+        writeOrder: false,
+        readOffer: false,
+        writeOffer: false,
+        addTicket: false,
+        readTicket: true,
+        writeTicket: true,
+        readRepair: false,
+        writeRepair: false
+      };
+    case JSON.stringify(["CONTENT_READER", false]):
       return {
         readAdmin: false,
         writeAdmin: false,
@@ -114,12 +143,13 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: true,
         readOffer: true,
         writeOffer: true,
+        addTicket: false,
         readTicket: true,
         writeTicket: false,
         readRepair: false,
         writeRepair: false
       };
-    case "TECHNICAL":
+    case JSON.stringify(["LOGISTICS_MANAGER", true]):
       return {
         readAdmin: false,
         writeAdmin: false,
@@ -137,6 +167,7 @@ export const getPrivileges = (role?: Role): Privileges => {
         writeOrder: false,
         readOffer: false,
         writeOffer: false,
+        addTicket: false,
         readTicket: true,
         writeTicket: true,
         readRepair: true,

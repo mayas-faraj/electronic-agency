@@ -48,7 +48,7 @@ const resolvers = {
   Mutation: {
     createCenter: async (_parent: any, args: any, app: AppContext) => {
       // check authorization
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       return await app.prismaClient.center.create({
@@ -60,7 +60,7 @@ const resolvers = {
     },
     updateCenter: async (_parent: any, args: any, app: AppContext) => {
       // check authorization
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
       // return result
       return await app.prismaClient.center.update({
         where: {
@@ -74,7 +74,7 @@ const resolvers = {
     },
     deleteCenter: async (_parent: any, args: any, app: AppContext) => {
       // check authorization
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
       // return result
       return await app.prismaClient.center.delete({ where: { id: args.id } });
     },

@@ -125,7 +125,7 @@ const resolvers = {
   Mutation: {
     createCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.create({
@@ -140,7 +140,7 @@ const resolvers = {
     },
     updateCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.update({
@@ -159,7 +159,7 @@ const resolvers = {
     },
     deleteCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       const result = await app.prismaClient.category.delete({
@@ -176,7 +176,7 @@ const resolvers = {
     },
     createSubCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       const result = await app.prismaClient.subCategory.create({
@@ -192,7 +192,7 @@ const resolvers = {
     },
     updateSubCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       const result = await app.prismaClient.subCategory.update({
@@ -212,7 +212,7 @@ const resolvers = {
     },
     deleteSubCategory: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_WRITER);
+      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_MANAGER);
 
       // return result
       const result = await app.prismaClient.subCategory.delete({

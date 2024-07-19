@@ -18,7 +18,7 @@ const resolvers = {
         app.user.rol,
         Role.ADMIN,
         Role.CONTENT_READER,
-        Role.CONTENT_WRITER
+        Role.CONTENT_MANAGER
       );
 
       // return result
@@ -75,7 +75,7 @@ const resolvers = {
         app.user.rol,
         Role.ADMIN,
         Role.CONTENT_READER,
-        Role.CONTENT_WRITER
+        Role.CONTENT_MANAGER
       );
 
       // return result
@@ -96,7 +96,7 @@ const resolvers = {
         app.user.rol,
         Role.ADMIN,
         Role.CONTENT_READER,
-        Role.CONTENT_WRITER
+        Role.CONTENT_MANAGER
       );
 
       // return result
@@ -131,8 +131,8 @@ const resolvers = {
         app.user.rol,
         Role.ADMIN,
         Role.CONTENT_READER,
-        Role.CONTENT_WRITER,
-        Role.LOGESTICS_MANAGER
+        Role.CONTENT_MANAGER,
+        Role.LOGISTICS_MANAGER
       );
 
       // return result

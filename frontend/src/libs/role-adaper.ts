@@ -1,10 +1,10 @@
 export const getRoleName = (dbRoleName: string): string => {
   switch (dbRoleName) {
-    case "PRODUCT_MANAGER":
+    case "CONTENT_MANAGER":
       return "CALL_CENTER";
-    case "SALES_MAN":
+    case "CONTENT_READER":
       return "SALES";
-    case "TECHNICAL":
+    case "LOGISTICS_MANAGER":
       return "TECHNITION";
     default:
       return dbRoleName;

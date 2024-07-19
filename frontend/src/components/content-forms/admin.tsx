@@ -23,7 +23,7 @@ type Center = {
   name: string;
 };
 
-const roles = ["ADMIN", "PRODUCT_MANAGER", "SALES_MAN", "TECHNICAL"];
+const roles = ["ADMIN", "CONTENT_MANAGER", "CONTENT_READER", "LOGISTICS_MANAGER"];
 
 const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
   // component reducer
@@ -36,7 +36,7 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
   const adminCommand =
     id === undefined
       ? `mutation { createAdmin(input: {user: "${info.user}", password: "${info.password}" role: "${info.role}"${
-          info.role !== "ADMIN" ? `, level: ${info.level}, centerId: ${info.centerId}` : ""
+          info.role !== "ADMIN" ? `, level: ${info.level}, centerId: ${info.centerId !== 0 ? info.centerId : null}` : ""
         }}) {id user role}}`
       : `mutation { updateAdmin(id: ${id},input: {user: "${info.user}", role: "${info.role}"${
           info.role !== "ADMIN" ? `, level: ${info.level}, centerId: ${info.centerId}` : ""

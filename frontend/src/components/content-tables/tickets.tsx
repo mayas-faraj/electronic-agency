@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Button, Modal } from "@mui/material";
-import { Email, Drafts, Visibility } from "@mui/icons-material";
+import { Edit, Visibility } from "@mui/icons-material";
 import TicketForm from "../content-forms/ticket";
 import ContentTable, { ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
@@ -102,7 +102,7 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
         headers={accessType === AccessType.READ_ACCESS ? tableHeaderImmutable : tableHeaderMutable}
         canRead={privileges.readTicket}
         canWrite={privileges.writeTicket}
-        addNewLink={accessType === AccessType.READ_ACCESS ? "/add-ticket" : undefined}
+        addNewLink={privileges.addTicket ? "/add-ticket" : undefined}
         data={tickets.map((ticket) => ({
           createdAt: new Date(ticket.createdAt).toLocaleDateString(),
           client: ticket.user,
@@ -118,7 +118,7 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
           status: ticket.status,
           open: (
             <Button variant="text" color="info" onClick={() => setOpenId(ticket.id)}>
-              {accessType === AccessType.READ_ACCESS ? <Visibility /> : <Drafts />}
+              {accessType === AccessType.READ_ACCESS ? <Visibility /> : <Edit />}
             </Button>
           )
         }))}

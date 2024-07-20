@@ -1,10 +1,11 @@
 import React, { FunctionComponent } from "react";
-import { FormControl, InputLabel, MenuItem, TextField, Select, Button, Modal } from "@mui/material";
-import { PermContactCalendar, Redeem } from "@mui/icons-material";
+import { FormControl, InputLabel, MenuItem, TextField, Select, Button, Modal, InputAdornment, IconButton, OutlinedInput } from "@mui/material";
+import { AddCard, PermContactCalendar, Redeem } from "@mui/icons-material";
 import ContentForm, { reducer } from "../content-form";
 import ClientView from "../views/client";
 import ProductView from "../views/product";
 import ClientSelect from "../content-tables/clients";
+import ProductSelect from "../content-tables/products";
 import getServerData from "../../libs/server-data";
 import { AccessType } from "../content-tables/tickets";
 
@@ -46,7 +47,7 @@ type Admin = {
   role: string;
 };
 
-const statuses = ["NEW", "OPEN", "PENDING", "RESOLVED", "UNRESOLVED", "CLOSED", "COMPLETED", "REOPEN"];
+const statuses = ["NEW", "OPEN", "PENDING", "IN_PROGRESS", "RESOLVED", "UNRESOLVED", "CLOSED", "COMPLETED", "REOPEN"];
 const priorities = ["CRITICAL", "HIGH", "NORMAL", "LOW"];
 
 const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) => {
@@ -56,6 +57,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
   // component status
   const [viewClient, setViewClient] = React.useState(false);
   const [viewProduct, setViewProduct] = React.useState(false);
+  const [selectProduct, setSelectProduct] = React.useState(false);
   const [selectClient, setSelectClient] = React.useState(false);
   const [centers, setCenters] = React.useState<Center[]>([]);
   const [targetType, setTargetType] = React.useState("GROUP");
@@ -63,18 +65,23 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
   // process form type (create or update)
   const ticketCommand =
     id !== undefined
-      ? `mutation { updateTicket(id: ${id}, input: {status: ${targetType === "GROUP" ? "OPEN" : "PENDING"}, priority: ${
-          info.priority
-        }}) { id priority status } createTicketAssignment(input: {ticketId: ${id}, assignTo: "${
-          info.center
-        }", targetType: ${targetType}}) { id createdAt } }`
+      ? `mutation { updateTicket(id: ${id}, input: {status: ${info.status}, priority: ${info.priority}}) { id priority status } createTicketAssignment(input: {ticketId: ${id}, assignTo: "${info.center}", targetType: ${targetType}}) { id createdAt } }`
       : `mutation { createTicket(input: {serviceId: 1, description: "${info.description}", title: "${info.title}", user: "${info.clientPhone}", asset: "${info.asset}", location: {  locationName: "${info.address}" }}) { id status } }`;
 
+  // event handlers
   const handleSelectClient = (clientId: number, clientEmail: string, clientPhone: string) => {
     dispatch({ type: "set", key: "clientId", value: clientId });
     dispatch({ type: "set", key: "clientEmail", value: clientEmail });
     dispatch({ type: "set", key: "clientPhone", value: clientPhone });
     setSelectClient(false);
+  };
+
+  const handleSelectProduct = (productId: number, name: string) => {
+    dispatch({ type: "set", key: "asset", value: `[product-${productId}]` });
+    dispatch({ type: "set", key: "productId", value: productId });
+    dispatch({ type: "set", key: "productName", value: name });
+
+    setSelectProduct(false);
   };
 
   const handleAssetChange = (value: string) => {
@@ -98,7 +105,10 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
         dispatch({ type: "set", key: "productName", value: "" });
       }
     };
-    getProduct();
+
+    if (value.startsWith("[product-") && value.endsWith("]"))
+      dispatch({ type: "set", key: "productId", value: parseInt(value.substring(9, value.length - 1)) });
+    else getProduct();
   };
 
   const handleSave = async (result: any) => {
@@ -177,9 +187,10 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
         if (centerResults.length === 0) {
           const centerResponse = await getServerData(`query { centerByName(name: "${parentName}") { id name admins { id user role } } }`);
           centerResults = (centerResponse.data.centerByName.admins as Admin[])
-            .filter((admin) => admin.role === "TECHNICAL")
+            .filter((admin) => admin.role === "LOGISTICS_MANAGER")
             .map((admin) => ({ id: admin.id, name: admin.user, admins: [] }));
           setTargetType("USER");
+          dispatch({ type: "set", key: "status", value: "IN_PROGRESS" });
         }
       }
 
@@ -190,7 +201,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
     else loadCenters();
 
     loadCenters();
-  }, [id]);
+  }, [id, accessType]);
 
   // render component
   return (
@@ -234,16 +245,29 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
           {info.productId === 0 ? "Put valid product SN" : (info.productName as string)}
         </Button>
         <FormControl fullWidth>
-          <TextField
-            variant="outlined"
+          <InputLabel htmlFor="sn-text">product sn</InputLabel>
+          <OutlinedInput
+            id="sn-text"
             label="product sn"
             value={info.asset}
-            InputProps={{ readOnly: id !== undefined }}
+            readOnly={id !== undefined}
             onChange={(e) => handleAssetChange(e.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton aria-label="Select products" disabled={id !== undefined} onClick={() => setSelectProduct(true)} edge="end">
+                  <AddCard />
+                </IconButton>
+              </InputAdornment>
+            }
           />
         </FormControl>
       </div>
-      {(id === undefined || accessType !== AccessType.CREATE_ACCESS) && (
+      {accessType === AccessType.READ_ACCESS && (
+        <FormControl fullWidth margin="normal">
+          <TextField variant="outlined" InputProps={{ readOnly: id !== undefined }} label="Current center" value={info.center} />
+        </FormControl>
+      )}
+      {(id === undefined || accessType === AccessType.FULL_ACCESS || accessType === AccessType.UPDATE_ACCESS) && (
         <FormControl fullWidth margin="normal">
           <InputLabel id="center-label">{targetType === "GROUP" ? "Centers" : "Technicals"}</InputLabel>
           <Select
@@ -252,7 +276,6 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
             label={targetType === "GROUP" ? "Centers" : "Technicals"}
             defaultValue={info.center}
             value={info.center}
-            readOnly={accessType === AccessType.READ_ACCESS}
             onChange={(e) => dispatch({ type: "set", key: "center", value: e.target.value })}
           >
             {centers.map((center) => (
@@ -349,6 +372,11 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
       <Modal open={viewProduct} onClose={() => setViewProduct(false)}>
         <div className="modal">
           <ProductView id={Number(info.productId)} />
+        </div>
+      </Modal>
+      <Modal open={selectProduct} onClose={() => setSelectProduct(false)}>
+        <div className="modal">
+          <ProductSelect isSelectable={true} onUpdate={(productId, name) => handleSelectProduct(productId, name)} />
         </div>
       </Modal>
     </ContentForm>

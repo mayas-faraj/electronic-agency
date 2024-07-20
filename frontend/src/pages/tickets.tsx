@@ -14,11 +14,15 @@ const TicketsPage = () => {
           <Tickets accessType={AccessType.FULL_ACCESS} />
         </>
       )}
-      {!privileges.writeAdmin && privileges.writeTicket && !privileges.writeRepair && (
+      {privileges.addTicket && (
         <>
           <h2>My Tickets</h2>
           <Tickets accessType={AccessType.READ_ACCESS} />
-          <h2>Assign to me</h2>
+        </>
+      )}
+      {!privileges.writeAdmin && privileges.writeTicket && !privileges.writeRepair && !privileges.addTicket && (
+        <>
+          <h2>My Center Tickets</h2>
           <Tickets accessType={AccessType.UPDATE_ACCESS} />
         </>
       )}

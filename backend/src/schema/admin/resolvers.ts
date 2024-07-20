@@ -184,6 +184,18 @@ const resolvers = {
 
       return result;
     },
+    createTechnicalAdmin: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.admin.create({
+        data: {
+          user: args.input.user,
+          password: args.input.password,
+          role: "LOGISTICS_MANAGER",
+        },
+      });
+
+      return result;
+    },
     updateAdmin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
       checkAuthorization(app.user.rol, Role.ADMIN);

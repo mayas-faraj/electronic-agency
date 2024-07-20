@@ -9,6 +9,7 @@ const typeDefs = `#graphql
 
     extend type Mutation {
         createAdmin(input: AdminInput!): AdminBasic
+        createTechnicalAdmin(input: AdminInput!): AdminBasic
 		updateAdmin(id: Int!, input: AdminUpdate!): AdminBasic
 		updateAdminByAuth(input: AdminUpdate!): AdminBasic
 		deleteAdmin(id: Int!): AdminBasic

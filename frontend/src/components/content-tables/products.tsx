@@ -24,11 +24,12 @@ interface IProduct {
 }
 interface IProductsType {
   isSelectable?: boolean;
+  isSelectCountPrice?: boolean;
   onUpdate?: (id: number, name: string, image: string, price: number, count: number) => void;
 }
 
 // main component
-const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) => {
+const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCountPrice, onUpdate }) => {
   // product state
   const [products, setProducts] = React.useState<IProduct[]>([]);
   const [editId, setEditId] = React.useState(0);
@@ -155,14 +156,16 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, onUpdate }) 
       />
       {selectProduct !== null && onUpdate !== undefined && (
         <>
-          <div className="column-double">
-            <FormControl fullWidth margin="normal">
-              <TextField variant="outlined" label="count" value={count} type="number" onChange={(e) => setCount(parseInt(e.target.value))} />
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <TextField variant="outlined" label="price" value={price} type="number" onChange={(e) => setPrice(parseInt(e.target.value))} />
-            </FormControl>
-          </div>
+          {isSelectCountPrice && (
+            <div className="column-double">
+              <FormControl fullWidth margin="normal">
+                <TextField variant="outlined" label="count" value={count} type="number" onChange={(e) => setCount(parseInt(e.target.value))} />
+              </FormControl>
+              <FormControl fullWidth margin="normal">
+                <TextField variant="outlined" label="price" value={price} type="number" onChange={(e) => setPrice(parseInt(e.target.value))} />
+              </FormControl>
+            </div>
+          )}
           <FormControl fullWidth margin="normal">
             <Button variant="contained" onClick={() => onUpdate(selectProduct.id, selectProduct.name, selectProduct.image ?? "", price, count)}>
               <AddCircle /> Add Selected Product

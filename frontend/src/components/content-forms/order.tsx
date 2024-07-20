@@ -328,6 +328,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
         <div className="modal">
           <ProductSelect
             isSelectable={true}
+            isSelectCountPrice={true}
             onUpdate={(productId, name, image, price, count) => handleSelectProduct(productId, name, image, price, count)}
           />
         </div>

@@ -73,6 +73,43 @@ const resolvers = {
 
       return result;
     },
+    productsByIds: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.product.findMany({
+        select: {
+          id: true,
+          name: true,
+          nameTranslated: true,
+          model: true,
+          image: true,
+          description: true,
+          descriptionTranslated: true,
+          specification: true,
+          specificationTranslated: true,
+          specificationImage: true,
+          price: true,
+          isDisabled: true,
+          catalogFile: true,
+          subCategory: {
+            select: {
+              id: true,
+              categoryId: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: {
+          id: "desc",
+        },
+        where: {
+          id: {
+            in: args.idList
+          }
+        },
+      });
+
+      return result;
+    },
     productsCount: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.product.aggregate({

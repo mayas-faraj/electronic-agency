@@ -32,9 +32,9 @@ const Header: FunctionComponent = () => {
 
   const links: ILink[] = [];
   if (privileges.readAdmin) links.push({ title: "Admins", to: "/admins", icon: <AdminPanelSettings /> });
-  if (privileges.readClient) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
-  if (privileges.readCategory) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
-  if (privileges.readProduct) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
+  if (privileges.readAdmin || (privileges.readClient && !privileges.writeTicket)) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
+  if (privileges.readAdmin || (privileges.readCategory && !privileges.writeTicket)) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
+  if (privileges.readAdmin || (privileges.readProduct && !privileges.writeTicket)) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
   if (privileges.readAdvertisement) links.push({ title: "Advertisements", to: "/advertisements", icon: <BurstModeRounded /> });
   if (privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
   if (privileges.readTicket) links.push({ title: "Tickets", to: "/tickets", icon: <RoomPreferences /> });

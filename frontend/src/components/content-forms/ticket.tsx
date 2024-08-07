@@ -63,9 +63,20 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
   const [targetType, setTargetType] = React.useState("GROUP");
 
   // process form type (create or update)
+  const updateTicketCommand = `updateTicket(id: ${id}, input: {${
+    accessType === AccessType.CREATE_ACCESS ? `status: ${info.status},` : ""
+  } priority: ${info.priority}}) { id priority status }`;
+  const createTicketAssignmentCommand = `createTicketAssignment(input: {ticketId: ${id}, assignTo: "${info.center}", assignToRole: "${
+    targetType === "GROUP" ? "GROUP" : "LOGISTICS_MANAGER"
+  }", targetType: ${targetType}}) { id createdAt }`;
+  const createTicketCommunicationCommand = `createTicketCommunication(input: {ticketId: ${id}, text: "${info.solution}" }) { id text }`;
   const ticketCommand =
     id !== undefined
-      ? `mutation { updateTicket(id: ${id}, input: {status: ${info.status}, priority: ${info.priority}}) { id priority status } createTicketAssignment(input: {ticketId: ${id}, assignTo: "${info.center}", targetType: ${targetType}}) { id createdAt } }`
+      ? `mutation { 
+          ${updateTicketCommand} 
+          ${accessType !== AccessType.CREATE_ACCESS ? createTicketAssignmentCommand : ""} 
+          ${info.solution !== "" ? createTicketCommunicationCommand : ""}
+        }`
       : `mutation { createTicket(input: {serviceId: 1, description: "${info.description}", title: "${info.title}", user: "${info.clientPhone}", asset: "${info.asset}", location: {  locationName: "${info.address}" }}) { id status } }`;
 
   // event handlers
@@ -124,18 +135,9 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
     dispatch({ type: "set", key: "asset", value: initialInfo.asset });
     dispatch({ type: "set", key: "status", value: initialInfo.status });
     dispatch({ type: "set", key: "center", value: initialInfo.center });
+    dispatch({ type: "set", key: "solution", value: initialInfo.solution });
 
     if (result?.data?.createTicket?.id != null) {
-      // await getServerData(
-      //   `mutation { ${centers
-      //     .filter((center) => center.name === info.center)[0]
-      //     .admins.map(
-      //       (admin, i) =>
-      //         `createTicketAssignment${i}: createTicketAssignment(ticketId: ${result.data.createTicket.id}, assignTo: "${admin.user}") { id }`
-      //     )
-      //     .join(" ")} }`,
-      //   true
-      // );
       await getServerData(
         `mutation { createTicketAssignment(input: {ticketId: ${result.data.createTicket.id}, assignTo: "${info.center}", targetType: ${targetType}}) { id }}`,
         true
@@ -148,7 +150,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
   React.useEffect(() => {
     const loadTicket = async () => {
       const result = await getServerData(
-        `query { ticket(id: ${id}) { id title description status title user asset location { locationName } assignments { assignTo } priority createdBy createdAt } }`,
+        `query { ticket(id: ${id}) { id title description status title user asset location { locationName } assignments { assignTo } communications { text } priority createdBy createdAt } }`,
         true
       );
 
@@ -159,9 +161,14 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
         dispatch({ type: "set", key: "priority", value: result.data.ticket.priority });
         dispatch({ type: "set", key: "asset", value: result.data.ticket.asset });
         dispatch({ type: "set", key: "address", value: result.data.ticket.location?.locationName ?? "" });
-        dispatch({ type: "set", key: "center", value: result.data.ticket.assignments?.at(0)?.assignTo ?? "" });
+        dispatch({ type: "set", key: "solution", value: result.data.ticket.communications?.at(0)?.text ?? "" });
         dispatch({ type: "set", key: "status", value: result.data.ticket.status });
         dispatch({ type: "set", key: "createdBy", value: result.data.ticket.createdBy });
+
+        let assignmentIndex = 0;
+        if (result.data.ticket.status === "UNRESOLVED") assignmentIndex = 1;
+        dispatch({ type: "set", key: "center", value: result.data.ticket.assignments?.at(assignmentIndex)?.assignTo ?? "" });
+
         handleAssetChange(result.data.ticket.asset);
 
         if (result.data.ticket.user != null) {
@@ -171,7 +178,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
           dispatch({ type: "set", key: "clientEmail", value: resultUser.data.clientByPhone.email });
         }
 
-        await loadCenters(result.data.ticket.assignments?.reverse()?.at(0)?.assignTo);
+        await loadCenters(result.data.ticket.assignments?.reverse()?.at(assignmentIndex)?.assignTo);
       }
     };
 
@@ -182,15 +189,15 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
         centerResults = centersResponse.data.centers;
       } else if (parentName != null && (accessType === AccessType.FULL_ACCESS || accessType === AccessType.UPDATE_ACCESS)) {
         const centersResponse = await getServerData(`query { centersByParentName(parentCenter: "${parentName}") { id name admins { user } } }`);
+
         if (centersResponse.data.centersByParentName.length > 0) centerResults = centersResponse.data.centersByParentName;
-        console.log(centersResponse.data.centersByParentName);
+
         if (centerResults.length === 0) {
           const centerResponse = await getServerData(`query { centerByName(name: "${parentName}") { id name admins { id user role } } }`);
           centerResults = (centerResponse.data.centerByName.admins as Admin[])
             .filter((admin) => admin.role === "LOGISTICS_MANAGER")
             .map((admin) => ({ id: admin.id, name: admin.user, admins: [] }));
           setTargetType("USER");
-          dispatch({ type: "set", key: "status", value: "IN_PROGRESS" });
         }
       }
 
@@ -226,7 +233,13 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
           </Button>
         )}
         {id !== undefined && (
-          <Button fullWidth variant="contained" color="primary" onClick={() => setViewClient(true)}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={accessType === AccessType.CREATE_ACCESS}
+            onClick={() => setViewClient(true)}
+          >
             <PermContactCalendar />
             {info.clientPhone as string}
           </Button>
@@ -267,7 +280,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
           <TextField variant="outlined" InputProps={{ readOnly: id !== undefined }} label="Current center" value={info.center} />
         </FormControl>
       )}
-      {(id === undefined || accessType === AccessType.FULL_ACCESS || accessType === AccessType.UPDATE_ACCESS) && (
+      {centers.length > 0 && (id === undefined || accessType === AccessType.FULL_ACCESS || accessType === AccessType.UPDATE_ACCESS) && (
         <FormControl fullWidth margin="normal">
           <InputLabel id="center-label">{targetType === "GROUP" ? "Centers" : "Technicals"}</InputLabel>
           <Select
@@ -316,7 +329,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
               label="Status"
               defaultValue={info.status}
               value={info.status}
-              readOnly={accessType !== AccessType.CREATE_ACCESS}
+              readOnly={accessType !== AccessType.CREATE_ACCESS || info.status === "RESOLVED" || info.status === "UNRESOLVED"}
               onChange={(e) => dispatch({ type: "set", key: "status", value: e.target.value })}
             >
               {statuses.map((status) => (
@@ -346,12 +359,13 @@ const Ticket: FunctionComponent<ITicketProps> = ({ accessType, id, onUpdate }) =
           </FormControl>
         </div>
       )}
-      {accessType === AccessType.CREATE_ACCESS && (
+      {(accessType === AccessType.CREATE_ACCESS || info.solution !== "") && (
         <FormControl fullWidth margin="normal">
           <TextField
             variant="outlined"
             label="solution"
             value={info.solution}
+            InputProps={{ readOnly: accessType !== AccessType.CREATE_ACCESS }}
             onChange={(e) => dispatch({ type: "set", key: "solution", value: e.target.value })}
           />
         </FormControl>

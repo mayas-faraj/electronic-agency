@@ -18,12 +18,17 @@ interface Ticket {
   openAt: boolean;
   asset: string;
   priority: string;
-  productItem: {
+  productItem?: {
     product?: {
       name: string;
       model: string;
       image: string;
     };
+  };
+  product?: {
+    name: string;
+    model: string;
+    image: string;
   };
 }
 
@@ -80,11 +85,22 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
 
     const ticketsResponse = await getServerData(`query { ${queryName} {id user title status createdAt openAt priority asset } }`, true);
     const tickets = ticketsResponse.data[queryName] as Ticket[];
-    const snList = tickets.map((ticket) => `"${ticket.asset}"`);
+    const assetList = tickets.map((ticket) => ticket.asset);
+    const idList = assetList
+      .filter((asset) => asset.startsWith("[product-") && asset.endsWith("]"))
+      .map((asset) => parseInt(asset.substring(9, asset.length - 1)));
+    const snList = assetList.filter((asset) => !asset.startsWith("[product-") || !asset.endsWith("]")).map((sn) => `"${sn}"`);
+
     const productsResponse = await getServerData(`query { productItems(snList: [${snList}]) { sn product { name model image } } }`);
+    const productsByIdsResponse = await getServerData(`query { productsByIds(idList: [${idList}]) { id name model image }}`);
+    console.log(productsByIdsResponse.data.productsByIds);
+
     const ticketItems = tickets.map((ticket) => ({
       ...ticket,
-      productItem: productsResponse.data.productItems.filter((item: any) => item.sn === ticket.asset)?.at(0)
+      productItem: productsResponse.data.productItems.filter((item: any) => item.sn === ticket.asset)?.at(0),
+      product: productsByIdsResponse.data.productsByIds
+        .filter((item: any) => item.id === parseInt(ticket.asset.substring(9, ticket.asset.length - 1)))
+        ?.at(0)
     }));
     setTickets(ticketItems);
   };
@@ -107,12 +123,12 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
           createdAt: new Date(ticket.createdAt).toLocaleDateString(),
           client: ticket.user,
           image:
-            ticket.productItem != null ? (
-              <img src={data["site-url"] + ticket.productItem.product?.image} alt={ticket.productItem.product?.name} />
+            ticket.productItem != null || ticket.product != null ? (
+              <img src={data["site-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)} alt={ticket.productItem?.product?.name ?? ticket.product?.name} />
             ) : (
               <img src={LogoMin} alt="alardh-alsalba" />
             ),
-          product: ticket.productItem != null ? ticket.productItem.product?.name + "\n" + ticket.productItem.product?.model : "<product not found>",
+          product: ticket.productItem != null ? ticket.productItem.product?.name + "\n" + ticket.productItem.product?.model : ticket.product?.name,
           summary: ticket.title,
           priority: <span className={`status-${ticket.priority.toLowerCase()}`}>{ticket.priority}</span>,
           status: ticket.status,

@@ -153,7 +153,7 @@ const resolvers = {
             jwt2: generateServiceJwtToken({
               name: result.user,
               sub: result.user,
-              role: result.role,
+              role: result.role !== "FEEDBACK" ? result.role : "LOGISTICS_MANAGER",
               aud: result.center?.name ?? "[no-center]",
             }),
             message: "Login success",

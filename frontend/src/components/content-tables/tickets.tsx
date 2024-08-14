@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Button, Modal } from "@mui/material";
-import { Edit, Visibility } from "@mui/icons-material";
+import { AddCircle, Edit, Visibility } from "@mui/icons-material";
 import TicketForm from "../content-forms/ticket";
 import ContentTable, { ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
@@ -36,18 +36,21 @@ export enum AccessType {
   FULL_ACCESS,
   READ_ACCESS,
   CREATE_ACCESS,
-  UPDATE_ACCESS
+  UPDATE_ACCESS,
+  TWEAK_ACCESS
 }
 
 type TicketsProps = {
   accessType: AccessType;
+  onlyResolved?: boolean;
 };
 
 // main component
-const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
+const Tickets: FunctionComponent<TicketsProps> = ({ accessType, onlyResolved }) => {
   // ticket state
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
   const [openId, setOpenId] = React.useState(0);
+  const [viewNewTicket, setViewNetTicket] = React.useState(false);
 
   // context
   const privileges = React.useContext(RoleContext);
@@ -55,8 +58,8 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
   // ticket schema
   const tableHeaderImmutable: ITableHeader[] = [
     { key: "createdAt", title: "Creation date" },
-    { key: "client", title: "client" },
-    { key: "image", title: "Product Image", isSpecialType: true },
+    { key: "client", title: "Client phone" },
+    { key: "image", title: "Product image", isSpecialType: true },
     { key: "product", title: "Product name" },
     { key: "summary", title: "Summary" },
     { key: "status", title: "Status" },
@@ -65,8 +68,8 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
 
   const tableHeaderMutable: ITableHeader[] = [
     { key: "createdAt", title: "Creation date" },
-    { key: "client", title: "client" },
-    { key: "image", title: "Product Image", isSpecialType: true },
+    { key: "client", title: "Client phone" },
+    { key: "image", title: "Product image", isSpecialType: true },
     { key: "product", title: "Product name" },
     { key: "summary", title: "Summary" },
     { key: "priority", title: "Priority" },
@@ -79,7 +82,7 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
 
     if (accessType === AccessType.FULL_ACCESS) queryName = "tickets";
     else if (accessType === AccessType.READ_ACCESS) queryName = "ticketsByAuth";
-    else if (accessType === AccessType.UPDATE_ACCESS) queryName = "ticketsAssignedToAuthGroup";
+    else if (accessType === AccessType.UPDATE_ACCESS || accessType === AccessType.TWEAK_ACCESS) queryName = "ticketsAssignedToAuthGroup";
     else if (accessType === AccessType.CREATE_ACCESS) queryName = "ticketsAssignedToAuthUser";
     else return;
 
@@ -93,7 +96,6 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
 
     const productsResponse = await getServerData(`query { productItems(snList: [${snList}]) { sn product { name model image } } }`);
     const productsByIdsResponse = await getServerData(`query { productsByIds(idList: [${idList}]) { id name model image }}`);
-    console.log(productsByIdsResponse.data.productsByIds);
 
     const ticketItems = tickets.map((ticket) => ({
       ...ticket,
@@ -102,7 +104,9 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
         .filter((item: any) => item.id === parseInt(ticket.asset.substring(9, ticket.asset.length - 1)))
         ?.at(0)
     }));
+    setViewNetTicket(false);
     setTickets(ticketItems);
+    setTimeout(() => setOpenId(0), 1000);
   };
 
   React.useEffect(() => {
@@ -112,26 +116,34 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
 
   // render
   return (
-    <div>
+    <>
+      {privileges.addTicket && (
+        <Button variant="contained" className="button button-right" onClick={() => setViewNetTicket(true)}>
+          <AddCircle />
+          Add New
+        </Button>
+      )}
       <ContentTable
         name="ticket"
         headers={accessType === AccessType.READ_ACCESS ? tableHeaderImmutable : tableHeaderMutable}
         canRead={privileges.readTicket}
         canWrite={privileges.writeTicket}
-        addNewLink={privileges.addTicket ? "/add-ticket" : undefined}
-        data={tickets.map((ticket) => ({
+        data={tickets.filter(ticket => !onlyResolved || ticket.status === "RESOLVED" || ticket.status === "FEEDBACK").map((ticket) => ({
           createdAt: new Date(ticket.createdAt).toLocaleDateString(),
           client: ticket.user,
           image:
             ticket.productItem != null || ticket.product != null ? (
-              <img src={data["site-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)} alt={ticket.productItem?.product?.name ?? ticket.product?.name} />
+              <img
+                src={data["site-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)}
+                alt={ticket.productItem?.product?.name ?? ticket.product?.name}
+              />
             ) : (
               <img src={LogoMin} alt="alardh-alsalba" />
             ),
           product: ticket.productItem != null ? ticket.productItem.product?.name + "\n" + ticket.productItem.product?.model : ticket.product?.name,
           summary: ticket.title,
-          priority: <span className={`status-${ticket.priority.toLowerCase()}`}>{ticket.priority}</span>,
-          status: ticket.status,
+          priority: <span className={`status-${ticket.priority.toLowerCase()}`}>{ticket.priority.toLowerCase()}</span>,
+          status: ticket.status.toLowerCase(),
           open: (
             <Button variant="text" color="info" onClick={() => setOpenId(ticket.id)}>
               {accessType === AccessType.READ_ACCESS ? <Visibility /> : <Edit />}
@@ -144,7 +156,12 @@ const Tickets: FunctionComponent<TicketsProps> = ({ accessType }) => {
           <TicketForm accessType={accessType} id={openId} onUpdate={action} />
         </div>
       </Modal>
-    </div>
+      <Modal open={viewNewTicket} onClose={() => setViewNetTicket(false)}>
+        <div className="modal">
+          <TicketForm onUpdate={action} />
+        </div>
+      </Modal>
+    </>
   );
 };
 

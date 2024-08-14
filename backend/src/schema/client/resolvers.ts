@@ -132,7 +132,8 @@ const resolvers = {
         Role.ADMIN,
         Role.CONTENT_READER,
         Role.CONTENT_MANAGER,
-        Role.LOGISTICS_MANAGER
+        Role.LOGISTICS_MANAGER,
+        Role.FEEDBACK
       );
 
       // return result

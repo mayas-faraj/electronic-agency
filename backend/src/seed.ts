@@ -92,7 +92,7 @@ result = await prismaClient.admin.createMany({
     {
       id: 1,
       user: "admin",
-      password: "Zxasqw12",
+      password: "Zxasqw1234",
       role: "ADMIN",
     },
     {
@@ -109,38 +109,72 @@ result = await prismaClient.admin.createMany({
       password: "Zxasqw1234",
       role: "CONTENT_MANAGER",
       level: 2,
-      centerId: 1,
+      centerId: 2,
     },
     {
       id: 4,
       user: "firas",
       password: "Zxasqw1234",
-      role: "CONTENT_READER",
+      role: "CONTENT_MANAGER",
       level: 3,
-      centerId: 3,
+      centerId: 4,
     },
     {
       id: 5,
       user: "ahmad sabtti",
       password: "Zxasqw1234",
-      role: "CONTENT_READER",
+      role: "CONTENT_MANAGER",
       level: 3,
-      centerId: 4,
+      centerId: 3,
     },
     {
       id: 6,
       user: "mussa",
       password: "Zxasqw1234",
-      role: "CONTENT_READER",
+      role: "CONTENT_MANAGER",
       level: 3,
       centerId: 5,
     },
     {
       id: 7,
+      user: "phone",
+      password: "Zxasqw1234",
+      role: "CONTENT_MANAGER"
+    },
+    {
+      id: 8,
       user: "tech1",
       password: "Zxasqw1234",
       role: "LOGISTICS_MANAGER",
+      centerId: 3,
+    },
+    {
+      id: 9,
+      user: "tech2",
+      password: "Zxasqw1234",
+      role: "LOGISTICS_MANAGER",
+      centerId: 4,
+    },
+    {
+      id: 10,
+      user: "tech3",
+      password: "Zxasqw1234",
+      role: "LOGISTICS_MANAGER",
       centerId: 5,
+    },
+    {
+      id: 11,
+      user: "hawraa",
+      password: "Zxasqw1234",
+      role: "FEEDBACK",
+      centerId: 3,
+    },
+    {
+      id: 12,
+      user: "ayoub",
+      password: "Zxasqw1234",
+      role: "FEEDBACK",
+      centerId: 4,
     },
   ],
 });
@@ -424,7 +458,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
-    id: 4,
+    id: 2,
     subCategoryId: 1,
     name: "GUD24T/A-SE",
     nameTranslated: "GUD24T/A-SE",
@@ -518,7 +552,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
-    id: 2,
+    id: 3,
     subCategoryId: 1,
     name: "GUD36T/A-SE",
     nameTranslated: "",
@@ -595,6 +629,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 4,
     subCategoryId: 1,
     name: "GUD48T/A-SE",
     nameTranslated: "GUD48T/A-SE",
@@ -671,7 +706,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
-    id: 3,
+    id: 5,
     subCategoryId: 1,
     name: "GUD60T/A-SE",
     nameTranslated: "GUD60T/A-SE",
@@ -764,7 +799,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
-    id: 5,
+    id: 6,
     subCategoryId: 1,
     name: "GUD18T/A-KE",
     nameTranslated: "GUD18T/A-KE",
@@ -853,6 +888,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 7,
     subCategoryId: 1,
     name: "GU30T/A-KE",
     nameTranslated: "GU30T/A-KE",
@@ -931,6 +967,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 8,
     subCategoryId: 1,
     name: "GU36T/A-KE",
     nameTranslated: "GU36T/A-KE",
@@ -1018,6 +1055,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 9,
     subCategoryId: 1,
     name: "GU48T/A-KE",
     nameTranslated: "GU48T/A-KE",
@@ -1110,6 +1148,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 10,
     subCategoryId: 1,
     name: "GU60T/A-KE",
     nameTranslated: "GU60T/A-KE",
@@ -1201,6 +1240,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 11,
     subCategoryId: 1,
     name: "GU24T/A-KE",
     nameTranslated: "GU24T/A-KE",
@@ -1292,6 +1332,7 @@ console.log("product seed result: ", result);
 
 result = await prismaClient.product.create({
   data: {
+    id: 12,
     subCategoryId: 2,
     name: "Air Cooled Scroll Chiller",
     nameTranslated: "Chiller نوع Scroll مبرد بالهواء",

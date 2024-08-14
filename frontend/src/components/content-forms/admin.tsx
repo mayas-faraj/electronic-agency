@@ -23,7 +23,7 @@ type Center = {
   name: string;
 };
 
-const roles = ["ADMIN", "CONTENT_MANAGER", "CONTENT_READER", "LOGISTICS_MANAGER"];
+const roles = ["ADMIN", "CONTENT_MANAGER", "CONTENT_READER", "LOGISTICS_MANAGER", "FEEDBACK"];
 
 const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
   // component reducer

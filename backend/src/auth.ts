@@ -31,6 +31,7 @@ export enum Role {
   CONTENT_MANAGER,
   CONTENT_READER,
   LOGISTICS_MANAGER,
+  FEEDBACK
 }
 
 export const checkAuthorization = (role: string, ...allowedRoles: Role[]) => {
@@ -49,20 +50,6 @@ export const generateJwtToken = (user: AuthUser) => {
 };
 
 export const generateServiceJwtToken = (user: ServiceUser) => {
-  let matchedRole = user.role;
-  switch (user.role) {
-    case "CONTENT_MANAGER":
-      matchedRole = "CONTENT_MANAGER";
-      break;
-    case "CONTENT_READER":
-      matchedRole = "CONTENT_MANAGER";
-      break;
-    case "LOGISTICS_MANAGER":
-      matchedRole = "LOGISTICS_MANAGER";
-      break;
-  }
-
-  user.role = matchedRole;
   return jwt.sign(user, secret);
 };
 

@@ -43,6 +43,13 @@ body {
   }
 }
 
+.button-right {
+  float: right;
+  z-index: 9999;
+  position: relative;
+  right: 13px;
+}
+
 .button--large {
   display: inline-block;
   width: 100%;
@@ -171,4 +178,10 @@ td {
 
 .status-critical {
   color: red;
+}
+
+.communication {
+  padding: 10px 5px;
+  border: 1px solid;
+  margin: 10px 0;
 }

@@ -6,12 +6,13 @@ import { ArrowBack } from "@mui/icons-material";
 
 // compoents props
 interface IPageProps {
-  title: string
-  children: ReactNode
+  title: string;
+  children: ReactNode;
+  hideBack?: boolean;
 }
 
 // main component
-const Page: FunctionComponent<IPageProps> = ({ title, children }) => {
+const Page: FunctionComponent<IPageProps> = ({ title, hideBack, children }) => {
   // navigation
   const navigate = useNavigate();
 
@@ -20,14 +21,21 @@ const Page: FunctionComponent<IPageProps> = ({ title, children }) => {
     <>
       <Header />
       <div className={styles.wrapper}>
-        <h1 className={styles.title}><span className={styles.title__text}>{title}</span></h1>
+        <h1 className={styles.title}>
+          <span className={styles.title__text}>{title}</span>
+        </h1>
         <div className={styles.content}>{children}</div>
-        <div className={styles.command}>
-          <a className="button" href="#!" onClick={ () => navigate(-1) }><ArrowBack />Back</a>
-        </div>
+        {!hideBack && (
+          <div className={styles.command}>
+            <a className="button" href="#!" onClick={() => navigate(-1)}>
+              <ArrowBack />
+              Back
+            </a>
+          </div>
+        )}
       </div>
     </>
-  )
+  );
 };
 
 export default Page;

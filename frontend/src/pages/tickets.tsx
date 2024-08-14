@@ -7,7 +7,7 @@ const TicketsPage = () => {
   const privileges = React.useContext(RoleContext);
 
   return (
-    <Page title="Tickets">
+    <Page title="Tickets" hideBack={true}>
       {privileges.writeAdmin && (
         <>
           <h2>All Tickets</h2>
@@ -20,7 +20,7 @@ const TicketsPage = () => {
           <Tickets accessType={AccessType.READ_ACCESS} />
         </>
       )}
-      {!privileges.writeAdmin && privileges.writeTicket && !privileges.writeRepair && !privileges.addTicket && (
+      {!privileges.writeAdmin && privileges.writeTicket && !privileges.writeRepair && !privileges.writeFeedback && !privileges.addTicket && (
         <>
           <h2>My Center Tickets</h2>
           <Tickets accessType={AccessType.UPDATE_ACCESS} />
@@ -30,6 +30,12 @@ const TicketsPage = () => {
         <>
           <h2>My Tasks</h2>
           <Tickets accessType={AccessType.CREATE_ACCESS} />
+        </>
+      )}
+      {!privileges.writeAdmin && privileges.writeFeedback && (
+        <>
+          <h2>My Feedback</h2>
+          <Tickets accessType={AccessType.TWEAK_ACCESS} onlyResolved={true} />
         </>
       )}
     </Page>

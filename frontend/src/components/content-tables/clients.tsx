@@ -13,16 +13,19 @@ interface IClient {
   user: string;
   phone: string;
   email: string;
+  firstName: string;
+  lastName: string;
   isDisabled: boolean;
 }
 
 interface IClientsType {
   isSelectable?: boolean;
-  onUpdate?: (id: number, email: string, phone: string) => void;
+  displayOneRow?: boolean;
+  onUpdate?: (id: number, email: string, phone: string, name: string, firstName: string, lastName: string) => void;
 }
 
 // main component
-const Clients: FunctionComponent<IClientsType> = ({ isSelectable, onUpdate }) => {
+const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow, onUpdate }) => {
   // client state
   const [clients, setClients] = React.useState<IClient[]>([]);
   const [viewId, setViewId] = React.useState(0);
@@ -34,18 +37,23 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, onUpdate }) =>
   // clients schema
   const tableHeader: ITableHeader[] = [
     { key: "user", title: "User Name" },
-    { key: "phone", title: "Phone" },
-    { key: "isDisabled", title: "Disable", isControlType: true },
-    { key: "view", title: "More Info", isSpecialType: true },
-    { key: "delete", title: "Delete", isControlType: true }
+    { key: "phone", title: "Phone" }
   ];
 
   if (isSelectable) tableHeader.push({ key: "select", title: "select" });
+  else {
+    tableHeader.push({ key: "isDisabled", title: "Disable", isControlType: true });
+    tableHeader.push({ key: "view", title: "More Info", isSpecialType: true });
+    tableHeader.push({ key: "delete", title: "Delete", isControlType: true });
+  }
 
   // on load
   const action = React.useCallback(async () => {
-    const result = await getServerData(`query { clients(filter: {keyword: "${keyword}"}) { id user phone email isDisabled }}`);
-    setClients(result.data.clients);
+    const result = await getServerData(`query { clients(filter: {keyword: "${keyword}"}) { id user phone email firstName lastName isDisabled }}`);
+    if (displayOneRow) {
+      if (result.data.clients?.length === 1) setClients([result.data.clients[0]]);
+      else setClients([]);
+    } else setClients(result.data.clients);
   }, [keyword]);
 
   // event handler
@@ -73,11 +81,12 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, onUpdate }) =>
       />
       <ContentTable
         name="client"
-        addNewLink="/add-client"
+        addNewLink={"/add-client"}
         isAddNewRight={true}
         headers={tableHeader}
         canRead={privileges.readClient}
         canWrite={privileges.writeClient}
+        hidePagination={displayOneRow}
         data={clients.map((client) => ({
           user: client.user,
           phone: client.phone,
@@ -106,7 +115,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, onUpdate }) =>
           ),
           select:
             isSelectable && onUpdate !== undefined ? (
-              <Button variant="text" color="info" onClick={() => onUpdate(client.id, client.email, client.phone)}>
+              <Button variant="text" color="info" onClick={() => onUpdate(client.id, client.email, client.phone, client.user, client.firstName, client.lastName)}>
                 <CheckCircle />
               </Button>
             ) : undefined

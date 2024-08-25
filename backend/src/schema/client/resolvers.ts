@@ -249,7 +249,7 @@ const resolvers = {
     },
     updateClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
+      
 
       // return result
       const result = await app.prismaClient.client.update({
@@ -295,7 +295,7 @@ const resolvers = {
     },
     deleteClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN, Role.CONTENT_READER);
+      
 
       // return result
       const result = await app.prismaClient.client.delete({

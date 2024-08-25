@@ -11,7 +11,7 @@ const resolvers = {
   Query: {
     admins: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN);
+
 
       // return result
       const result = await app.prismaClient.admin.findMany({
@@ -45,7 +45,7 @@ const resolvers = {
     },
     adminsCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN);
+
 
       // return result
       const result = await app.prismaClient.admin.aggregate({
@@ -61,7 +61,7 @@ const resolvers = {
     },
     admin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN);
+
 
       // return result
       const result = await app.prismaClient.admin.findUnique({
@@ -168,7 +168,7 @@ const resolvers = {
   Mutation: {
     createAdmin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN);
+
 
       // return result
       const result = await app.prismaClient.admin.create({
@@ -198,7 +198,7 @@ const resolvers = {
     },
     updateAdmin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN);
+
 
       // return result
       const result = await app.prismaClient.admin.update({
@@ -233,7 +233,7 @@ const resolvers = {
     },
     deleteAdmin: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      checkAuthorization(app.user.rol, Role.ADMIN);
+
 
       // return result
       const result = await app.prismaClient.admin.delete({

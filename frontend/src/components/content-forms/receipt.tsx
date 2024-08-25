@@ -55,7 +55,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         orientation: "portrait",
         unit: "px"
       });
-      pdf.addImage(imgData, "PNG", 20, 20, 0, 0);
+      pdf.addImage(imgData, "PNG", 20, 20, 400, 566);
       pdf.save("download.pdf");
     });
   };
@@ -100,7 +100,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         </div>
         <h1 className={styles.title}>{!isArabic ? "Price offer" : "عرض سعر"}</h1>
         <div className={styles.id}>
-          {!isArabic ? "Offer" : "عرض"} #EST-${id}
+          {!isArabic ? "Offer" : "عرض"} #EST-IQD {id}
         </div>
         <table className={styles.schemaTable}>
           <tbody>
@@ -153,7 +153,9 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td colSpan={3}></td>
               <td>{!isArabic ? "Sub total" : "المجموع الفرعي"}:</td>
               <td></td>
-              <td>{totalPrice.toLocaleString("en-US")} $</td>
+              <td>
+                {totalPrice.toLocaleString("en-US")} {!isArabic ? "IQD" : "د.ع."}
+              </td>
             </tr>
             <tr className={styles.summaryRow}>
               <td colSpan={3}></td>
@@ -165,7 +167,10 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td colSpan={3}></td>
               <td>{!isArabic ? "Total" : "الإجمالي"}:</td>
               <td></td>
-              <td>{info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")} $</td>
+              <td>
+                {info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")}{" "}
+                {!isArabic ? "IQD" : "د.ع."}
+              </td>
             </tr>
           </tbody>
         </table>

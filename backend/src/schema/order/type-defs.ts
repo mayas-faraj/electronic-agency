@@ -85,7 +85,7 @@ const typeDefs = `#graphql
 		price: Int!
 		validationDays: Int
 		createdAt: String
-		admin: AdminBasic
+		user: UserBasic
 		order: OrderBasic
 	}
 

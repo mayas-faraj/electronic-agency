@@ -290,7 +290,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.offer.create({
         data: {
-          adminId: app.user.id,
+          userId: app.user.id,
           orderId: args.input.orderId,
           price: args.input.price,
           validationDays: args.input.validationDays,
@@ -315,7 +315,7 @@ const resolvers = {
           id: args.id,
         },
         data: {
-          adminId: app.user.id,
+          userId: app.user.id,
           price: args.input.price,
           validationDays: args.input.validationDays,
         },

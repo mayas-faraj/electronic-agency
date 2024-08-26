@@ -10,7 +10,7 @@ export const clientFormatError = ((formattedError: GraphQLFormattedError, error:
         else if (msg.includes("`productsn`") || msg.includes("`product_sn`")) resultMsg = "Product serial number is not found";
     } else if(msg.includes("unique constraint")) {
         if (msg.includes("`client_user_key`")) resultMsg = "user is already exist";
-        else if (msg.includes("`admin_user_key`")) resultMsg = "admin user is already exist";
+        else if (msg.includes("`user_user_key`")) resultMsg = "user user is already exist";
         else if (msg.includes("`client_phone_key`")) resultMsg = "phone is belong to existing user";
         else if (msg.includes("`client_email_key`")) resultMsg = "email is belong to existing user";
         else if (msg.includes("`category_name_key`")) resultMsg = "category name is already exist";

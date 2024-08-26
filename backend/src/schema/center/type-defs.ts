@@ -24,7 +24,7 @@ const typeDefs = `#graphql
     name: String!
     parentId: Int
     createdAt: String!
-    admins: [Admin]
+    users: [User]
   }
 
   input CenterCreate {

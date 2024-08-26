@@ -1,5 +1,5 @@
 import clientResolvers from "./client/resolvers.js";
-import adminResolvers from "./admin/resolvers.js";
+import userResolvers from "./user/resolvers.js";
 import categoryResolvers from "./category/resolvers.js";
 import productResolvers from "./product/resolvers.js";
 import orderResolvers from "./order/resolvers.js";
@@ -8,7 +8,7 @@ import centerResolvers from "./center/resolvers.js";
 
 export default {
   Query: {
-    ...adminResolvers.Query,
+    ...userResolvers.Query,
     ...clientResolvers.Query,
     ...categoryResolvers.Query,
     ...productResolvers.Query,
@@ -17,7 +17,7 @@ export default {
     ...centerResolvers.Query
   },
   Mutation: {
-    ...adminResolvers.Mutation,
+    ...userResolvers.Mutation,
     ...clientResolvers.Mutation,
     ...categoryResolvers.Mutation,
     ...productResolvers.Mutation,

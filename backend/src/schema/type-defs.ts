@@ -1,5 +1,5 @@
 import clientTypeDefs from "./client/type-defs.js";
-import adminTypeDefs from "./admin/type-defs.js";
+import userTypeDefs from "./user/type-defs.js";
 import categoryTypeDefs from "./category/type-defs.js";
 import productTypeDefs from "./product/type-defs.js";
 import orderTypeDefs from "./order/type-defs.js";
@@ -33,9 +33,8 @@ const typeDefs = `#graphql
 		toDate: String
 	}
 
-	type User {
-		jwt: String!
-		jwt2: String!
+	type Login {
+		token: String!
 		success: Boolean!
 		message: String!
 	}
@@ -54,7 +53,7 @@ const typeDefs = `#graphql
 export default [
   typeDefs,
   clientTypeDefs,
-  adminTypeDefs,
+  userTypeDefs,
   categoryTypeDefs,
   productTypeDefs,
   orderTypeDefs,

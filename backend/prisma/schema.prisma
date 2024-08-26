@@ -58,7 +58,7 @@ model Code {
   @@map("code")
 }
 
-model Admin {
+model User {
   id          Int       @id @default(autoincrement())
   user        String    @unique @db.VarChar(100)
   password    String    @db.VarChar(100)
@@ -72,7 +72,7 @@ model Admin {
   center      Center?   @relation(fields: [centerId], references: [id])
   offers      Offer[]
 
-  @@map("admin")
+  @@map("user")
 }
 
 model Center {
@@ -83,7 +83,7 @@ model Center {
   updatedAt DateTime? @updatedAt @map("updated_at")
   parent    Center?   @relation(name: "center_level", fields: [parentId], references: [id])
   children  Center[]  @relation(name: "center_level")
-  admins    Admin[]
+  users     User[]
 
   @@map("center")
 }
@@ -214,13 +214,13 @@ model OrderProduct {
 
 model Offer {
   id             Int      @id @default(autoincrement())
-  adminId        Int      @map("admin_id")
+  userId         Int      @map("user_id")
   orderId        Int      @unique @map("order_id")
   price          Float
   validationDays Int?     @map("validation_days")
   createdAt      DateTime @default(now()) @map("created_at")
   order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  admin          Admin    @relation(fields: [adminId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
 
   @@map("offer")
 }

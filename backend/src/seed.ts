@@ -9,7 +9,7 @@ await prismaClient.product.deleteMany();
 await prismaClient.subCategory.deleteMany();
 await prismaClient.category.deleteMany();
 await prismaClient.client.deleteMany();
-await prismaClient.admin.deleteMany();
+await prismaClient.user.deleteMany();
 await prismaClient.center.deleteMany();
 
 // seed centers
@@ -86,8 +86,8 @@ result = await prismaClient.client.createMany({
 
 console.log("client seed result: ", result);
 
-// seed admins
-result = await prismaClient.admin.createMany({
+// seed users
+result = await prismaClient.user.createMany({
   data: [
     {
       id: 1,
@@ -179,7 +179,7 @@ result = await prismaClient.admin.createMany({
   ],
 });
 
-console.log("admins seed result: ", result);
+console.log("users seed result: ", result);
 
 // seed category
 result = await prismaClient.category.createMany({
@@ -2333,7 +2333,7 @@ result = await prismaClient.order.create({
     },
     offer: {
       create: {
-        adminId: 1,
+        userId: 1,
         price: 320,
         validationDays: 3,
       },

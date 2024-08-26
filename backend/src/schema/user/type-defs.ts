@@ -4,7 +4,7 @@ const typeDefs = `#graphql
 		adminsCount: AggregateResult
 		admin(id: Int!): Admin
 		adminByAuth: Admin
-		verifyAdmin(user: String!, password: String!): User
+		verifyAdmin(user: String!, password: String!): Login
     }
 
     extend type Mutation {

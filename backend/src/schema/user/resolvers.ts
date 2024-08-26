@@ -1,20 +1,17 @@
 import {
   type AppContext,
-  checkAuthorization,
   generateJwtToken,
-  generateServiceJwtToken,
-  Role,
 } from "../../auth.js";
 import filter from "../filter.js";
 
 const resolvers = {
   Query: {
-    admins: async (parent: any, args: any, app: AppContext) => {
+    users: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
 
       // return result
-      const result = await app.prismaClient.admin.findMany({
+      const result = await app.prismaClient.user.findMany({
         select: {
           id: true,
           user: true,
@@ -43,12 +40,12 @@ const resolvers = {
 
       return result;
     },
-    adminsCount: async (parent: any, args: any, app: AppContext) => {
+    usersCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
 
       // return result
-      const result = await app.prismaClient.admin.aggregate({
+      const result = await app.prismaClient.user.aggregate({
         _count: {
           id: true,
         },
@@ -59,12 +56,12 @@ const resolvers = {
 
       return { count: result._count.id, date: result._max.createdAt };
     },
-    admin: async (parent: any, args: any, app: AppContext) => {
+    user: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
 
       // return result
-      const result = await app.prismaClient.admin.findUnique({
+      const result = await app.prismaClient.user.findUnique({
         where: {
           id: args.id,
         },
@@ -82,11 +79,11 @@ const resolvers = {
 
       return result;
     },
-    adminByAuth: async (parent: any, args: any, app: AppContext) => {
+    userByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
-      const result = await app.prismaClient.admin.findUnique({
+      const result = await app.prismaClient.user.findUnique({
         where: {
-          id: app.user.id,
+          user: app.user.name,
         },
         include: {
           offers: {
@@ -102,12 +99,12 @@ const resolvers = {
 
       return result;
     },
-    verifyAdmin: async (parent: any, args: any, app: AppContext) => {
+    verifyUser: async (parent: any, args: any, app: AppContext) => {
       let message = "";
       let success = false;
 
       // return result
-      const userResult = await app.prismaClient.admin.findUnique({
+      const userResult = await app.prismaClient.user.findUnique({
         where: {
           user: args.user,
         },
@@ -121,7 +118,7 @@ const resolvers = {
         message = "User is not exists";
       else if (userResult.isDisabled === true) message = "User disabled";
       else {
-        const result = await app.prismaClient.admin.findFirst({
+        const result = await app.prismaClient.user.findFirst({
           where: {
             id: userResult.id,
             password: args.password,
@@ -135,7 +132,7 @@ const resolvers = {
         });
 
         if (result != null) {
-          await app.prismaClient.admin.update({
+          await app.prismaClient.user.update({
             where: {
               id: userResult.id,
             },
@@ -145,15 +142,10 @@ const resolvers = {
           });
 
           return {
-            jwt: generateJwtToken({
-              id: result.id,
-              nam: result.user,
-              rol: result.role,
-            }),
-            jwt2: generateServiceJwtToken({
+            token: generateJwtToken({
               name: result.user,
               sub: result.user,
-              role: result.role !== "FEEDBACK" ? result.role : "LOGISTICS_MANAGER",
+              roles: [result.roles],
               aud: result.center?.name ?? "[no-center]",
             }),
             message: "Login success",
@@ -166,12 +158,12 @@ const resolvers = {
     },
   },
   Mutation: {
-    createAdmin: async (parent: any, args: any, app: AppContext) => {
+    createUser: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
 
       // return result
-      const result = await app.prismaClient.admin.create({
+      const result = await app.prismaClient.user.create({
         data: {
           user: args.input.user,
           password: args.input.password,
@@ -184,9 +176,9 @@ const resolvers = {
 
       return result;
     },
-    createTechnicalAdmin: async (parent: any, args: any, app: AppContext) => {
+    createTechnicalUser: async (parent: any, args: any, app: AppContext) => {
       // return result
-      const result = await app.prismaClient.admin.create({
+      const result = await app.prismaClient.user.create({
         data: {
           user: args.input.user,
           password: args.input.password,
@@ -196,12 +188,12 @@ const resolvers = {
 
       return result;
     },
-    updateAdmin: async (parent: any, args: any, app: AppContext) => {
+    updateUser: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
 
       // return result
-      const result = await app.prismaClient.admin.update({
+      const result = await app.prismaClient.user.update({
         where: {
           id: args.id,
         },
@@ -217,9 +209,9 @@ const resolvers = {
 
       return result;
     },
-    updateAdminByAuth: async (parent: any, args: any, app: AppContext) => {
+    updateUserByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
-      const result = await app.prismaClient.admin.update({
+      const result = await app.prismaClient.user.update({
         where: {
           id: app.user.id,
         },
@@ -231,12 +223,12 @@ const resolvers = {
 
       return result;
     },
-    deleteAdmin: async (parent: any, args: any, app: AppContext) => {
+    deleteUser: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
 
       // return result
-      const result = await app.prismaClient.admin.delete({
+      const result = await app.prismaClient.user.delete({
         where: {
           id: args.id,
         },

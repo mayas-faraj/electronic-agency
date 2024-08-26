@@ -59,20 +59,42 @@ model Code {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  user        String    @unique @db.VarChar(100)
-  password    String    @db.VarChar(100)
-  level       Int       @default(1)
+  id          Int        @id @default(autoincrement())
+  user        String     @unique @db.VarChar(100)
+  password    String     @db.VarChar(100)
+  level       Int        @default(1)
   centerId    Int?
-  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  lastLoginAt DateTime? @map("last_login_at")
-  role        Role      @default(LOGISTICS_MANAGER)
-  center      Center?   @relation(fields: [centerId], references: [id])
+  isDisabled  Boolean    @default(false) @map("is_disabled") @db.TinyInt
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  lastLoginAt DateTime?  @map("last_login_at")
+  roles       UserRole[]
+  center      Center?    @relation(fields: [centerId], references: [id])
   offers      Offer[]
 
   @@map("user")
+}
+
+model Role {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique @db.VarChar(50)
+  description String?    @db.VarChar(500)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  userRoles   UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId    Int      @map("user_id")
+  roleId    Int      @map("role_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
 }
 
 model Center {
@@ -223,16 +245,6 @@ model Offer {
   user           User     @relation(fields: [userId], references: [id])
 
   @@map("offer")
-}
-
-enum Role {
-  SUBSCRIBER
-  CONTENT_READER
-  CONTENT_MANAGER
-  LOGISTICS_MANAGER
-  FEEDBACK
-  ADMIN
-  SUPER_ADMIN
 }
 
 enum OrderStatus {

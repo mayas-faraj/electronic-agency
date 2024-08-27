@@ -33,7 +33,6 @@ model Client {
   updatedAt   DateTime?               @updatedAt @map("updated_at")
   lastLoginAt DateTime?               @map("last_login_at")
   orders      Order[]
-  reviews     ProductReview[]
   products    ProductItemsOnClients[]
   code        Code?
 
@@ -161,7 +160,6 @@ model Product {
   subCategory             SubCategory     @relation(fields: [subCategoryId], references: [id])
   items                   ProductItem[]
   orderProducts           OrderProduct[]
-  reviews                 ProductReview[]
 
   @@unique([name, model])
   @@map("product")
@@ -186,19 +184,6 @@ model ProductItemsOnClients {
   client      Client      @relation(fields: [clientId], references: [id])
 
   @@map("product_items_on_clients")
-}
-
-model ProductReview {
-  id        Int      @id @default(autoincrement())
-  productId Int      @map("product_id")
-  clientId  Int      @map("client_id")
-  rating    Int
-  comment   String?  @db.VarChar(500)
-  createdAt DateTime @default(now()) @map("created_at")
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  client    Client   @relation(fields: [clientId], references: [id])
-
-  @@map("product_review")
 }
 
 model Order {

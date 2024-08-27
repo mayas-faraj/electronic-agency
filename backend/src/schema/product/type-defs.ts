@@ -19,8 +19,6 @@ const typeDefs = `#graphql
 				updateProductItemSold(sn: String!, isSold: Boolean!): ProductItemBasic
 				createProductItemOnClientByAuth(sn: String!): ProductItemOnClient
 				deleteProductItemOnClientByAuth(sn: String!): ProductItemOnClient
-				createProductReviewByAuth(productId: Int!, input: ProductReviewInput!): ProductReviewBasic
-				deleteProductReview(id: Int!): ProductReviewBasic
     }
 
     type Product {
@@ -40,7 +38,6 @@ const typeDefs = `#graphql
 		createdAt: String
 		updatedAt: String
 		subCategory: SubCategory
-		reviews: [ProductReviewBasic]
 		items: [ProductItemBasic]
 	}
 
@@ -109,26 +106,6 @@ const typeDefs = `#graphql
 		productSn: String
 		clientId: Int
 		createdAt: String
-	}
-
-	type ProductReview {
-		id: Int!
-		rating: Int!
-		comment: String
-		createdAt: String
-		client: ClientBasic
-	}
-
-	type ProductReviewBasic {
-		id: Int!
-		rating: Int!
-		comment: String
-		createdAt: String
-	}
-
-	input ProductReviewInput {
-		rating: Int!
-		comment: String
 	}
 
 	type ImportReport {

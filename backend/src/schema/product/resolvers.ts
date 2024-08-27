@@ -137,14 +137,6 @@ const resolvers = {
               name: true,
             },
           },
-          reviews: {
-            select: {
-              id: true,
-              rating: true,
-              comment: true,
-              createdAt: true,
-            },
-          },
           items: {
             select: {
               sn: true,
@@ -439,45 +431,6 @@ const resolvers = {
         },
         select: {
           productSn: true,
-          createdAt: true,
-        },
-      });
-
-      return result;
-    },
-    createProductReviewByAuth: async (
-      parent: any,
-      args: any,
-      app: AppContext
-    ) => {
-      // result result
-      const result = await app.prismaClient.productReview.create({
-        data: {
-          clientId: app.user.id,
-          productId: args.productId,
-          rating: args.input.rating,
-          comment: args.input.comment,
-        },
-        select: {
-          id: true,
-          rating: true,
-          comment: true,
-          createdAt: true,
-        },
-      });
-
-      return result;
-    },
-    deleteProductReview: async (parent: any, args: any, app: AppContext) => {
-      // result result
-      const result = await app.prismaClient.productReview.delete({
-        where: {
-          id: args.id,
-        },
-        select: {
-          id: true,
-          rating: true,
-          comment: true,
           createdAt: true,
         },
       });

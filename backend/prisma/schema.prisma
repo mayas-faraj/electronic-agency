@@ -69,7 +69,6 @@ model User {
   lastLoginAt DateTime?  @map("last_login_at")
   roles       UserRole[]
   center      Center?    @relation(fields: [centerId], references: [id])
-  offers      Offer[]
 
   @@map("user")
 }
@@ -221,13 +220,11 @@ model OrderProduct {
 
 model Offer {
   id             Int      @id @default(autoincrement())
-  userId         Int      @map("user_id")
   orderId        Int      @unique @map("order_id")
   price          Float
   validationDays Int?     @map("validation_days")
   createdAt      DateTime @default(now()) @map("created_at")
   order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  user           User     @relation(fields: [userId], references: [id])
 
   @@map("offer")
 }

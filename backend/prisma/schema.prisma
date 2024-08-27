@@ -32,8 +32,6 @@ model Client {
   createdAt   DateTime                @default(now()) @map("created_at")
   updatedAt   DateTime?               @updatedAt @map("updated_at")
   lastLoginAt DateTime?               @map("last_login_at")
-  orders      Order[]
-  products    ProductItemsOnClients[]
   code        Code?
 
   @@map("client")
@@ -140,23 +138,23 @@ model SubCategory {
 }
 
 model Product {
-  id                      Int             @id @default(autoincrement())
-  subCategoryId           Int             @map("sub_category_id")
-  name                    String          @db.VarChar(100)
-  nameTranslated          String          @map("name_translated") @db.VarChar(100)
-  model                   String?         @db.VarChar(100)
-  image                   String?         @db.VarChar(400)
-  description             String?         @db.VarChar(1500)
-  descriptionTranslated   String?         @map("description_translated") @db.VarChar(1500)
-  specification           String?         @db.LongText
-  specificationTranslated String?         @map("specification_translated") @db.LongText
-  specificationImage      String?         @db.VarChar(400)
+  id                      Int            @id @default(autoincrement())
+  subCategoryId           Int            @map("sub_category_id")
+  name                    String         @db.VarChar(100)
+  nameTranslated          String         @map("name_translated") @db.VarChar(100)
+  model                   String?        @db.VarChar(100)
+  image                   String?        @db.VarChar(400)
+  description             String?        @db.VarChar(1500)
+  descriptionTranslated   String?        @map("description_translated") @db.VarChar(1500)
+  specification           String?        @db.LongText
+  specificationTranslated String?        @map("specification_translated") @db.LongText
+  specificationImage      String?        @db.VarChar(400)
   price                   Float?
-  catalogFile             String?         @map("catalog_file") @db.VarChar(400)
-  isDisabled              Boolean         @default(false) @map("is_disabled") @db.TinyInt
-  createdAt               DateTime        @default(now()) @map("created_at")
-  updatedAt               DateTime?       @updatedAt @map("updated_at")
-  subCategory             SubCategory     @relation(fields: [subCategoryId], references: [id])
+  catalogFile             String?        @map("catalog_file") @db.VarChar(400)
+  isDisabled              Boolean        @default(false) @map("is_disabled") @db.TinyInt
+  createdAt               DateTime       @default(now()) @map("created_at")
+  updatedAt               DateTime?      @updatedAt @map("updated_at")
+  subCategory             SubCategory    @relation(fields: [subCategoryId], references: [id])
   items                   ProductItem[]
   orderProducts           OrderProduct[]
 
@@ -177,17 +175,16 @@ model ProductItem {
 
 model ProductItemsOnClients {
   productSn   String      @id
-  clientId    Int
+  user        String
   createdAt   DateTime    @default(now()) @map("created_at")
   productItem ProductItem @relation(fields: [productSn], references: [sn], onDelete: Cascade, onUpdate: Cascade)
-  client      Client      @relation(fields: [clientId], references: [id])
 
   @@map("product_items_on_clients")
 }
 
 model Order {
   id             Int            @id @default(autoincrement())
-  clientId       Int            @map("client_id")
+  user           String
   address        String         @db.VarChar(500)
   note           String?        @db.VarChar(500)
   company        String?        @db.VarChar(100)
@@ -199,7 +196,6 @@ model Order {
   isDraft        Boolean        @default(false) @map("is_draft") @db.TinyInt
   isOfferRequest Boolean        @default(false) @map("is_offer_request") @db.TinyInt
   createdAt      DateTime       @default(now()) @map("created_at")
-  client         Client         @relation(fields: [clientId], references: [id])
   offer          Offer?
   products       OrderProduct[]
 

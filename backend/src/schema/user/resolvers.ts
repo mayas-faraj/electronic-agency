@@ -1,22 +1,25 @@
-import {
-  type AppContext,
-  generateJwtToken,
-} from "../../auth.js";
+import { type AppContext, generateJwtToken } from "../../auth.js";
 import filter from "../filter.js";
 
 const resolvers = {
   Query: {
     users: async (parent: any, args: any, app: AppContext) => {
-      // check permissions
-
-
       // return result
       const result = await app.prismaClient.user.findMany({
         select: {
           id: true,
           user: true,
           isDisabled: true,
-          role: true,
+          userRoles: {
+            select: {
+              roleId: true,
+              role: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
           centerId: true,
           level: true,
           center: {
@@ -43,7 +46,6 @@ const resolvers = {
     usersCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
-
       // return result
       const result = await app.prismaClient.user.aggregate({
         _count: {
@@ -59,19 +61,15 @@ const resolvers = {
     user: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
-
       // return result
       const result = await app.prismaClient.user.findUnique({
         where: {
           id: args.id,
         },
         include: {
-          offers: {
-            select: {
-              id: true,
-              price: true,
-              validationDays: true,
-              createdAt: true,
+          userRoles: {
+            include: {
+              role: true,
             },
           },
         },
@@ -85,13 +83,18 @@ const resolvers = {
         where: {
           user: app.user.name,
         },
-        include: {
-          offers: {
+        select: {
+          id: true,
+          user: true,
+          isDisabled: true,
+          userRoles: {
             select: {
-              id: true,
-              price: true,
-              validationDays: true,
-              createdAt: true,
+              roleId: true,
+              role: {
+                select: {
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -99,6 +102,8 @@ const resolvers = {
 
       return result;
     },
+  },
+  Mutation: {
     verifyUser: async (parent: any, args: any, app: AppContext) => {
       let message = "";
       let success = false;
@@ -126,7 +131,11 @@ const resolvers = {
           select: {
             id: true,
             user: true,
-            role: true,
+            userRoles: {
+              select: {
+                role: true,
+              },
+            },
             center: true,
           },
         });
@@ -145,7 +154,7 @@ const resolvers = {
             token: generateJwtToken({
               name: result.user,
               sub: result.user,
-              roles: [result.roles],
+              roles: result.userRoles.map((userRole) => userRole.role.name),
               aud: result.center?.name ?? "[no-center]",
             }),
             message: "Login success",
@@ -154,23 +163,28 @@ const resolvers = {
         } else message = "password error";
       }
 
-      return { jwt: "", jwt2: "", message, success };
+      return { token: "", message, success };
     },
-  },
-  Mutation: {
     createUser: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-
 
       // return result
       const result = await app.prismaClient.user.create({
         data: {
           user: args.input.user,
           password: args.input.password,
-          role: args.input.role,
           isDisabled: args.input.isDisabled,
           level: args.input.level,
           centerId: args.input.centerId,
+          userRoles: {
+            create: (args.input.roles as string[]).map((role) => ({
+              role: {
+                connect: {
+                  name: role,
+                },
+              },
+            })),
+          },
         },
       });
 
@@ -182,7 +196,15 @@ const resolvers = {
         data: {
           user: args.input.user,
           password: args.input.password,
-          role: "LOGISTICS_MANAGER",
+          userRoles: {
+            create: {
+              role: {
+                connect: {
+                  name: "logistics_manager",
+                },
+              },
+            },
+          },
         },
       });
 
@@ -191,6 +213,11 @@ const resolvers = {
     updateUser: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 
+      // delete old roles
+      if (args.input.roles !== undefined)
+        await app.prismaClient.userRole.deleteMany({
+          where: { userId: args.id },
+        });
 
       // return result
       const result = await app.prismaClient.user.update({
@@ -200,7 +227,18 @@ const resolvers = {
         data: {
           user: args.input.user,
           password: args.input.password,
-          role: args.input.role,
+          userRoles:
+            args.input.roles != undefined
+              ? {
+                  create: (args.input.roles as string[]).map((role) => ({
+                    role: {
+                      connect: {
+                        name: role,
+                      },
+                    },
+                  })),
+                }
+              : undefined,
           isDisabled: args.input.isDisabled,
           level: args.input.level,
           centerId: args.input.centerId,
@@ -213,7 +251,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.user.update({
         where: {
-          id: app.user.id,
+          user: app.user.name,
         },
         data: {
           user: args.input.user,
@@ -225,7 +263,6 @@ const resolvers = {
     },
     deleteUser: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-
 
       // return result
       const result = await app.prismaClient.user.delete({

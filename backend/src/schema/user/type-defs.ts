@@ -1,21 +1,21 @@
 const typeDefs = `#graphql
 	extend type Query {
-        admins(filter: SearchFilter): [AdminBasic]
-		adminsCount: AggregateResult
-		admin(id: Int!): Admin
-		adminByAuth: Admin
-		verifyAdmin(user: String!, password: String!): Login
+        users(filter: SearchFilter): [UserBasic]
+		usersCount: AggregateResult
+		user(id: Int!): User
+		userByAuth: User
     }
 
     extend type Mutation {
-        createAdmin(input: AdminInput!): AdminBasic
-        createTechnicalAdmin(input: AdminInput!): AdminBasic
-		updateAdmin(id: Int!, input: AdminUpdate!): AdminBasic
-		updateAdminByAuth(input: AdminUpdate!): AdminBasic
-		deleteAdmin(id: Int!): AdminBasic
+		verifyUser(user: String!, password: String!): Login
+        createUser(input: UserInput!): UserBasic
+        createTechnicalUser(input: UserInput!): UserBasic
+		updateUser(id: Int!, input: UserUpdate!): UserBasic
+		updateUserByAuth(input: UserUpdate!): UserBasic
+		deleteUser(id: Int!): UserBasic
     }
 
-    type Admin {
+    type User {
 		id: Int!
 		user: String!
 		level: Int!
@@ -24,31 +24,39 @@ const typeDefs = `#graphql
 		createdAt: String
 		updatedAt: String
 		lastLoginAt: String
-		role: String
-		offers: [OfferBasic]
+		userRoles: [UserRole]
 	}
 
-	type AdminBasic {
+	type UserBasic {
 		id: Int!
 		user: String!
 		isDisabled: Boolean
-		role: String
+		userRoles: [UserRole]
 		center: Center
 	}
 
-	input AdminInput {
+	type UserRole {
+		roleId: Int!
+		role: Role!
+	}
+
+	type Role {
+		name: String!
+	}
+
+	input UserInput {
 		user: String!
 		password: String
-		role: String
+		roles: [String]!
 		isDisabled: Boolean
 		level: Int
 		centerId: Int
 	}
 
-	input AdminUpdate {
+	input UserUpdate {
 		user: String
 		password: String
-		role: String
+		roles: [String]
 		isDisabled: Boolean
 		level: Int
 		centerId: Int

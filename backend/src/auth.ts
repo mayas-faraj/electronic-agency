@@ -8,58 +8,29 @@ dotenv.config();
 const secret = process.env.SECRET ?? "";
 
 // app interface
-interface AuthUser {
-  id: number;
-  nam: string;
-  rol: string;
-}
-
-interface ServiceUser {
+interface User {
   name: string;
-  role: string;
+  roles: string[];
   sub: string;
   aud?: string;
 }
 export interface AppContext {
   prismaClient: PrismaClient;
-  user: AuthUser;
+  user: User;
 }
-
-// check auth function
-export enum Role {
-  ADMIN,
-  CONTENT_MANAGER,
-  CONTENT_READER,
-  LOGISTICS_MANAGER,
-  FEEDBACK
-}
-
-export const checkAuthorization = (role: string, ...allowedRoles: Role[]) => {
-  for (let allowedRole of allowedRoles)
-    if (role === Role[allowedRole]) return true;
-  throw new GraphQLError(
-    `${
-      role != "" ? role : "user without a role"
-    } is unauthorized to access resources, only allowd for role indexs: ${allowedRoles}`
-  );
-};
 
 // decode user
-export const generateJwtToken = (user: AuthUser) => {
-  return jwt.sign(user, secret);
-};
-
-export const generateServiceJwtToken = (user: ServiceUser) => {
+export const generateJwtToken = (user: User) => {
   return jwt.sign(user, secret);
 };
 
 // verify user
-export const getUserFromJwt = (authorizationToken: string): AuthUser => {
-  const emptyUser = { id: 0, nam: "", rol: "" };
+export const getUserFromJwt = (authorizationToken: string): User => {
+  const emptyUser = { name: "", sub: "", aud: "", roles: [] };
   if (authorizationToken == null || authorizationToken === "") return emptyUser;
   try {
     const result = jwt.verify(authorizationToken, secret);
-    return result as AuthUser;
+    return result as User;
   } catch (ex) {
     return emptyUser;
   }

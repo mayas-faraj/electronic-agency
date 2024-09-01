@@ -1,11 +1,5 @@
 import { GraphQLError } from "graphql";
-import {
-  type AppContext,
-  checkAuthorization,
-  generateJwtToken,
-  generateServiceJwtToken,
-  Role,
-} from "../../auth.js";
+import { type AppContext, generateJwtToken } from "../../auth.js";
 import filter from "../filter.js";
 import { generateName, generateVerificationCode } from "../generate.js";
 import { sendSms } from "../../sms.js";
@@ -13,14 +7,6 @@ import { sendSms } from "../../sms.js";
 const resolvers = {
   Query: {
     clients: async (parent: any, args: any, app: AppContext) => {
-      // check permissions
-      checkAuthorization(
-        app.user.rol,
-        Role.ADMIN,
-        Role.CONTENT_READER,
-        Role.CONTENT_MANAGER
-      );
-
       // return result
       const result = await app.prismaClient.client.findMany({
         skip: args.pagination?.id != null ? 1 : undefined,
@@ -70,14 +56,6 @@ const resolvers = {
       return result;
     },
     clientsCount: async (parent: any, args: any, app: AppContext) => {
-      // check permissions
-      checkAuthorization(
-        app.user.rol,
-        Role.ADMIN,
-        Role.CONTENT_READER,
-        Role.CONTENT_MANAGER
-      );
-
       // return result
       const result = await app.prismaClient.client.aggregate({
         _count: {
@@ -91,51 +69,42 @@ const resolvers = {
       return { count: result._count.id, date: result._max.createdAt };
     },
     client: async (parent: any, args: any, app: AppContext) => {
-      // check permissions
-      checkAuthorization(
-        app.user.rol,
-        Role.ADMIN,
-        Role.CONTENT_READER,
-        Role.CONTENT_MANAGER
-      );
-
       // return result
       const result = await app.prismaClient.client.findUnique({
         where: {
           id: args.id,
         },
-        include: {
-          orders: {
-            select: {
-              id: true,
-              status: true,
-              createdAt: true,
-            },
+      });
+
+      if (result !== null) {
+        const orders = await app.prismaClient.order.findMany({
+          where: {
+            user: result.user,
           },
-          reviews: {
-            select: {
-              id: true,
-              rating: true,
-              comment: true,
-              createdAt: true,
-            },
-          },
+        });
+
+        return { ...result, orders };
+      } else return null;
+    },
+    clientByUser: async (parent: any, args: any, app: AppContext) => {
+      // return result
+      const result = await app.prismaClient.client.findUnique({
+        where: {
+          user: args.user
         },
       });
 
-      return result;
+      if (result !== null) {
+        const orders = await app.prismaClient.order.findMany({
+          where: {
+            user: args.user
+          },
+        });
+
+        return { ...result, orders };
+      } else return null;
     },
     clientByPhone: async (parent: any, args: any, app: AppContext) => {
-      // check permissions
-      checkAuthorization(
-        app.user.rol,
-        Role.ADMIN,
-        Role.CONTENT_READER,
-        Role.CONTENT_MANAGER,
-        Role.LOGISTICS_MANAGER,
-        Role.FEEDBACK
-      );
-
       // return result
       const result = await app.prismaClient.client.findUnique({
         where: {
@@ -149,28 +118,19 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.client.findUnique({
         where: {
-          id: app.user.id,
-        },
-        include: {
-          orders: {
-            select: {
-              id: true,
-              status: true,
-              createdAt: true,
-            },
-          },
-          reviews: {
-            select: {
-              id: true,
-              rating: true,
-              comment: true,
-              createdAt: true,
-            },
-          },
+          user: app.user.name,
         },
       });
 
-      return result;
+      if (result !== null) {
+        const orders = await app.prismaClient.order.findMany({
+          where: {
+            user: result.user,
+          },
+        });
+
+        return { ...result, orders };
+      } else return null;
     },
     verifyClient: async (parent: any, args: any, app: AppContext) => {
       // return result
@@ -201,16 +161,16 @@ const resolvers = {
           },
         });
         return {
-          jwt: generateJwtToken({ id: result.id, nam: result.user, rol: "" }),
-          jwt2: generateServiceJwtToken({
+          token: generateJwtToken({
             name: result.user,
             sub: `${result.firstName} ${result.lastName}`,
-            role: "SUBSCRIBER",
+            roles: ["SUBSCRIBER"],
             aud: "ea",
           }),
           success: true,
+          message: "",
         };
-      } else return { jwt: "", success: false };
+      } else return { jwt: "", success: false, message: "password error" };
     },
   },
   Mutation: {
@@ -249,7 +209,6 @@ const resolvers = {
     },
     updateClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.client.update({
@@ -264,7 +223,12 @@ const resolvers = {
           namePrefix: args.input.namePrefix,
           firstName: args.input.firstName,
           lastName: args.input.lastName,
-          birthDate: new Date(args.input.birthDate),
+          birthDate:
+            args.input.birthDate !== undefined
+              ? args.input.birthDate !== null
+                ? new Date(args.input.birthDate)
+                : null
+              : undefined,
           isMale: args.input.isMale,
           isDisabled: args.input.isDisabled,
         },
@@ -276,7 +240,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.client.update({
         where: {
-          id: app.user.id,
+          user: app.user.name,
         },
         data: {
           user: args.input.user,
@@ -286,7 +250,12 @@ const resolvers = {
           namePrefix: args.input.namePrefix,
           firstName: args.input.firstName,
           lastName: args.input.lastName,
-          birthDate: new Date(args.input.birthDate),
+          birthDate:
+            args.input.birthDate !== undefined
+              ? args.input.birthDate !== null
+                ? new Date(args.input.birthDate)
+                : null
+              : undefined,
           isMale: args.input.isMale,
         },
       });
@@ -295,7 +264,6 @@ const resolvers = {
     },
     deleteClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.client.delete({

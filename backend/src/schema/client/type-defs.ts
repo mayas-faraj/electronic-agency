@@ -3,9 +3,10 @@ const typeDefs = `#graphql
         clients(filter: SearchFilter, pagination: Pagination): [ClientBasic]
 		clientsCount: AggregateResult
 		client(id: Int!): Client
+		clientByUser(user: String!): Client
 		clientByPhone(phone: String!): Client
 		clientByAuth: Client
-		verifyClient(clientId: Int!, codeText: String!): User
+		verifyClient(clientId: Int!, codeText: String!): Login
     }
 
     extend type Mutation {
@@ -33,7 +34,6 @@ const typeDefs = `#graphql
 		updatedAt: String
 		lastLoginAt: String
 		orders: [OrderBasic]
-		reviews: [ProductReviewBasic]
 	}
 
 	type ClientBasic {

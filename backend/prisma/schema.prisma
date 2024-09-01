@@ -17,21 +17,21 @@ datasource db {
 // description  1500
 
 model Client {
-  id          Int                     @id @default(autoincrement())
-  user        String                  @unique @db.VarChar(100)
-  phone       String                  @unique @db.VarChar(100)
-  email       String?                 @unique @db.VarChar(50)
-  avatar      String?                 @db.VarChar(400)
-  namePrefix  String                  @default("Mr.") @map("name_prefix") @db.Char(3)
-  firstName   String                  @map("first_name") @db.VarChar(100)
-  lastName    String?                 @map("last_name") @db.VarChar(100)
-  birthDate   DateTime?               @map("birth_date")
-  isMale      Boolean                 @default(true) @map("is_male") @db.TinyInt
-  isDisabled  Boolean                 @default(false) @map("is_disabled") @db.TinyInt
-  isVerified  Boolean                 @default(false) @map("is_verified") @db.TinyInt
-  createdAt   DateTime                @default(now()) @map("created_at")
-  updatedAt   DateTime?               @updatedAt @map("updated_at")
-  lastLoginAt DateTime?               @map("last_login_at")
+  id          Int       @id @default(autoincrement())
+  user        String    @unique @db.VarChar(100)
+  phone       String    @unique @db.VarChar(100)
+  email       String?   @unique @db.VarChar(50)
+  avatar      String?   @db.VarChar(400)
+  namePrefix  String    @default("Mr.") @map("name_prefix") @db.Char(3)
+  firstName   String    @map("first_name") @db.VarChar(100)
+  lastName    String?   @map("last_name") @db.VarChar(100)
+  birthDate   DateTime? @map("birth_date")
+  isMale      Boolean   @default(true) @map("is_male") @db.TinyInt
+  isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
+  isVerified  Boolean   @default(false) @map("is_verified") @db.TinyInt
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  lastLoginAt DateTime? @map("last_login_at")
   code        Code?
 
   @@map("client")
@@ -65,7 +65,7 @@ model User {
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime?  @updatedAt @map("updated_at")
   lastLoginAt DateTime?  @map("last_login_at")
-  roles       UserRole[]
+  userRoles   UserRole[]
   center      Center?    @relation(fields: [centerId], references: [id])
 
   @@map("user")

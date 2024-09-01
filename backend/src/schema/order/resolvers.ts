@@ -5,7 +5,6 @@ const resolvers = {
   Query: {
     orders: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.order.findMany({
@@ -55,7 +54,6 @@ const resolvers = {
     },
     order: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.order.findUnique({
@@ -64,6 +62,7 @@ const resolvers = {
         },
         select: {
           id: true,
+          user: true,
           address: true,
           note: true,
           company: true,
@@ -94,20 +93,6 @@ const resolvers = {
               },
             },
           },
-          client: {
-            select: {
-              id: true,
-              user: true,
-              phone: true,
-              email: true,
-              avatar: true,
-              namePrefix: true,
-              firstName: true,
-              lastName: true,
-              birthDate: true,
-              isMale: true,
-            },
-          },
           offer: {
             select: {
               id: true,
@@ -120,7 +105,7 @@ const resolvers = {
       });
 
       // set read value to true
-      if (result != null)
+      if (result != null) {
         await app.prismaClient.order.update({
           where: {
             id: args.id,
@@ -130,13 +115,32 @@ const resolvers = {
           },
         });
 
-      return result;
+        const client = await app.prismaClient.client.findUnique({
+          where: {
+            user: result?.user,
+          },
+          select: {
+            id: true,
+            user: true,
+            phone: true,
+            email: true,
+            avatar: true,
+            namePrefix: true,
+            firstName: true,
+            lastName: true,
+            birthDate: true,
+            isMale: true,
+          },
+        });
+
+        return { ...result, client };
+      } else return null;
     },
     ordersByAuth: async (parent: any, args: any, app: AppContext) => {
       // return result
       const result = await app.prismaClient.order.findMany({
         where: {
-          clientId: app.user.id,
+          user: app.user.name,
           isDraft: args.isDraft === true,
         },
         select: {
@@ -171,7 +175,6 @@ const resolvers = {
     },
     ordersUnreadCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.order.aggregate({
@@ -188,7 +191,6 @@ const resolvers = {
     },
     ordersCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.order.aggregate({
@@ -212,7 +214,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.order.create({
         data: {
-          clientId: app.user.id,
+          user: app.user.name,
           address: args.input.address,
           note: args.input.note,
           company: args.input.company,
@@ -237,7 +239,7 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.order.create({
         data: {
-          clientId: args.clientId,
+          user: args.user,
           address: args.input.address,
           note: args.input.note,
           company: args.input.company,
@@ -249,9 +251,9 @@ const resolvers = {
           status: "PENDING",
           products: {
             createMany: {
-              data: args.input.products
-            }
-          }
+              data: args.input.products,
+            },
+          },
         },
       });
 
@@ -272,7 +274,6 @@ const resolvers = {
     },
     deleteOrder: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.order.delete({
@@ -285,12 +286,10 @@ const resolvers = {
     },
     createOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.offer.create({
         data: {
-          userId: app.user.id,
           orderId: args.input.orderId,
           price: args.input.price,
           validationDays: args.input.validationDays,
@@ -307,7 +306,6 @@ const resolvers = {
     },
     updateOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.offer.update({
@@ -315,7 +313,6 @@ const resolvers = {
           id: args.id,
         },
         data: {
-          userId: app.user.id,
           price: args.input.price,
           validationDays: args.input.validationDays,
         },
@@ -331,7 +328,6 @@ const resolvers = {
     },
     deleteOffer: async (parent: any, args: any, app: AppContext) => {
       // check permissions
-      
 
       // return result
       const result = await app.prismaClient.offer.delete({

@@ -9,7 +9,7 @@ const typeDefs = `#graphql
 
     extend type Mutation {
         createOrderByAuth(input: OrderInput!): OrderBasic
-		createOrder(clientId: Int!, input: OrderCreate!): OrderBasic
+		createOrder(user: String!, input: OrderCreate!): OrderBasic
 				updateOrderStatus(id: Int!, status: String!): OrderBasic
 				deleteOrder(id: Int!): OrderBasic
 				createOfferByAuth(input: OfferInput!): OfferBasic

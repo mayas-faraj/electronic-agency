@@ -172,7 +172,7 @@ const resolvers = {
           client: {
             select: {
               productSn: true,
-              clientId: true,
+              user: true,
               createdAt: true,
             },
           },
@@ -213,7 +213,7 @@ const resolvers = {
       const result = await app.prismaClient.productItem.findMany({
         where: {
           client: {
-            clientId: app.user.id,
+            user: app.user.name
           },
         },
         include: {
@@ -407,11 +407,11 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.productItemsOnClients.create({
         data: {
-          clientId: app.user.id,
+          user: app.user.name,
           productSn: args.sn,
         },
         select: {
-          clientId: true,
+          user: true,
           productSn: true,
           createdAt: true,
         },

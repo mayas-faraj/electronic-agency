@@ -104,7 +104,7 @@ const typeDefs = `#graphql
 
 	type ProductItemOnClient {
 		productSn: String
-		clientId: Int
+		user: String
 		createdAt: String
 	}
 

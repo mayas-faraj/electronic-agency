@@ -85,101 +85,69 @@ result = await prismaClient.client.createMany({
 });
 
 console.log("client seed result: ", result);
+const roles = [
+  "admin",
+  "data_viewer",
+  "sales_man",
+  "offer_admin",
+  "top_call_center",
+  "call_center",
+  "technician",
+  "closer",
+  "feedback",
+];
 
-// seed users
-result = await prismaClient.user.createMany({
-  data: [
-    {
-      id: 1,
-      user: "admin",
-      password: "Zxasqw1234",
-      role: "ADMIN",
-    },
-    {
-      id: 2,
-      user: "sara",
-      password: "Zxasqw1234",
-      role: "CONTENT_MANAGER",
-      level: 2,
-      centerId: 1,
-    },
-    {
-      id: 3,
-      user: "hendreen",
-      password: "Zxasqw1234",
-      role: "CONTENT_MANAGER",
-      level: 2,
-      centerId: 2,
-    },
-    {
-      id: 4,
-      user: "firas",
-      password: "Zxasqw1234",
-      role: "CONTENT_MANAGER",
-      level: 3,
-      centerId: 4,
-    },
-    {
-      id: 5,
-      user: "ahmad sabtti",
-      password: "Zxasqw1234",
-      role: "CONTENT_MANAGER",
-      level: 3,
-      centerId: 3,
-    },
-    {
-      id: 6,
-      user: "mussa",
-      password: "Zxasqw1234",
-      role: "CONTENT_MANAGER",
-      level: 3,
-      centerId: 5,
-    },
-    {
-      id: 7,
-      user: "phone",
-      password: "Zxasqw1234",
-      role: "CONTENT_MANAGER"
-    },
-    {
-      id: 8,
-      user: "tech1",
-      password: "Zxasqw1234",
-      role: "LOGISTICS_MANAGER",
-      centerId: 3,
-    },
-    {
-      id: 9,
-      user: "tech2",
-      password: "Zxasqw1234",
-      role: "LOGISTICS_MANAGER",
-      centerId: 4,
-    },
-    {
-      id: 10,
-      user: "tech3",
-      password: "Zxasqw1234",
-      role: "LOGISTICS_MANAGER",
-      centerId: 5,
-    },
-    {
-      id: 11,
-      user: "hawraa",
-      password: "Zxasqw1234",
-      role: "FEEDBACK",
-      centerId: 3,
-    },
-    {
-      id: 12,
-      user: "ayoub",
-      password: "Zxasqw1234",
-      role: "FEEDBACK",
-      centerId: 4,
-    },
-  ],
+const users = [
+  { name: "admin", roles: ["admin"], centerId: null },
+  { name: "viewer", roles: ["data_viewer"], centerId: null },
+  { name: "sales", roles: ["sales_man"], centerId: null },
+  { name: "offer-admin", roles: ["offer_admin"], centerId: null },
+  { name: "phone", roles: ["top_call_center"], centerId: null },
+  { name: "sara", roles: ["call_center"], centerId: 1 },
+  { name: "hendreen", roles: ["call_center"], centerId: 2 },
+  { name: "firas", roles: ["call_center", "closer"], centerId: 4 },
+  { name: "ahmad sabtti", roles: ["call_center", "closer"], centerId: 3 },
+  { name: "mussa", roles: ["call_center"], centerId: 5 },
+  { name: "tech1", roles: ["technician"], centerId: 3 },
+  { name: "tech2", roles: ["technician"], centerId: 4 },
+  { name: "tech3", roles: ["technician"], centerId: 5 },
+  { name: "hawraa-baghdad", roles: ["feedback"], centerId: 3 },
+  { name: "hawraa-cities", roles: ["feedback"], centerId: 4 },
+  { name: "ayoub", roles: ["closer", "feedback"], centerId: 5 },
+];
+
+// seed roles
+await prismaClient.role.createMany({
+  data: roles.map((role, index) => ({
+    id: index + 1,
+    name: role,
+    description: `description for ${role}`,
+    updatedAt: null,
+  })),
 });
 
-console.log("users seed result: ", result);
+// seed users
+users.forEach(async (user, index) => {
+  await prismaClient.user.create({
+    data: {
+      id: index + 1,
+      user: user.name,
+      password: "Zxasqw1234",
+      centerId: user.centerId,
+      userRoles: {
+        create: user.roles.map((role) => ({
+          role: {
+            connect: {
+              name: role,
+            },
+          },
+        })),
+      },
+    },
+  });
+});
+
+console.log("users seed result: ", "batch");
 
 // seed category
 result = await prismaClient.category.createMany({
@@ -430,27 +398,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	3.39/3.62
         ],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-            comment: "best device",
-          },
-          {
-            clientId: 2,
-            rating: 4,
-            comment: "good air condition",
-          },
-          {
-            clientId: 3,
-            rating: 5,
-            comment: "high quality",
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -531,17 +478,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	3.5/4
           { sn: "341784196" },
           { sn: "341784197" },
           { sn: "341784198" },
-        ],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 3,
-            rating: 5,
-            comment: "good quality",
-          },
         ],
       },
     },
@@ -776,22 +712,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	2.8/3/3
         data: [{ sn: "741784197" }, { sn: "741784198" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-            comment: "best device22",
-          },
-          {
-            clientId: 3,
-            rating: 5,
-            comment: "high quality22",
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -869,16 +789,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	3.44/3.85
     items: {
       createMany: {
         data: [{ sn: "841784197" }, { sn: "841784198" }],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 3,
-            rating: 2,
-          },
-        ],
       },
     },
   },
@@ -1038,16 +948,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	2.89/3.38
         data: [{ sn: "141784197" }, { sn: "141784198" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 3,
-            rating: 2,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1124,21 +1024,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	3.11/3.51
     items: {
       createMany: {
         data: [{ sn: "441784197" }, { sn: "441784198" }],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 2,
-            rating: 3,
-            comment: "better thant older one",
-          },
-          {
-            clientId: 3,
-            rating: 2,
-          },
-        ],
       },
     },
   },
@@ -1218,21 +1103,6 @@ Max. Distance	Height/ Length	m	30/50
         data: [{ sn: "541784197" }, { sn: "541784198" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 2,
-            rating: 3,
-            comment: "better thant older one",
-          },
-          {
-            clientId: 3,
-            rating: 2,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1310,21 +1180,6 @@ EER/C.O.P معامل كفاءة الطاقة		W/W	3.3/3.61
         data: [{ sn: "7417841917" }, { sn: "7417841918" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 2,
-            rating: 3,
-            comment: "better thant older one",
-          },
-          {
-            clientId: 3,
-            rating: 2,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1353,24 +1208,6 @@ Capacity Range (KW)
         data: [{ sn: "11323489" }, { sn: "11323479" }, { sn: "11323469" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1396,24 +1233,6 @@ Capacity Range (KW)
     items: {
       createMany: {
         data: [{ sn: "31323489" }, { sn: "31323479" }, { sn: "31323469" }],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
       },
     },
   },
@@ -1444,24 +1263,6 @@ Capacity Range (KW)
         data: [{ sn: "41323489" }, { sn: "41323479" }, { sn: "41323469" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1488,24 +1289,6 @@ Capacity Range (KW)
     items: {
       createMany: {
         data: [{ sn: "51323489" }, { sn: "51323479" }, { sn: "51323469" }],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
       },
     },
   },
@@ -1536,24 +1319,6 @@ Capacity Range (KW)
         data: [{ sn: "61323489" }, { sn: "61323479" }, { sn: "61323469" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1580,24 +1345,6 @@ Capacity Range (KW)
     items: {
       createMany: {
         data: [{ sn: "71323489" }, { sn: "71323479" }, { sn: "71323469" }],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
       },
     },
   },
@@ -1627,24 +1374,6 @@ Capacity Range (KW)
         data: [{ sn: "81323489" }, { sn: "81323479" }, { sn: "81323469" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1672,24 +1401,6 @@ Capacity Range (KW)
         data: [{ sn: "91323489" }, { sn: "91323479" }, { sn: "91323469" }],
       },
     },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
-      },
-    },
   },
 });
 
@@ -1715,24 +1426,6 @@ Capacity Range (KW)
     items: {
       createMany: {
         data: [{ sn: "101323489" }, { sn: "101323479" }, { sn: "101323469" }],
-      },
-    },
-    reviews: {
-      createMany: {
-        data: [
-          {
-            clientId: 1,
-            rating: 5,
-          },
-          {
-            clientId: 2,
-            rating: 4,
-          },
-          {
-            clientId: 3,
-            rating: 5,
-          },
-        ],
       },
     },
   },
@@ -2293,15 +1986,15 @@ console.log("product seed result: ", result);
 result = await prismaClient.productItemsOnClients.createMany({
   data: [
     {
-      clientId: 1,
+      user: "lord.mayas",
       productSn: "9AC9920000553",
     },
     {
-      clientId: 1,
+      user: "zaherati",
       productSn: "136983725927",
     },
     {
-      clientId: 2,
+      user: "zaherati",
       productSn: "116983725927",
     },
   ],
@@ -2312,7 +2005,7 @@ console.log("product on clients review seed result: ", result);
 // seed orders
 result = await prismaClient.order.create({
   data: {
-    clientId: 1,
+    user: "lord.mayas",
     address: "Zahera-Damascus-Syria",
     isDraft: false,
     status: "ACCEPTED",
@@ -2333,7 +2026,6 @@ result = await prismaClient.order.create({
     },
     offer: {
       create: {
-        userId: 1,
         price: 320,
         validationDays: 3,
       },
@@ -2345,7 +2037,7 @@ console.log("order seed result: ", result);
 
 result = await prismaClient.order.create({
   data: {
-    clientId: 2,
+    user: "zaherati",
     address: "Muhajreen-Damascus-Syria",
     isDraft: true,
     status: "PENDING",

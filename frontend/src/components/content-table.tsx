@@ -9,19 +9,26 @@ import Content from "./content";
 import styles from "../styles/content-table.module.scss";
 
 // types
+export enum HeaderType {
+  UPDATE,
+  DELETE,
+  SPECIAL
+}
+
 export interface ITableHeader {
   key: string;
   title: string;
-  isControlType?: boolean;
-  isSpecialType?: boolean;
+  type?: HeaderType;
 }
 
 interface IContentTableProps {
   name: string;
   headers: ITableHeader[];
   data: Record<string, ReactNode>[];
+  canCreate?: boolean;
   canRead: boolean;
-  canWrite: boolean;
+  canUpdate: boolean;
+  canDelete: boolean;
   hasSnColumn?: boolean;
   addNewLink?: string;
   isAddNewRight?: boolean;
@@ -32,8 +39,10 @@ interface IContentTableProps {
 const ContentTable: FunctionComponent<IContentTableProps> = ({
   name,
   headers,
+  canCreate,
   canRead,
-  canWrite,
+  canUpdate,
+  canDelete,
   hasSnColumn,
   addNewLink,
   isAddNewRight,
@@ -58,15 +67,17 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
   };
 
   // process privilege to product headers
-  const visibleHeader = headers.filter((header) => canWrite || !header.isControlType);
+  const visibleHeader = headers.filter(
+    (header) => header.type === undefined || header.type === HeaderType.SPECIAL || (header.type === HeaderType.UPDATE && canUpdate) || (header.type === HeaderType.DELETE && canDelete)
+  );
 
   // prepare export to csv
-  const csvHeader = headers.filter((header) => !header.isControlType && !header.isSpecialType);
+  const csvHeader = headers.filter((header) => header.type === undefined);
 
   // render
   return (
     <>
-      {canWrite && addNewLink != null && (
+      {canCreate && addNewLink != null && (
         <Link to={addNewLink} className={`${styles.button} ${styles["button--main"]} ${isAddNewRight === true ? styles["button--right"] : ""}`}>
           <AddCircleIcon />
           Add new {name}
@@ -80,7 +91,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
               <TableRow>
                 {hasSnColumn && <TableCell>Sn</TableCell>}
                 {visibleHeader.map((header) => (
-                  <TableCell key={header.key} align={header.isControlType || header.isSpecialType ? "center" : "left"}>
+                  <TableCell key={header.key} align={header.type !== undefined ? "center" : "left"}>
                     {header.title}
                   </TableCell>
                 ))}
@@ -93,7 +104,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
                     {hasSnColumn && <TableCell>{page * rowsPerPage + rowIndex + 1}</TableCell>}
                     <Content name={name}>
                       {visibleHeader.map((header) => (
-                        <TableCell key={header.key + dataRow.id?.toString()} align={header.isControlType || header.isSpecialType ? "center" : "left"}>
+                        <TableCell key={header.key + dataRow.id?.toString()} align={header.type !== undefined ? "center" : "left"}>
                           {dataRow[header.key]}
                         </TableCell>
                       ))}
@@ -114,7 +125,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         )}
-        {privileges.writeAdmin && (
+        {privileges.updateAdmin && !hidePagination && (
           <CsvDownloadButton
             className={styles.button + " " + styles["button--small"]}
             headers={csvHeader.map((header) => header.title)}

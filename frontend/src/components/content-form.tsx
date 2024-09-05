@@ -57,6 +57,7 @@ interface IContentForm {
   buttonIcon?: ReactNode;
   hasButtonText?: boolean;
   isService?: boolean;
+  isDisabled?: boolean;
   children: ReactNode;
 }
 
@@ -72,6 +73,7 @@ const ContentForm: FunctionComponent<IContentForm> = ({
   hasButtonText,
   buttonIcon,
   isService,
+  isDisabled,
   children
 }) => {
   return (
@@ -89,6 +91,7 @@ const ContentForm: FunctionComponent<IContentForm> = ({
           onUpdate={onUpdate}
           buttonIcon={buttonIcon}
           hasButtonText={hasButtonText}
+          isDisabled={isDisabled}
           isService={isService}
         />
       </Content>

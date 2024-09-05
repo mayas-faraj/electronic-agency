@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Button, InputAdornment, Modal, TextField } from "@mui/material";
 import { CheckCircle, Search, Visibility } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import ClientView from "../views/client";
 import RoleContext from "../role-context";
 import getServerData from "../../libs/server-data";
@@ -12,6 +12,10 @@ interface IClient {
   id: number;
   user: string;
   phone: string;
+  phone2: string;
+  address: string;
+  address2: string;
+  company: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -21,14 +25,25 @@ interface IClient {
 interface IClientsType {
   isSelectable?: boolean;
   displayOneRow?: boolean;
-  onUpdate?: (id: number, email: string, phone: string, name: string, firstName: string, lastName: string) => void;
+  onUpdate?: (
+    id: number,
+    email: string,
+    phone: string,
+    name: string,
+    firstName: string,
+    lastName: string,
+    company: string,
+    phone2: string,
+    address: string,
+    address2: string
+  ) => void;
 }
 
 // main component
 const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow, onUpdate }) => {
   // client state
   const [clients, setClients] = React.useState<IClient[]>([]);
-  const [viewId, setViewId] = React.useState(0);
+  const [viewUser, setViewUser] = React.useState("");
   const [keyword, setKeyword] = React.useState("");
 
   // context
@@ -36,20 +51,23 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
 
   // clients schema
   const tableHeader: ITableHeader[] = [
-    { key: "user", title: "User Name" },
+    { key: "company", title: "Company Name" },
+    { key: "fullName", title: "Full Name" },
     { key: "phone", title: "Phone" }
   ];
 
-  if (isSelectable) tableHeader.push({ key: "select", title: "select" });
+  if (isSelectable) tableHeader.push({ key: "select", title: "Select" });
   else {
-    tableHeader.push({ key: "isDisabled", title: "Disable", isControlType: true });
-    tableHeader.push({ key: "view", title: "More Info", isSpecialType: true });
-    tableHeader.push({ key: "delete", title: "Delete", isControlType: true });
+    tableHeader.push({ key: "isDisabled", title: "Disable", type: HeaderType.UPDATE });
+    tableHeader.push({ key: "view", title: "More Info", type: HeaderType.SPECIAL });
+    tableHeader.push({ key: "delete", title: "Delete", type: HeaderType.DELETE });
   }
 
   // on load
   const action = React.useCallback(async () => {
-    const result = await getServerData(`query { clients(filter: {keyword: "${keyword}"}) { id user phone email firstName lastName isDisabled }}`);
+    const result = await getServerData(
+      `query { clients(filter: {keyword: "${keyword}", showDisabled: true}) { id user phone phone2 address address2 company email firstName lastName isDisabled }}`
+    );
     if (displayOneRow) {
       if (result.data.clients?.length === 1) setClients([result.data.clients[0]]);
       else setClients([]);
@@ -84,11 +102,14 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
         addNewLink={"/add-client"}
         isAddNewRight={true}
         headers={tableHeader}
+        canCreate={privileges.createClient}
+        canDelete={privileges.deleteClient}
         canRead={privileges.readClient}
-        canWrite={privileges.writeClient}
+        canUpdate={privileges.updateClient}
         hidePagination={displayOneRow}
         data={clients.map((client) => ({
-          user: client.user,
+          company: client.company ?? "<No Company>",
+          fullName: `${client.firstName} ${client.lastName !== null ? client.lastName : ""}`,
           phone: client.phone,
           isDisabled: (
             <Management
@@ -100,7 +121,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
             />
           ),
           view: (
-            <Button variant="text" color="info" onClick={() => setViewId(client.id)}>
+            <Button variant="text" color="info" onClick={() => setViewUser(client.user)}>
               <Visibility />
             </Button>
           ),
@@ -115,15 +136,32 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
           ),
           select:
             isSelectable && onUpdate !== undefined ? (
-              <Button variant="text" color="info" onClick={() => onUpdate(client.id, client.email, client.phone, client.user, client.firstName, client.lastName)}>
+              <Button
+                variant="text"
+                color="info"
+                onClick={() =>
+                  onUpdate(
+                    client.id,
+                    client.email,
+                    client.phone,
+                    client.user,
+                    client.firstName,
+                    client.lastName,
+                    client.company,
+                    client.phone2,
+                    client.address,
+                    client.address2
+                  )
+                }
+              >
                 <CheckCircle />
               </Button>
             ) : undefined
         }))}
       />
-      <Modal open={viewId !== 0} onClose={() => setViewId(0)}>
+      <Modal open={viewUser !== ""} onClose={() => setViewUser("")}>
         <div className="modal">
-          <ClientView id={viewId} />
+          <ClientView user={viewUser} />
         </div>
       </Modal>
     </div>

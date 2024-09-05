@@ -61,7 +61,7 @@ const ProductItem: FunctionComponent<IProductProps> = ({ productId, productItemS
   // process form type (create or update)
   const productCommand =
     productItemSn == null || productItemSn === ""
-      ? `mutation { createProductItems(productId: ${productId}, snList: ["${sn}"])  {count}}`
+      ? `mutation { createProductItems(productId: ${productId}, snList: ["${sn}"])  {acceptCount}}`
       : `mutation { updateProductItem(sn: "${productItemSn}", newSn: "${sn}")  {sn createdAt}}`;
 
   // render component

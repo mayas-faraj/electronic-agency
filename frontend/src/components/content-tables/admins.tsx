@@ -2,20 +2,23 @@ import React, { FunctionComponent } from "react";
 import { Button, InputAdornment, Modal, TextField } from "@mui/material";
 import { Edit, Search, Visibility, LockReset, Language } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import AdminForm from "../content-forms/admin";
 import AdminView from "../views/admin";
 import RoleContext from "../role-context";
 import getServerData from "../../libs/server-data";
 import Password from "../content-forms/password";
 import { Link } from "react-router-dom";
-import { getRoleName } from "../../libs/role-adaper";
 
 // types
 interface IAdmin {
   id: number;
   user: string;
-  role: string;
+  userRoles: {
+    role: {
+      name: string;
+    };
+  }[];
   isDisabled: boolean;
   center?: {
     name: string;
@@ -39,19 +42,19 @@ const Admins: FunctionComponent = () => {
     { key: "user", title: "User Name" },
     { key: "role", title: "Role" },
     { key: "center", title: "Center" },
-    { key: "isDisabled", title: "Disable", isControlType: true },
-    { key: "view", title: "More Info", isSpecialType: true },
-    { key: "password", title: "Change Password", isControlType: true },
-    { key: "edit", title: "Edit", isControlType: true },
-    { key: "delete", title: "Delete", isControlType: true }
+    { key: "isDisabled", title: "Disable", type: HeaderType.UPDATE },
+    { key: "view", title: "More Info", type: HeaderType.SPECIAL },
+    { key: "password", title: "Change Password", type: HeaderType.UPDATE },
+    { key: "edit", title: "Edit", type: HeaderType.UPDATE },
+    { key: "delete", title: "Delete", type: HeaderType.DELETE }
   ];
 
   // on load
   const action = React.useCallback(async () => {
     const result = await getServerData(
-      `query { admins(filter: {showDisabled: true, keyword: "${keyword}"}) { id user role center { name } isDisabled }}`
+      `query { users(filter: {showDisabled: true, keyword: "${keyword}"}) { id user userRoles { role { name } } center { name } isDisabled }}`
     );
-    setAdmins(result.data.admins);
+    setAdmins(result.data.users);
   }, [keyword]);
 
   // event handler
@@ -83,20 +86,22 @@ const Admins: FunctionComponent = () => {
       <ContentTable
         name="backend user"
         headers={tableHeader}
+        canCreate={privileges.createAdmin}
+        canDelete={privileges.deleteAdmin}
         canRead={privileges.readAdmin}
-        canWrite={privileges.writeAdmin}
+        canUpdate={privileges.updateAdmin}
         hasSnColumn={true}
         addNewLink="/add-admin"
         isAddNewRight={true}
         data={admins.map((admin) => ({
           user: admin.user,
-          role: getRoleName(admin.role).toLowerCase().replace("_", " "),
+          role: admin.userRoles.map(userRole => userRole.role.name).join(", ").toLowerCase().replace("_", " "),
           center: admin.center?.name ?? "-",
           isDisabled: (
             <Management
               type={ManagementType.switch}
               operation={Operation.update}
-              command={`mutation { updateAdmin(id: ${admin.id}, input: {isDisabled: ${!admin.isDisabled}})  {id}}`}
+              command={`mutation { updateUser(id: ${admin.id}, input: {isDisabled: ${!admin.isDisabled}})  {id}}`}
               initialValue={admin.isDisabled}
               onUpdate={action}
             />
@@ -120,7 +125,7 @@ const Admins: FunctionComponent = () => {
             <Management
               type={ManagementType.button}
               operation={Operation.delete}
-              command={`mutation { deleteAdmin(id: ${admin.id})  {id}}`}
+              command={`mutation { deleteUser(id: ${admin.id})  {id}}`}
               hasConfirmModal={true}
               onUpdate={action}
             />

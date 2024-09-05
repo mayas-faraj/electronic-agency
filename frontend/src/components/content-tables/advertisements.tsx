@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
 import data from "../../data.json";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
@@ -30,9 +30,9 @@ const Advertisements: FunctionComponent = () => {
   const tableHeader: ITableHeader[] = [
     { key: "image", title: "Image" },
     { key: "createdAt", title: "Creation Date" },
-    { key: "orderUp", title: "Up", isControlType: true },
-    { key: "orderDown", title: "Down", isControlType: true },
-    { key: "delete", title: "Delete", isControlType: true }
+    { key: "orderUp", title: "Up", type: HeaderType.UPDATE },
+    { key: "orderDown", title: "Down", type: HeaderType.UPDATE },
+    { key: "delete", title: "Delete", type: HeaderType.DELETE }
   ];
   // on load
   const action = async () => {
@@ -52,21 +52,27 @@ const Advertisements: FunctionComponent = () => {
   // render
   return (
     <div>
-      <ContentForm
-        name="ads"
-        title="Create new ads"
-        command={`mutation { createAdvertisement(input: {imageUrl: "${image}", imageOrder: ${lastOrder + 1}}) { id imageUrl imageOrder createdAt }}`}
-        commandDisabled={image === ""}
-        commandDisabledMessage="Please upload image the click save button"
-        onUpdate={() => action()}
-      >
-        <ImageUpload name="image" uploadUrl="/upload-product" formName="product" value={image} onChange={(url) => setImage(url)} />
-      </ContentForm>
+      {privileges.createAdvertisement && (
+        <ContentForm
+          name="ads"
+          title="Create new ads"
+          command={`mutation { createAdvertisement(input: {imageUrl: "${image}", imageOrder: ${
+            lastOrder + 1
+          }}) { id imageUrl imageOrder createdAt }}`}
+          commandDisabled={image === ""}
+          commandDisabledMessage="Please upload image the click save button"
+          onUpdate={() => action()}
+        >
+          <ImageUpload name="image" uploadUrl="/upload-product" formName="product" value={image} onChange={(url) => setImage(url)} />
+        </ContentForm>
+      )}
       <ContentTable
         name="advertisement"
         headers={tableHeader}
+        canCreate={privileges.createAdvertisement}
+        canDelete={privileges.deleteAdvertisement}
         canRead={privileges.readAdvertisement}
-        canWrite={privileges.writeAdvertisement}
+        canUpdate={privileges.updateAdvertisement}
         hasSnColumn={true}
         data={advertisements.map((ads, index) => ({
           image: <img src={data["site-url"] + ads.imageUrl} alt={"ads"} />,

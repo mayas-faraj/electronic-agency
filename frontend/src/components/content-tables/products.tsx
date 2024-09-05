@@ -3,7 +3,7 @@ import { Button, FormControl, InputAdornment, Modal, TextField } from "@mui/mate
 import { Abc, AddCircle, CheckCircle, Search, Visibility } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import ProductItems from "../content-tables/product-item";
 import ProductForm from "../content-forms/product";
 import ProductView from "../views/product";
@@ -45,19 +45,19 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCoun
 
   // product schema
   const tableHeader: ITableHeader[] = [
-    { key: "image", title: "Image", isSpecialType: true },
+    { key: "image", title: "Image", type: HeaderType.SPECIAL },
     { key: "name", title: "Name" },
     { key: "model", title: "Model" },
-    { key: "view", title: "More Info", isSpecialType: true }
+    { key: "view", title: "More Info", type: HeaderType.SPECIAL }
   ];
 
   if (isSelectable) tableHeader.push({ key: "select", title: "select" });
   else {
     tableHeader.push(
-      { key: "isDisabled", title: "Disable", isControlType: true },
-      { key: "item", title: "Manage SN", isControlType: true },
-      { key: "edit", title: "Edit", isControlType: true },
-      { key: "delete", title: "Delete", isControlType: true }
+      { key: "isDisabled", title: "Disable", type: HeaderType.UPDATE },
+      { key: "item", title: "Manage SN", type: HeaderType.UPDATE },
+      { key: "edit", title: "Edit", type: HeaderType.UPDATE },
+      { key: "delete", title: "Delete", type: HeaderType.DELETE }
     );
   }
 
@@ -101,8 +101,10 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCoun
       <ContentTable
         name="product"
         headers={tableHeader}
+        canCreate={privileges.createProduct}
+        canDelete={privileges.deleteProduct}
         canRead={privileges.readProduct}
-        canWrite={privileges.writeProduct}
+        canUpdate={privileges.updateProduct}
         hasSnColumn={true}
         addNewLink={!isSelectable ? "/add-product" : undefined}
         isAddNewRight={true}

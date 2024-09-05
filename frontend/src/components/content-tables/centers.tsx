@@ -5,7 +5,7 @@ import { Language } from "@mui/icons-material";
 import CenterForm from "../content-forms/center";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
 import { Link } from "react-router-dom";
 
@@ -27,9 +27,9 @@ const Centers: FunctionComponent<{ parentId: number }> = ({ parentId }) => {
   // center schema
   const tableHeader: ITableHeader[] = [
     { key: "name", title: "Name" },
-    { key: "subcenter", title: "Subcenters", isSpecialType: true },
-    { key: "edit", title: "Edit", isControlType: true },
-    { key: "delete", title: "Delete", isControlType: true }
+    { key: "subcenter", title: "Subcenters", type: HeaderType.SPECIAL },
+    { key: "edit", title: "Edit", type: HeaderType.UPDATE },
+    { key: "delete", title: "Delete", type: HeaderType.DELETE }
   ];
 
   // on load
@@ -49,8 +49,10 @@ const Centers: FunctionComponent<{ parentId: number }> = ({ parentId }) => {
         name="center"
         headers={tableHeader}
         addNewLink={`/add-center${parentId !== 0 ? `/${parentId}` : ""}`}
+        canCreate={privileges.createAdmin}
+        canDelete={privileges.deleteAdmin}
         canRead={privileges.readAdmin}
-        canWrite={privileges.writeAdmin}
+        canUpdate={privileges.updateAdmin}
         data={centers.map((center) => ({
           name: center.name,
           subcenter: (

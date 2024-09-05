@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Button, Modal } from "@mui/material";
 import { Email, Drafts } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import OrderForm from "../content-forms/order";
 import getServerData from "../../libs/server-data";
 import RoleContext from "../role-context";
@@ -37,14 +37,14 @@ const Orders: FunctionComponent = () => {
 
   // order schema
   const tableHeader: ITableHeader[] = [
-    { key: "image", title: "Product Image", isSpecialType: true },
+    { key: "image", title: "Product Image", type: HeaderType.SPECIAL },
     { key: "products", title: "Products" },
     { key: "createdAt", title: "Order Date" },
     { key: "totalCount", title: "Count" },
     { key: "totalPrice", title: "Total price" },
-    { key: "view", title: "Open", isSpecialType: true },
+    { key: "view", title: "Open", type: HeaderType.SPECIAL },
     { key: "status", title: "Status" },
-    { key: "delete", title: "Delete", isControlType: true }
+    { key: "delete", title: "Delete", type: HeaderType.DELETE }
   ];
 
   // on load
@@ -64,8 +64,10 @@ const Orders: FunctionComponent = () => {
       <ContentTable
         name="order"
         headers={tableHeader}
+        canCreate={privileges.createOrder}
+        canDelete={privileges.deleteOrder}
         canRead={privileges.readOrder}
-        canWrite={privileges.writeOrder}
+        canUpdate={privileges.updateOrder}
         addNewLink="/add-order"
         data={orders.map((order) => ({
           image: <img src={data["site-url"] + order.products[0]?.product.image} alt={order.products[0]?.product.name} />,

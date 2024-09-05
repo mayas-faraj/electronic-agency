@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
 import ProductItem from "../content-forms/product-item";
 
@@ -26,8 +26,8 @@ const ProductItems: FunctionComponent<{ productId: number }> = ({ productId }) =
     const tableHeader: ITableHeader[] = [
         { key: "sn", title: "SN" },
         { key: "createdAt", title: "Creation Date" },
-        { key: "edit", title: "Edit", isControlType: true },
-        { key: "delete", title: "Delete", isControlType: true },
+        { key: "edit", title: "Edit", type: HeaderType.UPDATE },
+        { key: "delete", title: "Delete", type: HeaderType.DELETE },
     ];
     // on load
     const action = async () => {
@@ -39,7 +39,7 @@ const ProductItems: FunctionComponent<{ productId: number }> = ({ productId }) =
     // event handler
     React.useEffect(() => {
         const action = async () => {
-            const result = await getServerData(`query { product(id: ${productId}) { items { sn createdAt} } }`)
+            const result = await getServerData(`query { product(id: ${productId}) { items { sn createdAt} } }`);
             setProductItems(result.data.product.items);
         };
         action();
@@ -52,8 +52,10 @@ const ProductItems: FunctionComponent<{ productId: number }> = ({ productId }) =
             <ContentTable
                 name="productItem"
                 headers={tableHeader}
+                canCreate={privileges.createProductItem}
+                canDelete={privileges.deleteProductItem}
                 canRead={privileges.readProductItem}
-                canWrite={privileges.writeProductItem}
+                canUpdate={privileges.updateProductItem}
                 hasSnColumn={true}
                 data={
                     productItems.map(productItem => ({

@@ -6,7 +6,7 @@ const Admin: FunctionComponent<{id: number}> = ({ id }) => {
   return (
     <View 
     title="Admin details"
-    command={`query { admin(id: ${id}) { user role isDisabled createdAt updatedAt lastLoginAt } }`}
+    command={`query { user(id: ${id}) { user role isDisabled createdAt updatedAt lastLoginAt } }`}
     headers={[
         {key: "user", title: "User Name", icon: <AccountCircle />},
         {key: "role", title: "User Role", icon: <MilitaryTech />},

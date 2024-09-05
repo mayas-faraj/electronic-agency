@@ -7,7 +7,7 @@ import CategoryView from "../views/category";
 import getServerData from "../../libs/server-data";
 import data from "../../data.json";
 import Management, { ManagementType, Operation } from "../management";
-import ContentTable, { ITableHeader } from "../content-table";
+import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
 import { Link } from "react-router-dom";
 
@@ -30,17 +30,17 @@ const Categories: FunctionComponent = () => {
 
     // category schema
     const tableHeader: ITableHeader[] = [
-        { key: "image", title: "Image", isSpecialType: true },
+        { key: "image", title: "Image", type: HeaderType.SPECIAL },
         { key: "name", title: "Name" },
-        { key: "view", title: "More Info", isSpecialType: true},
-        { key: "subcategory", title: "Subcategories", isSpecialType: true},
-        { key: "edit", title: "Edit", isControlType: true },
-        { key: "delete", title: "Delete", isControlType: true },
+        { key: "view", title: "More Info", type: HeaderType.SPECIAL},
+        { key: "subcategory", title: "Subcategories", type: HeaderType.SPECIAL},
+        { key: "edit", title: "Edit", type: HeaderType.UPDATE },
+        { key: "delete", title: "Delete", type: HeaderType.DELETE },
     ];
 
     // on load
     const action = async () => {
-        const result = await getServerData(`query { categories { id name image }}`)
+        const result = await getServerData(`query { categories { id name image }}`);
         setCategories(result.data.categories);
     };
 
@@ -55,8 +55,10 @@ const Categories: FunctionComponent = () => {
                 name="category"
                 headers={tableHeader}
                 addNewLink="/add-category"
+                canCreate={privileges.createCategory}
+                canDelete={privileges.deleteCategory}
                 canRead={privileges.readCategory}
-                canWrite={privileges.writeCategory}
+                canUpdate={privileges.updateCategory}
                 data={
                     categories.map(category => ({
                         name: category.name,

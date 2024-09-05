@@ -25,8 +25,8 @@ const Password: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
   // process form type (create or update)
   const adminCommand =
     id !== undefined
-      ? `mutation { updateAdmin(id: ${id},input: {password: "${info.password}"}) {id user role}}`
-      : `mutation { updateAdminByAuth(input: {password: "${info.password}"}) {id user role}}`;
+      ? `mutation { updateUser(id: ${id},input: {password: "${info.password}"}) {id user }}`
+      : `mutation { updateAdminByAuth(input: {password: "${info.password}"}) {id user }}`;
 
   // render component
   return (

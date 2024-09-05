@@ -13,9 +13,12 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
+  Box,
+  InputAdornment,
+  FilledInput
 } from "@mui/material";
-import { PermContactCalendar, ReceiptLong, Delete, AddCircle } from "@mui/icons-material";
+import { ReceiptLong, Delete, AddCircle, Phone } from "@mui/icons-material";
 import ContentForm, { reducer } from "../content-form";
 import ClientView from "../views/client";
 import ClientSelect from "../content-tables/clients";
@@ -23,6 +26,7 @@ import ProductSelect from "../content-tables/products";
 import Receipt from "./receipt";
 import getServerData from "../../libs/server-data";
 import data from "../../data.json";
+import RoleContext from "../role-context";
 
 const initialInfo = {
   orderId: 0,
@@ -37,9 +41,11 @@ const initialInfo = {
   offerId: 0,
   offerPrice: "0",
   validationDays: "1",
-  clientId: 0,
+  clientUser: "",
   clientEmail: "",
-  clientPhone: ""
+  clientPhone: "",
+  clientFirstName: "",
+  clientLastName: ""
 };
 
 type OrderProduct = {
@@ -64,6 +70,9 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   // component reducer
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
 
+  // component context
+  const privileges = React.useContext(RoleContext);
+
   // component status
   const [viewClient, setViewClient] = React.useState(false);
   const [selectClient, setSelectClient] = React.useState(false);
@@ -76,7 +85,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   const orderCommand =
     id !== undefined
       ? `mutation { updateOrderStatus(id: ${id}, status: "${info.status}") { id status } }`
-      : `mutation { createOrder(clientId: ${info.clientId}, input: {address: "${info.address}", note: "${info.note}", company: "${
+      : `mutation { createOrder(user: "${info.clientUser}", input: {address: "${info.address}", note: "${info.note}", company: "${
           info.company
         }", delivery: "${info.delivery}", warranty: "${info.warranty}", terms: "${info.terms}", products: [${products.map(
           (orderProduct) => `{
@@ -86,10 +95,26 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
         }`
         )}]}) { id status } }`;
 
-  const handleSelectClient = (clientId: number, clientEmail: string, clientPhone: string) => {
-    dispatch({ type: "set", key: "clientId", value: clientId });
+  const handleSelectClient = (
+    _: number,
+    clientEmail: string,
+    clientPhone: string,
+    clientUser: string,
+    clientFirstName: string,
+    clientLastName: string,
+    clientCompany: string,
+    clientPhone2: string,
+    clientAddress: string,
+    clientAddress2: string
+  ) => {
     dispatch({ type: "set", key: "clientEmail", value: clientEmail });
-    dispatch({ type: "set", key: "clientPhone", value: clientPhone });
+    dispatch({ type: "set", key: "clientPhone", value: `${clientPhone}${clientPhone2 ? "/" + clientPhone2 : ""}` });
+    dispatch({ type: "set", key: "clientUser", value: clientUser });
+    dispatch({ type: "set", key: "clientFirstName", value: clientFirstName });
+    dispatch({ type: "set", key: "clientLastName", value: clientLastName });
+    dispatch({ type: "set", key: "company", value: clientCompany });
+    dispatch({ type: "set", key: "address", value: `${clientAddress != null ? clientAddress : ""}${clientAddress2 ? "/" + clientAddress2 : ""}` });
+
     setSelectClient(false);
   };
 
@@ -115,12 +140,15 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadOrder = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id address note status company warranty delivery terms createdAt products { price count product { name image nameTranslated model } } client { id phone email } offer { id price validationDays } } }`
+        `query { order(id: ${id}) { id address note status company warranty delivery terms createdAt products { price count product { name image nameTranslated model } } client { id user phone phone2 company address address2 email firstName lastName } offer { id price validationDays } } }`
       );
 
-      dispatch({ type: "set", key: "clientId", value: result.data.order.client.id });
+      dispatch({ type: "set", key: "clientUser", value: result.data.order.client.user });
       dispatch({ type: "set", key: "clientPhone", value: result.data.order.client.phone });
+      dispatch({ type: "set", key: "clientPhone2", value: result.data.order.client.phone2 });
       dispatch({ type: "set", key: "clientEmail", value: result.data.order.client.email });
+      dispatch({ type: "set", key: "clientFirstName", value: result.data.order.client.firstName });
+      dispatch({ type: "set", key: "clientLastName", value: result.data.order.client.lastName });
       dispatch({ type: "set", key: "createdAt", value: result.data.order.createdAt });
       dispatch({ type: "set", key: "address", value: result.data.order.address });
       dispatch({ type: "set", key: "note", value: result.data.order.note });
@@ -144,38 +172,60 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
       title="Order Info"
       command={orderCommand}
       onUpdate={(result) => handleSave(result)}
-      commandDisabled={id === undefined && (info.orderId !== 0 || products.length === 0 || info.clientId === 0)}
+      isDisabled={!privileges.updateOrder || !privileges.createOrder}
+      commandDisabled={id === undefined && (info.orderId !== 0 || products.length === 0 || info.clientUser === "")}
     >
       {id !== undefined && <h2 className="subtitle">Order :{id.toString()}</h2>}
-      <div className="column-double">
+      <Box component="fieldset">
+        <legend>Client</legend>
         {id === undefined && (
-          <Button fullWidth variant="contained" color="primary" onClick={() => setSelectClient(true)}>
-            <PermContactCalendar />
-            {info.clientPhone === "" ? "Select Client" : `Update Client: ${info.clientPhone} [${info.clientEmail}]`}
-          </Button>
+          <ClientSelect
+            isSelectable={true}
+            displayOneRow={true}
+            onUpdate={(_, clientEmail, clientPhone, clientUser, clientFirstName, clientLastName, company, phone2, address, address2) =>
+              handleSelectClient(_, clientEmail, clientPhone, clientUser, clientFirstName, clientLastName, company, phone2, address, address2)
+            }
+          />
         )}
-        {id !== undefined && (
-          <Button fullWidth variant="contained" color="primary" onClick={() => setViewClient(true)}>
-            <PermContactCalendar />
-            {info.clientPhone as string}
-          </Button>
-        )}
-        <TextField
-          variant="outlined"
-          InputProps={{ readOnly: id !== undefined }}
-          label="Client Address"
-          value={info.address}
-          onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value })}
-        />
-      </div>
+        <div className="column-double">
+          <FormControl fullWidth margin="normal">
+            <TextField variant="outlined" InputProps={{ readOnly: true }} label="Client Name" value={info.clientUser} />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField variant="outlined" InputProps={{ readOnly: true }} label="Client Phone" value={info.clientPhone} />
+          </FormControl>
+        </div>
+        <div className="column-double">
+          <FormControl fullWidth margin="normal">
+            <TextField variant="outlined" InputProps={{ readOnly: true }} label="First Name" value={info.clientFirstName} />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField variant="outlined" InputProps={{ readOnly: true }} label="Last Name" value={info.clientLastName} />
+          </FormControl>
+        </div>
+        <div className="column-double">
+          <FormControl fullWidth margin="normal">
+            <TextField variant="outlined" InputProps={{ readOnly: true }} label="Client Email" value={info.clientEmail} />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              InputProps={{ readOnly: id !== undefined }}
+              label="Client Address"
+              value={info.address}
+              onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value })}
+            />
+          </FormControl>
+        </div>
+      </Box>
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table className="normal-table">
           <TableHead>
             <TableRow>
-              <TableCell>product image</TableCell>
-              <TableCell>name</TableCell>
-              <TableCell>count</TableCell>
-              <TableCell>price</TableCell>
+              <TableCell>Product Image</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Count</TableCell>
+              <TableCell>Price (IQD)</TableCell>
               {id === undefined && (
                 <TableCell width={95}>
                   <Button variant="text" onClick={() => setSelectProduct(true)}>
@@ -193,7 +243,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
                 </TableCell>
                 <TableCell>{orderProduct.product.name}</TableCell>
                 <TableCell>{orderProduct.count}</TableCell>
-                <TableCell>{orderProduct.price}</TableCell>
+                <TableCell>{orderProduct.price.toLocaleString()}</TableCell>
                 {id === undefined && (
                   <TableCell>
                     <Button variant="text" onClick={() => setProducts(products.filter((product, productIndex) => index !== productIndex))}>
@@ -207,11 +257,11 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
         </Table>
       </TableContainer>
       <FormControl fullWidth margin="normal">
-        <TextField
-          variant="outlined"
-          InputProps={{ readOnly: id !== undefined }}
-          label="Total price"
-          value={products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0)}
+        <InputLabel htmlFor="total-price">Total Price</InputLabel>
+        <FilledInput
+          id="total-price"
+          value={products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0).toLocaleString()}
+          endAdornment={<InputAdornment position="end">IQD</InputAdornment>}
         />
       </FormControl>
       <div className="column-double">
@@ -320,7 +370,31 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
         <div className="modal">
           <ClientSelect
             isSelectable={true}
-            onUpdate={(clientId, clientEmail, clientPhone) => handleSelectClient(clientId, clientEmail, clientPhone)}
+            onUpdate={(
+              _,
+              clientEmail,
+              clientPhone,
+              clientUser,
+              clientFirstName,
+              clientLastName,
+              clientCompany,
+              clientPhone2,
+              clientAddress,
+              clientAddress2
+            ) =>
+              handleSelectClient(
+                _,
+                clientEmail,
+                clientPhone,
+                clientUser,
+                clientFirstName,
+                clientLastName,
+                clientCompany,
+                clientPhone2,
+                clientAddress,
+                clientAddress2
+              )
+            }
           />
         </div>
       </Modal>
@@ -335,7 +409,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
       </Modal>
       <Modal open={viewClient} onClose={() => setViewClient(false)}>
         <div className="modal">
-          <ClientView id={Number(info.clientId)} />
+          <ClientView user={info.clientUser as string} />
         </div>
       </Modal>
       <Modal open={viewReceipt} onClose={() => setViewReceipt(false)}>

@@ -1,213 +1,490 @@
 import React from "react";
 
 export interface Privileges {
+  createAdmin: boolean;
   readAdmin: boolean;
-  writeAdmin: boolean;
+  updateAdmin: boolean;
+  deleteAdmin: boolean;
+  createClient: boolean;
   readClient: boolean;
-  writeClient: boolean;
+  updateClient: boolean;
+  deleteClient: boolean;
+  createCategory: boolean;
   readCategory: boolean;
-  writeCategory: boolean;
+  updateCategory: boolean;
+  deleteCategory: boolean;
+  createProduct: boolean;
   readProduct: boolean;
-  writeProduct: boolean;
+  updateProduct: boolean;
+  deleteProduct: boolean;
+  createProductItem: boolean;
   readProductItem: boolean;
-  writeProductItem: boolean;
+  updateProductItem: boolean;
+  deleteProductItem: boolean;
+  createAdvertisement: boolean;
   readAdvertisement: boolean;
-  writeAdvertisement: boolean;
+  updateAdvertisement: boolean;
+  deleteAdvertisement: boolean;
+  createOrder: boolean;
   readOrder: boolean;
-  writeOrder: boolean;
+  updateOrder: boolean;
+  deleteOrder: boolean;
+  createOffer: boolean;
   readOffer: boolean;
-  writeOffer: boolean;
-  addTicket: boolean;
+  updateOffer: boolean;
+  deleteOffer: boolean;
+  createTicket: boolean;
   readTicket: boolean;
-  writeTicket: boolean;
-  readRepair: boolean;
-  writeRepair: boolean;
-  writeFeedback: boolean;
+  updateTicket: boolean;
+  deleteTicket: boolean;
+  createRepair: boolean;
+  updateRepair: boolean;
+  createFeedback: boolean;
 }
 
 export const noPrivileges: Privileges = {
+  createAdmin: false,
   readAdmin: false,
-  writeAdmin: false,
+  updateAdmin: false,
+  deleteAdmin: false,
+  createClient: false,
   readClient: false,
-  writeClient: false,
+  updateClient: false,
+  deleteClient: false,
+  createCategory: false,
   readCategory: false,
-  writeCategory: false,
+  updateCategory: false,
+  deleteCategory: false,
+  createProduct: false,
   readProduct: false,
-  writeProduct: false,
+  updateProduct: false,
+  deleteProduct: false,
+  createProductItem: false,
   readProductItem: false,
-  writeProductItem: false,
+  updateProductItem: false,
+  deleteProductItem: false,
+  createAdvertisement: false,
   readAdvertisement: false,
-  writeAdvertisement: false,
+  updateAdvertisement: false,
+  deleteAdvertisement: false,
+  createOrder: false,
   readOrder: false,
-  writeOrder: false,
+  updateOrder: false,
+  deleteOrder: false,
+  createOffer: false,
   readOffer: false,
-  writeOffer: false,
-  addTicket: false,
+  updateOffer: false,
+  deleteOffer: false,
+  createTicket: false,
   readTicket: false,
-  writeTicket: false,
-  readRepair: false,
-  writeRepair: false,
-  writeFeedback: false
+  updateTicket: false,
+  deleteTicket: false,
+  createRepair: false,
+  updateRepair: false,
+  createFeedback: false
 };
 
-export type Role = "ADMIN" | "CONTENT_MANAGER" | "CONTENT_READER" | "LOGISTICS_MANAGER | FEEDBACK";
+type Role = "admin" | "data_viewer" | "sales_man" | "offer_admin" | "top_call_center" | "call_center" | "technician" | "closer" | "feedback";
 
-export const getPrivileges = (role?: Role, centerId?: number): Privileges => {
-  const hasCenter = centerId != null && centerId !== 0;
-  switch (JSON.stringify([role, hasCenter])) {
-    case JSON.stringify(["ADMIN", false]):
+export const getPrivileges = (roles: string[]): Privileges => {
+  let privileges = noPrivileges;
+  for (const role of roles) privileges = mergePrivileges(privileges, getPrivilegeOfRole(role as Role));
+  return privileges;
+};
+
+const getPrivilegeOfRole = (role: Role): Privileges => {
+  switch (role) {
+    case "admin":
       return {
+        createAdmin: true,
         readAdmin: true,
-        writeAdmin: true,
+        updateAdmin: true,
+        deleteAdmin: true,
+        createClient: true,
         readClient: true,
-        writeClient: true,
+        updateClient: true,
+        deleteClient: true,
+        createCategory: true,
         readCategory: true,
-        writeCategory: true,
+        updateCategory: true,
+        deleteCategory: true,
+        createProduct: true,
         readProduct: true,
-        writeProduct: true,
+        updateProduct: true,
+        deleteProduct: true,
+        createProductItem: true,
         readProductItem: true,
-        writeProductItem: true,
+        updateProductItem: true,
+        deleteProductItem: true,
+        createAdvertisement: true,
         readAdvertisement: true,
-        writeAdvertisement: true,
+        updateAdvertisement: true,
+        deleteAdvertisement: true,
+        createOrder: true,
         readOrder: true,
-        writeOrder: true,
+        updateOrder: true,
+        deleteOrder: true,
+        createOffer: true,
         readOffer: true,
-        writeOffer: true,
-        addTicket: true,
+        updateOffer: true,
+        deleteOffer: true,
+        createTicket: true,
         readTicket: true,
-        writeTicket: true,
-        readRepair: true,
-        writeRepair: true,
-        writeFeedback: false
+        updateTicket: true,
+        deleteTicket: true,
+        createRepair: true,
+        updateRepair: true,
+        createFeedback: true
       };
-    case JSON.stringify(["CONTENT_MANAGER", false]):
+    case "data_viewer":
       return {
+        createAdmin: false,
         readAdmin: false,
-        writeAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: false,
         readClient: true,
-        writeClient: true,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
         readCategory: true,
-        writeCategory: true,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
         readProduct: true,
-        writeProduct: false,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: true,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
+        readAdvertisement: true,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
+        readOrder: true,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
+        readOffer: true,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: false,
+        readTicket: true,
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: false
+      };
+    case "sales_man":
+      return {
+        createAdmin: false,
+        readAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: true,
+        readClient: true,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
+        readCategory: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: true,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: true,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
+        readAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: true,
+        readOrder: true,
+        updateOrder: true,
+        deleteOrder: true,
+        createOffer: true,
+        readOffer: true,
+        updateOffer: true,
+        deleteOffer: true,
+        createTicket: false,
+        readTicket: false,
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: false
+      };
+    case "offer_admin":
+      return {
+        createAdmin: false,
+        readAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: true,
+        readClient: true,
+        updateClient: true,
+        deleteClient: true,
+        createCategory: false,
+        readCategory: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: true,
+        readProduct: true,
+        updateProduct: true,
+        deleteProduct: true,
+        createProductItem: true,
+        readProductItem: true,
+        updateProductItem: true,
+        deleteProductItem: true,
+        createAdvertisement: false,
+        readAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: true,
+        readOrder: true,
+        updateOrder: true,
+        deleteOrder: true,
+        createOffer: true,
+        readOffer: true,
+        updateOffer: true,
+        deleteOffer: true,
+        createTicket: false,
+        readTicket: false,
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: false
+      };
+    case "top_call_center":
+      return {
+        createAdmin: false,
+        readAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: true,
+        readClient: true,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
+        readCategory: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: true,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
         readProductItem: false,
-        writeProductItem: false,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
         readAdvertisement: false,
-        writeAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
         readOrder: false,
-        writeOrder: false,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
         readOffer: false,
-        writeOffer: false,
-        addTicket: true,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: true,
         readTicket: true,
-        writeTicket: true,
-        readRepair: false,
-        writeRepair: false,
-        writeFeedback: false
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: false
       };
-    case JSON.stringify(["CONTENT_MANAGER", true]):
+    case "call_center":
       return {
+        createAdmin: false,
         readAdmin: false,
-        writeAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: false,
         readClient: true,
-        writeClient: false,
-        readCategory: true,
-        writeCategory: true,
-        readProduct: true,
-        writeProduct: true,
-        readProductItem: true,
-        writeProductItem: true,
-        readAdvertisement: false,
-        writeAdvertisement: false,
-        readOrder: false,
-        writeOrder: false,
-        readOffer: false,
-        writeOffer: false,
-        addTicket: false,
-        readTicket: true,
-        writeTicket: true,
-        readRepair: false,
-        writeRepair: false,
-        writeFeedback: false
-      };
-    case JSON.stringify(["CONTENT_READER", false]):
-      return {
-        readAdmin: false,
-        writeAdmin: false,
-        readClient: true,
-        writeClient: false,
-        readCategory: true,
-        writeCategory: false,
-        readProduct: true,
-        writeProduct: false,
-        readProductItem: true,
-        writeProductItem: false,
-        readAdvertisement: true,
-        writeAdvertisement: true,
-        readOrder: true,
-        writeOrder: true,
-        readOffer: true,
-        writeOffer: true,
-        addTicket: false,
-        readTicket: true,
-        writeTicket: false,
-        readRepair: false,
-        writeRepair: false,
-        writeFeedback: false
-      };
-    case JSON.stringify(["LOGISTICS_MANAGER", true]):
-      return {
-        readAdmin: false,
-        writeAdmin: false,
-        readClient: false,
-        writeClient: false,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
         readCategory: false,
-        writeCategory: false,
-        readProduct: true,
-        writeProduct: false,
-        readProductItem: true,
-        writeProductItem: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: false,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: false,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
         readAdvertisement: false,
-        writeAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
         readOrder: false,
-        writeOrder: false,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
         readOffer: false,
-        writeOffer: false,
-        addTicket: false,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: false,
         readTicket: true,
-        writeTicket: true,
-        readRepair: true,
-        writeRepair: true,
-        writeFeedback: false
+        updateTicket: true,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: false
       };
-      case JSON.stringify(["FEEDBACK", true]):
+    case "technician":
       return {
+        createAdmin: false,
         readAdmin: false,
-        writeAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: false,
         readClient: false,
-        writeClient: false,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
         readCategory: false,
-        writeCategory: false,
-        readProduct: true,
-        writeProduct: false,
-        readProductItem: true,
-        writeProductItem: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: false,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: false,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
         readAdvertisement: false,
-        writeAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
         readOrder: false,
-        writeOrder: false,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
         readOffer: false,
-        writeOffer: false,
-        addTicket: false,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: false,
         readTicket: true,
-        writeTicket: true,
-        readRepair: true,
-        writeRepair: false,
-        writeFeedback: true
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: true,
+        updateRepair: false,
+        createFeedback: false
+      };
+    case "closer":
+      return {
+        createAdmin: false,
+        readAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: false,
+        readClient: false,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
+        readCategory: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: false,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: false,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
+        readAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
+        readOrder: false,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
+        readOffer: false,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: false,
+        readTicket: true,
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: true,
+        createFeedback: false
+      };
+    case "feedback":
+      return {
+        createAdmin: false,
+        readAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: false,
+        readClient: false,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
+        readCategory: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: false,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: false,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
+        readAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
+        readOrder: false,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
+        readOffer: false,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: false,
+        readTicket: true,
+        updateTicket: false,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: true
       };
     default:
       return noPrivileges;
   }
+};
+
+const mergePrivileges = (privileges1: Privileges, privileges2: Privileges): Privileges => {
+  const result = noPrivileges;
+  for (const key in result) {
+    const privilegeKey = key as keyof Privileges;
+    result[privilegeKey] = privileges1[privilegeKey] || privileges2[privilegeKey];
+  }
+
+  return result;
 };
 
 const RoleContext = React.createContext<Privileges>(noPrivileges);

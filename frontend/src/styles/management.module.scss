@@ -22,6 +22,19 @@
   }
 }
 
+.button--disabled {
+  background-color: grey !important;
+  color: white !important;
+  width: 100%;
+  padding: 15px 0 !important;
+  margin-top: 15px !important;
+
+  svg {
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+}
+
 .button--delete {
   color: #ff6d6d !important;
 }

@@ -122,7 +122,7 @@ const Management: FunctionComponent<IManagementProps> = ({
     <>
       <div className={`${styles.wrapper} ${className}`}>
         {(type == null || type === ManagementType.button) && (
-          <Button variant="text" disabled={isDisabled} className={buttonInfo.class} onClick={() => handleEvent()}>
+          <Button variant="text" disabled={isDisabled} className={!isDisabled ? buttonInfo.class : styles["button--disabled"]} onClick={() => handleEvent()}>
             {buttonInfo.icon} {buttonInfo.text}
           </Button>
         )}

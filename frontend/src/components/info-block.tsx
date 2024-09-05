@@ -43,14 +43,14 @@ export const AdminInfoBlock = () => {
     // side effect compenent load
     React.useEffect(() => {
         const action = async () => {
-            const result = await getServerData(`query { adminsCount { count date }}`);
+            const result = await getServerData(`query { usersCount { count date }}`);
             setInfo({
                 icon: <AdminPanelSettings />,
                 title: "System Admins",
-                info: `${result.data.adminsCount.count}  admins`,
+                info: `${result.data.usersCount.count}  admins`,
                 url: "/admins",
                 description: `Admin can create admins, sales man, technical user and product manager users, 
-            last admin created to system at: ${new Date(parseInt(result.data.adminsCount.date)).toLocaleDateString()}`
+            last admin created to system at: ${new Date(parseInt(result.data.usersCount.date)).toLocaleDateString()}`
             });
         }
         action();

@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RoleContext, { noPrivileges, type Privileges, getPrivileges, Role } from "./components/role-context";
+import RoleContext, { noPrivileges, type Privileges, getPrivileges } from "./components/role-context";
 import GlimmerPage from "./pages/glimmer";
 import NotFoundPage from "./pages/404";
 import "@fontsource/roboto/300.css";
@@ -15,13 +15,18 @@ import getServerData from "./libs/server-data";
 interface Profile {
   id: number;
   user: string;
-  role?: Role;
+  userRoles: {
+    roleId: number;
+    role: {
+      name: string;
+    };
+  }[];
   centerId?: number;
 }
 
 function App() {
   // privileges state
-  const [profile, setProfile] = React.useState<Profile>({ id: 0, user: "" });
+  const [profile, setProfile] = React.useState<Profile>({ id: 0, user: "", userRoles: [] });
   const [privileges, setPrivileges] = React.useState<Privileges>(noPrivileges);
 
   // side effects to load profile and privileges
@@ -29,8 +34,8 @@ function App() {
     // on app load
     const action = async () => {
       // seting profile
-      const result = await getServerData("query { adminByAuth { id user role centerId } }");
-      setProfile(result.data.adminByAuth);
+      const result = await getServerData("query { userByAuth { id user userRoles { roleId role { name } } centerId } }");
+      setProfile(result.data.userByAuth);
     };
 
     // cheking token
@@ -39,7 +44,7 @@ function App() {
 
   React.useEffect(() => {
     // profile has changed
-    setPrivileges(getPrivileges(profile?.role, profile.centerId));
+    setPrivileges(getPrivileges(profile.userRoles.map((userRole) => userRole.role.name)));
   }, [profile]);
 
   // lazy load pages
@@ -65,7 +70,7 @@ function App() {
   const AddCenterPage = React.lazy(() => import("./pages/add-center"));
 
   // app router
-  const routes = [
+  const allRoutes = [
     {
       path: "/",
       element: <HomePage />,
@@ -90,13 +95,34 @@ function App() {
     { path: "/add-sub-category/:categoryid", element: <AddSubCategoryPage /> },
     { path: "/add-ticket", element: <AddTicketPage /> },
     { path: "/add-center/:parentId?", element: <AddCenterPage /> },
-
     { path: "*", element: <NotFoundPage /> }
+  ];
+
+  const ticketRoutes = [
+    { path: "/login", element: <LoginPage /> },
+    { path: "/add-client", element: <AddClientPage /> },
+    { path: "/password", element: <PasswordPage /> },
+    { path: "*", element: <TicketsPage /> }
+  ];
+
+  const orderRoutes = [
+    { path: "/login", element: <LoginPage /> },
+    { path: "/add-client", element: <AddClientPage /> },
+    { path: "/add-order", element: <AddOrderPage /> },
+    { path: "/password", element: <PasswordPage /> },
+    { path: "*", element: <OrdersPage /> }
   ];
 
   const loginRoutes = [{ path: "*", element: <LoginPage /> }];
 
-  const router = createBrowserRouter(StorageManager.hasToken() ? routes : loginRoutes, {
+  let routes = loginRoutes;
+  if (StorageManager.hasToken()) {
+    if (!privileges.updateClient && privileges.createTicket) routes = ticketRoutes;
+    else if (!privileges.updateClient && privileges.createOrder) routes = orderRoutes;
+    else routes = allRoutes;
+  } else routes = loginRoutes;
+
+  const router = createBrowserRouter(routes, {
     basename: "/alardh-alsalba"
   });
 

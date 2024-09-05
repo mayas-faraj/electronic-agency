@@ -6,7 +6,6 @@ const getServerData = async (gqlCommand: string, isService?: boolean) => {
   let backendUrl = data["backend-url"];
 
   if (isService) {
-    token = StorageManager.get2();
     backendUrl = data["backend-service-url"];
   }
 

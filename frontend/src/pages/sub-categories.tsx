@@ -14,7 +14,7 @@ const SubCategoriesPage = () => {
   // on load
   React.useEffect(() => {
     const action = async () => {
-      const result = await getServerData(`query { category(id: ${categoryId}) { name }}`)
+      const result = await getServerData(`query { category(id: ${categoryId}) { name }}`);
       setCategoryName(result.data.category.name);
     };
     action();

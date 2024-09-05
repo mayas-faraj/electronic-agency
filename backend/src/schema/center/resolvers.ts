@@ -26,7 +26,15 @@ const resolvers = {
         where: { name: args.name },
         include: {
           children: true,
-          users: true,
+          users: {
+            include: {
+              userRoles: {
+                include: {
+                  role: true,
+                },
+              },
+            },
+          },
         },
       });
     },
@@ -48,7 +56,6 @@ const resolvers = {
   Mutation: {
     createCenter: async (_parent: any, args: any, app: AppContext) => {
       // check authorization
-      
 
       // return result
       return await app.prismaClient.center.create({
@@ -60,7 +67,7 @@ const resolvers = {
     },
     updateCenter: async (_parent: any, args: any, app: AppContext) => {
       // check authorization
-      
+
       // return result
       return await app.prismaClient.center.update({
         where: {
@@ -74,7 +81,7 @@ const resolvers = {
     },
     deleteCenter: async (_parent: any, args: any, app: AppContext) => {
       // check authorization
-      
+
       // return result
       return await app.prismaClient.center.delete({ where: { id: args.id } });
     },

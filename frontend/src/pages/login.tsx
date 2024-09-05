@@ -36,7 +36,7 @@ const LoginPage: FunctionComponent = () => {
     // verification of user
     setLoading(true);
     const action = async () => {
-      const loginResult = await getServerData(`query { verifyAdmin(user: "${user}", password: "${password}") { jwt jwt2 success message } }`);
+      const loginResult = await getServerData(`mutation { verifyUser(user: "${user}", password: "${password}") { token success message } }`);
 
       setUser("");
       setPassword("");
@@ -45,14 +45,13 @@ const LoginPage: FunctionComponent = () => {
         if (loginResult.errors.length > 0 && loginResult.errors[0].message != null) setErrorMessage(loginResult.errors[0].message);
         else setErrorMessage("Error while trying to login operation.");
       } else {
-        const result = loginResult.data?.verifyAdmin;
+        const result = loginResult.data?.verifyUser;
         if (result != null) {
-          if (result.success && result.jwt !== "") {
+          if (result.success && result.token !== "") {
             setSuccessMessage(result.message);
 
             // save access token
-            StorageManager.save(result.jwt);
-            StorageManager.save2(result.jwt2);
+            StorageManager.save(result.token);
 
             // navigate to home
             setTimeout(() => {

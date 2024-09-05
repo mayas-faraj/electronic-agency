@@ -21,6 +21,10 @@ const resolvers = {
           id: true,
           user: true,
           phone: true,
+          phone2: true,
+          address: true,
+          address2: true,
+          company: true,
           email: true,
           avatar: true,
           namePrefix: true,
@@ -90,14 +94,14 @@ const resolvers = {
       // return result
       const result = await app.prismaClient.client.findUnique({
         where: {
-          user: args.user
+          user: args.user,
         },
       });
 
       if (result !== null) {
         const orders = await app.prismaClient.order.findMany({
           where: {
-            user: args.user
+            user: args.user,
           },
         });
 
@@ -198,6 +202,10 @@ const resolvers = {
         data: {
           user: userName.toLowerCase(),
           phone: args.input.phone,
+          phone2: args.input.phone2,
+          address: args.input.address,
+          address2: args.input.address2,
+          company: args.input.company,
           email: args.input.email,
           namePrefix: args.input.namePrefix,
           firstName: args.input.firstName,
@@ -209,7 +217,27 @@ const resolvers = {
     },
     updateClient: async (parent: any, args: any, app: AppContext) => {
       // check permissions
+      // save unique input
+      let email = args.input.email;
+      let phone = args.input.phone;
+      let phone2 = args.input.phone2;
+      // read current user
+      const user = await app.prismaClient.client.findUnique({
+        where: {
+          id: args.id,
+        },
+        select: {
+          phone: true,
+          phone2: true,
+          email: true,
+        },
+      });
 
+      if (user !== null) {
+        if (user.email === email) email = undefined;
+        if (user.phone === phone) phone = undefined;
+        if (user.phone2 === phone2) phone = undefined;
+      }
       // return result
       const result = await app.prismaClient.client.update({
         where: {
@@ -217,8 +245,12 @@ const resolvers = {
         },
         data: {
           user: args.input.user,
-          phone: args.input.phone,
-          email: args.input.email,
+          phone: phone,
+          phone2: phone2,
+          address: args.input.address,
+          address2: args.input.address2,
+          company: args.input.company,
+          email: email,
           avatar: args.input.avatar,
           namePrefix: args.input.namePrefix,
           firstName: args.input.firstName,
@@ -237,6 +269,27 @@ const resolvers = {
       return result;
     },
     updateClientByAuth: async (parent: any, args: any, app: AppContext) => {
+      // save unique input
+      let email = args.input.email;
+      let phone = args.input.phone;
+      let phone2 = args.input.phone2;
+      // read current user
+      const user = await app.prismaClient.client.findUnique({
+        where: {
+          id: args.id,
+        },
+        select: {
+          phone: true,
+          phone2: true,
+          email: true,
+        },
+      });
+
+      if (user !== null) {
+        if (user.email === email) email = undefined;
+        if (user.phone === phone) phone = undefined;
+        if (user.phone2 === phone2) phone = undefined;
+      }
       // return result
       const result = await app.prismaClient.client.update({
         where: {
@@ -244,8 +297,12 @@ const resolvers = {
         },
         data: {
           user: args.input.user,
-          phone: args.input.phone,
-          email: args.input.email,
+          phone: phone,
+          phone2: phone2,
+          address: args.input.address,
+          address2: args.input.address2,
+          company: args.input.company,
+          email: email,
           avatar: args.input.avatar,
           namePrefix: args.input.namePrefix,
           firstName: args.input.firstName,
@@ -274,6 +331,10 @@ const resolvers = {
           id: true,
           user: true,
           phone: true,
+          phone2: true,
+          address: true,
+          address2: true,
+          company: true,
           email: true,
           namePrefix: true,
           firstName: true,

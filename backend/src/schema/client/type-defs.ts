@@ -22,6 +22,10 @@ const typeDefs = `#graphql
 		id: Int!
 		user: String!
 		phone: String
+		phone2: String
+		address: String
+		address2: String
+		company: String
 		email: String
 		avatar: String
 		namePrefix: String
@@ -40,6 +44,10 @@ const typeDefs = `#graphql
 		id: Int!
 		user: String!
 		phone: String!
+		phone2: String
+		address: String
+		address2: String
+		company: String
 		email: String
 		avatar: String
 		namePrefix: String
@@ -52,6 +60,10 @@ const typeDefs = `#graphql
 
 	input ClientInput {
 		phone: String
+		phone2: String
+		address: String
+		address2: String
+		company: String
 		email: String
 		avatar: String
 		namePrefix: String

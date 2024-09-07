@@ -218,6 +218,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
             <TextField
               variant="outlined"
               InputProps={{ readOnly: id !== undefined }}
+              inputProps={{ maxLength: 500 }}
               label="Client Address"
               value={info.address}
               onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value })}
@@ -286,7 +287,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
             inputProps={{ min: 0 }}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton onClick={() => dispatch({ type: "set", key: "isDiscountPercent", value: !info.isDiscountPercent })} edge="end">
+                <IconButton onClick={() => dispatch({ type: "set", key: "isDiscountPercent", value: !info.isDiscountPercent })} edge="end" disabled={id !== undefined}>
                   {info.isDiscountPercent ? <Percent /> : <Numbers />}
                 </IconButton>
               </InputAdornment>
@@ -323,6 +324,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               label="company"
               value={info.company}
               InputProps={{ readOnly: id !== undefined }}
+              inputProps={{ maxLength: 100 }}
               onChange={(e) => dispatch({ type: "set", key: "company", value: e.target.value })}
             />
           </FormControl>
@@ -332,6 +334,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               label="warranty"
               value={info.warranty}
               InputProps={{ readOnly: id !== undefined }}
+              inputProps={{ maxLength: 100 }}
               onChange={(e) => dispatch({ type: "set", key: "warranty", value: e.target.value })}
             />
           </FormControl>
@@ -344,6 +347,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               value={info.terms}
               onChange={(e) => dispatch({ type: "set", key: "terms", value: e.target.value })}
               InputProps={{ readOnly: id !== undefined }}
+              inputProps={{ maxLength: 500 }}
             />
           </FormControl>
           <FormControl fullWidth margin="normal">
@@ -353,6 +357,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               value={info.delivery}
               onChange={(e) => dispatch({ type: "set", key: "delivery", value: e.target.value })}
               InputProps={{ readOnly: id !== undefined }}
+              inputProps={{ maxLength: 100 }}
             />
           </FormControl>
         </div>
@@ -361,6 +366,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
         <TextField
           variant="outlined"
           InputProps={{ readOnly: id !== undefined }}
+          inputProps={{ maxLength: 2000 }}
           multiline={true}
           rows={5}
           label="Note"

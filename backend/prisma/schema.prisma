@@ -13,7 +13,8 @@ datasource db {
 // name, phone 100
 // sn, email, password 50
 // link 400
-// address, note, comment 500
+// address, comment 500
+// note 2000
 // description  1500
 
 model Client {
@@ -190,7 +191,7 @@ model Order {
   id             Int            @id @default(autoincrement())
   user           String
   address        String         @db.VarChar(500)
-  note           String?        @db.VarChar(500)
+  note           String?        @db.VarChar(2000)
   company        String?        @db.VarChar(100)
   delivery       String?        @db.VarChar(100)
   warranty       String?        @db.VarChar(100)

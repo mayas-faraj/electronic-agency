@@ -2026,7 +2026,8 @@ result = await prismaClient.order.create({
     },
     offer: {
       create: {
-        price: 320,
+        discount: 10,
+        isDiscountPercent: true,
         validationDays: 3,
       },
     },

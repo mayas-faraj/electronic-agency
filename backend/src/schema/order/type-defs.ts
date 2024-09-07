@@ -82,7 +82,8 @@ const typeDefs = `#graphql
 
 	type Offer {
 		id: Int!
-		price: Int!
+		discount: Float!
+		isDiscountPercent: Boolean!
 		validationDays: Int
 		createdAt: String
 		user: UserBasic
@@ -91,19 +92,22 @@ const typeDefs = `#graphql
 
 	type OfferBasic {
 		id: Int!
-		price: Int!
+		discount: Float!
+		isDiscountPercent: Boolean!
 		validationDays: Int
 		createdAt: String
 	}
 
 	input OfferInput {
 		orderId: Int!
-		price: Int!
+		discount: Float!
+		isDiscountPercent: Boolean!
 		validationDays: Int
 	}
 
 	input OfferUpdate {
-		price: Int!
+		discount: Float!
+		isDiscountPercent: Boolean!
 		validationDays: Int
 	}
 `;

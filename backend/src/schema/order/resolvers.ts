@@ -96,7 +96,8 @@ const resolvers = {
           offer: {
             select: {
               id: true,
-              price: true,
+              discount: true,
+              isDiscountPercent: true,
               validationDays: true,
               createdAt: true,
             },
@@ -291,12 +292,14 @@ const resolvers = {
       const result = await app.prismaClient.offer.create({
         data: {
           orderId: args.input.orderId,
-          price: args.input.price,
+          discount: args.input.discount,
+          isDiscountPercent: args.input.isDiscountPercent,
           validationDays: args.input.validationDays,
         },
         select: {
           id: true,
-          price: true,
+          discount: true,
+          isDiscountPercent: true,
           validationDays: true,
           createdAt: true,
         },
@@ -313,12 +316,14 @@ const resolvers = {
           id: args.id,
         },
         data: {
-          price: args.input.price,
+          discount: args.input.discount,
+          isDiscountPercent: args.input.isDiscountPercent,
           validationDays: args.input.validationDays,
         },
         select: {
           id: true,
-          price: true,
+          discount: args.input.discount,
+          isDiscountPercent: args.input.isDiscountPercent,
           validationDays: true,
           createdAt: true,
         },
@@ -336,7 +341,8 @@ const resolvers = {
         },
         select: {
           id: true,
-          price: true,
+          discount: args.input.discount,
+          isDiscountPercent: args.input.isDiscountPercent,
           validationDays: true,
           createdAt: true,
         },

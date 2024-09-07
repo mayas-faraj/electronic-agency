@@ -20,7 +20,7 @@ interface Order {
       name: string;
       model: string;
       image: string;
-    },
+    };
     count: number;
     price: number;
   }[];
@@ -71,7 +71,7 @@ const Orders: FunctionComponent = () => {
         addNewLink="/add-order"
         data={orders.map((order) => ({
           image: <img src={data["site-url"] + order.products[0]?.product.image} alt={order.products[0]?.product.name} />,
-          products: order.products.map(orderProduct => `${orderProduct.product.name} (${orderProduct.product.model})`).join("\n"),
+          products: order.products.map((orderProduct) => `${orderProduct.product.name} (${orderProduct.product.model})`).join("\n"),
           totalCount: order.products.reduce((acc, product) => acc + product.count, 0),
           totalPrice: order.isOfferRequest ? "Offer Request" : order.products.reduce((acc, product) => acc + product.price, 0),
           createdAt: new Date(parseInt(order.createdAt)).toLocaleString(),
@@ -80,7 +80,7 @@ const Orders: FunctionComponent = () => {
               {order.isRead ? <Drafts /> : <Email />}
             </Button>
           ),
-          status: order.status,
+          status: <span className={`status-${order.status.toLowerCase()}`}>{order.status.toLowerCase()}</span>,
           delete: (
             <Management
               onUpdate={() => action()}

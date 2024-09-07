@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Button, Modal } from "@mui/material";
-import { AddCircle, DeleteForever, Edit, Visibility } from "@mui/icons-material";
+import { AddCircle, Edit, Visibility } from "@mui/icons-material";
 import TicketForm from "../content-forms/ticket";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import RoleContext from "../role-context";
@@ -127,7 +127,7 @@ const Tickets: FunctionComponent = () => {
               ),
             product: ticket.productItem != null ? ticket.productItem.product?.name + "\n" + ticket.productItem.product?.model : ticket.product?.name,
             summary: ticket.title,
-            priority: <span className={`status-${ticket.priority.toLowerCase()}`}>{ticket.priority.toLowerCase()}</span>,
+            priority: <span className={`priority-${ticket.priority.toLowerCase()}`}>{ticket.priority.toLowerCase()}</span>,
             status: ticket.status.toLowerCase().replace("_", " "),
             open: (
               <Button variant="text" color="info" onClick={() => setOpenId(ticket.id)}>

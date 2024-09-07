@@ -15,7 +15,8 @@ const initialInfo = {
   email: "",
   firstName: "",
   lastName: "",
-  offerPrice: 0,
+  offerDiscount: 0,
+  isDiscountPercent: false,
   validationDays: 1,
   address: "",
   note: ""
@@ -45,7 +46,8 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   const htmlRef = React.useRef<HTMLDivElement>(null);
 
   const totalPrice = products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0);
-
+  const offerPrice = info.isDiscountPercent ? totalPrice * (1 - parseInt(info.offerDiscount as string) / 100) : totalPrice - parseInt(info.offerDiscount as string);
+  console.log(info.isDiscountPercent, info.offerDiscount);
   const print = () => {
     if (htmlRef.current === null) return;
 
@@ -64,7 +66,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   React.useEffect(() => {
     const loadReceipt = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id address note company warranty delivery terms createdAt products { price count product { name nameTranslated model } } client { id user phone email firstName lastName } offer { id price validationDays } } }`
+        `query { order(id: ${id}) { id address note company warranty delivery terms createdAt products { price count product { name nameTranslated model } } client { id user phone email firstName lastName } offer { id discount isDiscountPercent validationDays } } }`
       );
 
       if (result.data.order !== null) {
@@ -80,7 +82,8 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         dispatch({ type: "set", key: "delivery", value: result.data.order.delivery });
         dispatch({ type: "set", key: "warranty", value: result.data.order.warranty });
         dispatch({ type: "set", key: "terms", value: result.data.order.terms });
-        dispatch({ type: "set", key: "offerPrice", value: result.data.order.offer?.price ?? 0 });
+        dispatch({ type: "set", key: "offerDiscount", value: result.data.order.offer?.discount ?? 0 });
+        dispatch({ type: "set", key: "isDiscountPercent", value: result.data.order.offer?.isDiscountPercent ?? false });
         dispatch({ type: "set", key: "validationDays", value: result.data.order.offer?.validationDays ?? 1 });
 
         setProducts(result.data.order.products);
@@ -161,14 +164,16 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td colSpan={3}></td>
               <td>{!isArabic ? "Discount" : "الخصم"}:</td>
               <td></td>
-              <td>{info.offerPrice !== 0 ? (totalPrice - (info.offerPrice as number)).toLocaleString("en-US") : 0}</td>
+              <td>
+                {info.offerDiscount as string} {info.isDiscountPercent ? "%" : !isArabic ? "IQD" : "د.ع."}
+              </td>
             </tr>
             <tr className={`${styles.strong} ${styles.summaryRow}`}>
               <td colSpan={3}></td>
               <td>{!isArabic ? "Total" : "الإجمالي"}:</td>
               <td></td>
               <td>
-                {info.offerPrice !== 0 ? (info.offerPrice as number).toLocaleString("en-US") : totalPrice.toLocaleString("en-US")}{" "}
+                {!isNaN(offerPrice) ? Math.ceil(offerPrice).toLocaleString("en-US") : 0} {" "}
                 {!isArabic ? "IQD" : "د.ع."}
               </td>
             </tr>
@@ -221,11 +226,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         <Button variant="contained" color="primary" onClick={() => print()}>
           <CloudDownload />
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          href={`mailto:${info.email}?subject=Offer for you from Alardh-Alsalba&body=We create a special offer for you`}
-        >
+        <Button variant="contained" color="primary" href={`mailto:${info.email}?subject=Offer for you from Alardh-Alsalba&body=We create a special offer for you`}>
           <Send />
         </Button>
       </div>

@@ -5,7 +5,8 @@ import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
 
 const initialInfo = {
-    price: 0,
+    discount: 0,
+    isDiscountPercent: false,
     validationDays: 0,
     createdAt: ""
 };
@@ -22,14 +23,15 @@ const Offer: FunctionComponent<IOfferProps> = ({ id, orderId, onUpdate }) => {
 
     // process form type (create or update)
     const offerCommand = id === undefined ?
-        `mutation { createOfferByAuth(input: {orderId: ${orderId}, price: ${info.price}, validationDays: ${info.validationDays}}) { id createdAt } }` :
-        `mutation { updateOfferByAuth(id: ${id}, input: {price: ${info.price}, validationDays: ${info.validationDays}}) {id createdAt}}`;
+        `mutation { createOfferByAuth(input: {orderId: ${orderId}, discount: ${info.discount}, isDiscountPercent: ${info.isDiscountPercent}, validationDays: ${info.validationDays}}) { id createdAt } }` :
+        `mutation { updateOfferByAuth(id: ${id}, input: {discount: ${info.discount}, isDiscountPercent: ${info.isDiscountPercent}, validationDays: ${info.validationDays}}) {id createdAt}}`;
 
     // on load
     React.useEffect(() => {
         const action = async () => {
-            const result = await getServerData(`query { order(id: ${orderId}) { offer { validationDays price createdAt } } }`);
-            dispatch({ type: "set", key: "price", value: result.data.order.offer.price });
+            const result = await getServerData(`query { order(id: ${orderId}) { offer { validationDays discount isDiscountPercent createdAt } } }`);
+            dispatch({ type: "set", key: "discount", value: result.data.order.offer.discount });
+            dispatch({ type: "set", key: "isDiscountPercent", value: result.data.order.offer.isDiscountPercent });
             dispatch({ type: "set", key: "validationDays", value: result.data.order.offer.validationDays });
             dispatch({ type: "set", key: "createdAt", value: result.data.order.offer.createdAt });
         };
@@ -46,7 +48,7 @@ const Offer: FunctionComponent<IOfferProps> = ({ id, orderId, onUpdate }) => {
             )}
             <div className="column-double">
                 <FormControl fullWidth margin="normal">
-                    <TextField type="number" label="Price" value={info.price} onChange={e => dispatch({ type: "set", key: "price", value: e.target.value })} />
+                    <TextField type="number" label="Price" value={info.discount} onChange={e => dispatch({ type: "set", key: "discount", value: e.target.value })} />
                 </FormControl>
                 <FormControl fullWidth margin="normal">
                     <TextField type="number" label="validationDays" value={info.validationDays} onChange={e => dispatch({ type: "set", key: "validationDays", value: e.target.value })} />

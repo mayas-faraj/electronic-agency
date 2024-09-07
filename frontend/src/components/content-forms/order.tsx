@@ -16,9 +16,10 @@ import {
   TableBody,
   Box,
   InputAdornment,
-  FilledInput
+  OutlinedInput,
+  IconButton
 } from "@mui/material";
-import { ReceiptLong, Delete, AddCircle, Phone } from "@mui/icons-material";
+import { ReceiptLong, Delete, AddCircle, Percent, Numbers } from "@mui/icons-material";
 import ContentForm, { reducer } from "../content-form";
 import ClientView from "../views/client";
 import ClientSelect from "../content-tables/clients";
@@ -39,7 +40,8 @@ const initialInfo = {
   status: "",
   isOfferRequest: false,
   offerId: 0,
-  offerPrice: "0",
+  offerDiscount: "0",
+  isDiscountPercent: false,
   validationDays: "1",
   clientUser: "",
   clientEmail: "",
@@ -81,13 +83,16 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   const [viewReceiptAr, setViewReceiptAr] = React.useState(false);
   const [products, setProducts] = React.useState<OrderProduct[]>([]);
 
+  const totalPrice = products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0);
+  const offerPrice = info.isDiscountPercent ? totalPrice * (1 - parseInt(info.offerDiscount as string) / 100) : totalPrice - parseInt(info.offerDiscount as string);
+
   // process form type (create or update)
   const orderCommand =
     id !== undefined
       ? `mutation { updateOrderStatus(id: ${id}, status: "${info.status}") { id status } }`
-      : `mutation { createOrder(user: "${info.clientUser}", input: {address: "${info.address}", note: "${info.note}", company: "${
-          info.company
-        }", delivery: "${info.delivery}", warranty: "${info.warranty}", terms: "${info.terms}", products: [${products.map(
+      : `mutation { createOrder(user: "${info.clientUser}", input: {address: "${info.address}", note: "${info.note}", company: "${info.company}", delivery: "${
+          info.delivery
+        }", warranty: "${info.warranty}", terms: "${info.terms}", products: [${products.map(
           (orderProduct) => `{
           productId: ${orderProduct.product.id},
           count: ${orderProduct.count},
@@ -127,9 +132,10 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
     if (result?.data?.createOrder?.id != null) {
       dispatch({ type: "set", key: "orderId", value: result.data.createOrder.id });
       await getServerData(
-        `mutation { createOfferByAuth(input: {orderId: ${result.data.createOrder.id}, price: ${parseInt(
-          info.offerPrice as string
-        )}, validationDays: ${parseInt(info.validationDays as string)}}) { id } }`
+        `mutation { createOfferByAuth(input: {orderId: ${result.data.createOrder.id}, 
+         discount: ${parseInt(info.offerDiscount as string)},
+         isDiscountPercent: ${info.isDiscountPercent as boolean},
+         validationDays: ${parseInt(info.validationDays as string)}}) { id } }`
       );
     }
 
@@ -140,7 +146,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadOrder = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id address note status company warranty delivery terms createdAt products { price count product { name image nameTranslated model } } client { id user phone phone2 company address address2 email firstName lastName } offer { id price validationDays } } }`
+        `query { order(id: ${id}) { id address note status company warranty delivery terms createdAt products { price count product { name image nameTranslated model } } client { id user phone phone2 company address address2 email firstName lastName } offer { id discount isDiscountPercent validationDays } } }`
       );
 
       dispatch({ type: "set", key: "clientUser", value: result.data.order.client.user });
@@ -156,7 +162,8 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
       dispatch({ type: "set", key: "delivery", value: result.data.order.delivery });
       dispatch({ type: "set", key: "warranty", value: result.data.order.warranty });
       dispatch({ type: "set", key: "terms", value: result.data.order.terms });
-      dispatch({ type: "set", key: "offerPrice", value: result.data.order.offer?.price ?? 0 });
+      dispatch({ type: "set", key: "offerDiscount", value: result.data.order.offer?.discount ?? 0 });
+      dispatch({ type: "set", key: "isDiscountPercent", value: result.data.order.offer?.isDiscountPercent ?? false });
       dispatch({ type: "set", key: "validationDays", value: result.data.order.offer?.validationDays ?? 1 });
       dispatch({ type: "set", key: "status", value: result.data.order.status });
       setProducts(result.data.order.products);
@@ -258,25 +265,58 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
       </TableContainer>
       <FormControl fullWidth margin="normal">
         <InputLabel htmlFor="total-price">Total Price</InputLabel>
-        <FilledInput
+        <OutlinedInput
           id="total-price"
-          value={products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0).toLocaleString()}
+          label="Total Price"
+          readOnly={true}
+          value={totalPrice.toLocaleString()}
+          endAdornment={<InputAdornment position="end">IQD</InputAdornment>}
+        />
+      </FormControl>
+      <div className="column-double">
+        <FormControl fullWidth margin="normal">
+          <InputLabel htmlFor="offer-discount">Offer Discount</InputLabel>
+          <OutlinedInput
+            id="offer-discount"
+            label="Offer Discount"
+            value={info.offerDiscount}
+            type="number"
+            onChange={(e) => dispatch({ type: "set", key: "offerDiscount", value: e.target.value })}
+            readOnly={id !== undefined}
+            inputProps={{ min: 0 }}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton onClick={() => dispatch({ type: "set", key: "isDiscountPercent", value: !info.isDiscountPercent })} edge="end">
+                  {info.isDiscountPercent ? <Percent /> : <Numbers />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            variant="outlined"
+            label="validation days"
+            value={info.validationDays}
+            type="number"
+            onChange={(e) => dispatch({ type: "set", key: "validationDays", value: e.target.value })}
+            InputProps={{ readOnly: id !== undefined }}
+            inputProps={{ min: 0 }}
+          />
+        </FormControl>
+      </div>
+      <FormControl fullWidth margin="normal">
+        <InputLabel htmlFor="total-price">Offer Price</InputLabel>
+        <OutlinedInput
+          id="offer-price"
+          label="Offer Price"
+          readOnly={true}
+          value={!isNaN(offerPrice) ? Math.ceil(offerPrice).toLocaleString() : 0}
           endAdornment={<InputAdornment position="end">IQD</InputAdornment>}
         />
       </FormControl>
       <div className="column-double">
         <div>
-          <FormControl fullWidth margin="normal">
-            <TextField
-              variant="outlined"
-              label="offer price"
-              value={info.offerPrice}
-              type="number"
-              onChange={(e) => dispatch({ type: "set", key: "offerPrice", value: e.target.value })}
-              InputProps={{ readOnly: id !== undefined }}
-              inputProps={{ min: 0 }}
-            />
-          </FormControl>
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
@@ -297,17 +337,6 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
           </FormControl>
         </div>
         <div>
-          <FormControl fullWidth margin="normal">
-            <TextField
-              variant="outlined"
-              label="validation days"
-              value={info.validationDays}
-              type="number"
-              onChange={(e) => dispatch({ type: "set", key: "validationDays", value: e.target.value })}
-              InputProps={{ readOnly: id !== undefined }}
-              inputProps={{ min: 0 }}
-            />
-          </FormControl>
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
@@ -370,30 +399,8 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
         <div className="modal">
           <ClientSelect
             isSelectable={true}
-            onUpdate={(
-              _,
-              clientEmail,
-              clientPhone,
-              clientUser,
-              clientFirstName,
-              clientLastName,
-              clientCompany,
-              clientPhone2,
-              clientAddress,
-              clientAddress2
-            ) =>
-              handleSelectClient(
-                _,
-                clientEmail,
-                clientPhone,
-                clientUser,
-                clientFirstName,
-                clientLastName,
-                clientCompany,
-                clientPhone2,
-                clientAddress,
-                clientAddress2
-              )
+            onUpdate={(_, clientEmail, clientPhone, clientUser, clientFirstName, clientLastName, clientCompany, clientPhone2, clientAddress, clientAddress2) =>
+              handleSelectClient(_, clientEmail, clientPhone, clientUser, clientFirstName, clientLastName, clientCompany, clientPhone2, clientAddress, clientAddress2)
             }
           />
         </div>

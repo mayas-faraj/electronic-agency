@@ -164,19 +164,35 @@ td {
   text-align: center;
 }
 
-.status-low {
+.priority-low {
   color: deepskyblue;
 }
 
-.status-normal {
+.priority-normal {
   color: green;
 }
 
-.status-high {
+.priority-high {
   color: orange;
 }
 
-.status-critical {
+.priority-critical {
+  color: red;
+}
+
+.status-closed {
+  color: deepskyblue;
+}
+
+.status-accepted {
+  color: green;
+}
+
+.status-pending {
+  color: orange;
+}
+
+.status-rejected {
   color: red;
 }
 

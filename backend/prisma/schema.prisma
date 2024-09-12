@@ -190,8 +190,10 @@ model ProductItemsOnClients {
 model Order {
   id             Int            @id @default(autoincrement())
   user           String
+  projectNumber  Int            @map("project_number")
+  subject        String?        @db.VarChar(100)
   address        String         @db.VarChar(500)
-  note           String?        @db.VarChar(2000)
+  note           String?        @db.VarChar(5000)
   company        String?        @db.VarChar(100)
   delivery       String?        @db.VarChar(100)
   warranty       String?        @db.VarChar(100)

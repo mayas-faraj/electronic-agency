@@ -18,6 +18,8 @@ const initialInfo = {
   offerDiscount: 0,
   isDiscountPercent: false,
   validationDays: 1,
+  projectNumber: "",
+  subject: "",
   address: "",
   note: ""
 };
@@ -66,7 +68,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   React.useEffect(() => {
     const loadReceipt = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id address note company warranty delivery terms createdAt products { price count product { name nameTranslated model } } client { id user phone email firstName lastName } offer { id discount isDiscountPercent validationDays } } }`
+        `query { order(id: ${id}) { id projectNumber subject address note company warranty delivery terms createdAt products { price count product { name nameTranslated model } } client { id user phone email firstName lastName } offer { id discount isDiscountPercent validationDays } } }`
       );
 
       if (result.data.order !== null) {
@@ -76,6 +78,8 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         dispatch({ type: "set", key: "lastName", value: result.data.order.client.lastName });
         dispatch({ type: "set", key: "user", value: result.data.order.user });
         dispatch({ type: "set", key: "createdAt", value: result.data.order.createdAt });
+        dispatch({ type: "set", key: "projectNumber", value: result.data.order.projectNumber });
+        dispatch({ type: "set", key: "subject", value: result.data.order.subject });
         dispatch({ type: "set", key: "address", value: result.data.order.address });
         dispatch({ type: "set", key: "note", value: result.data.order.note });
         dispatch({ type: "set", key: "company", value: result.data.order.company });
@@ -123,14 +127,15 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</td>
               <td>{info.phone as string}</td>
               <td>{!isArabic ? "Reference #:" : "رقم المشروع:"}</td>
-              <td>{id}</td>
+              <td>{info.projectNumber as number}</td>
             </tr>
           </tbody>
         </table>
         <p>
-          {!isArabic
-            ? "We are glad to submit you with commerical price quotation for the products detailed below"
-            : "يسرنا أن نقدم لكم عرض السعر التجاري للمنتجات المبينة تفاصيلها أدناه"}
+          {(info.subject as string) ??
+            (!isArabic
+              ? "We are glad to submit you with commerical price quotation for the products detailed below"
+              : "يسرنا أن نقدم لكم عرض السعر التجاري للمنتجات المبينة تفاصيلها أدناه")}
         </p>
         <table className={styles.productsTable}>
           <tbody>
@@ -173,8 +178,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td>{!isArabic ? "Total" : "الإجمالي"}:</td>
               <td></td>
               <td>
-                {!isNaN(offerPrice) ? Math.ceil(offerPrice).toLocaleString("en-US") : 0} {" "}
-                {!isArabic ? "IQD" : "د.ع."}
+                {!isNaN(offerPrice) ? Math.ceil(offerPrice).toLocaleString("en-US") : 0} {!isArabic ? "IQD" : "د.ع."}
               </td>
             </tr>
           </tbody>

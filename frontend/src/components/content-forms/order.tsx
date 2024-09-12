@@ -31,6 +31,8 @@ import RoleContext from "../role-context";
 
 const initialInfo = {
   orderId: 0,
+  projectNumber: 1,
+  subject: "",
   address: "",
   note: "",
   company: "",
@@ -90,9 +92,11 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   const orderCommand =
     id !== undefined
       ? `mutation { updateOrderStatus(id: ${id}, status: "${info.status}") { id status } }`
-      : `mutation { createOrder(user: "${info.clientUser}", input: {address: "${info.address}", note: "${info.note}", company: "${info.company}", delivery: "${
-          info.delivery
-        }", warranty: "${info.warranty}", terms: "${info.terms}", products: [${products.map(
+      : `mutation { createOrder(user: "${info.clientUser}", input: {projectNumber: ${info.projectNumber}, subject: "${info.subject}", address: "${info.address}", note: "${(
+          info.note as string
+        ).replace(/[\u0000-\u001F\u007F-\u009F]/g, "")}", company: "${info.company}", delivery: "${info.delivery}", warranty: "${info.warranty}", terms: "${
+          info.terms
+        }", products: [${products.map(
           (orderProduct) => `{
           productId: ${orderProduct.product.id},
           count: ${orderProduct.count},
@@ -117,7 +121,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
     dispatch({ type: "set", key: "clientUser", value: clientUser });
     dispatch({ type: "set", key: "clientFirstName", value: clientFirstName });
     dispatch({ type: "set", key: "clientLastName", value: clientLastName });
-    dispatch({ type: "set", key: "company", value: clientCompany });
+    dispatch({ type: "set", key: "company", value: clientCompany ?? "" });
     dispatch({ type: "set", key: "address", value: `${clientAddress != null ? clientAddress : ""}${clientAddress2 ? "/" + clientAddress2 : ""}` });
 
     setSelectClient(false);
@@ -146,7 +150,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadOrder = async () => {
       const result = await getServerData(
-        `query { order(id: ${id}) { id address note status company warranty delivery terms createdAt products { price count product { name image nameTranslated model } } client { id user phone phone2 company address address2 email firstName lastName } offer { id discount isDiscountPercent validationDays } } }`
+        `query { order(id: ${id}) { id projectNumber subject address note status company warranty delivery terms createdAt products { price count product { name image nameTranslated model } } client { id user phone phone2 company address address2 email firstName lastName } offer { id discount isDiscountPercent validationDays } } }`
       );
 
       dispatch({ type: "set", key: "clientUser", value: result.data.order.client.user });
@@ -156,6 +160,8 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
       dispatch({ type: "set", key: "clientFirstName", value: result.data.order.client.firstName });
       dispatch({ type: "set", key: "clientLastName", value: result.data.order.client.lastName });
       dispatch({ type: "set", key: "createdAt", value: result.data.order.createdAt });
+      dispatch({ type: "set", key: "subject", value: result.data.order.subject });
+      dispatch({ type: "set", key: "projectNumber", value: result.data.order.projectNumber });
       dispatch({ type: "set", key: "address", value: result.data.order.address });
       dispatch({ type: "set", key: "note", value: result.data.order.note });
       dispatch({ type: "set", key: "company", value: result.data.order.company });
@@ -321,7 +327,18 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
-              label="company"
+              label="Project Number"
+              value={info.projectNumber}
+              InputProps={{ readOnly: id !== undefined }}
+              inputProps={{ min: 0 }}
+              type="number"
+              onChange={(e) => dispatch({ type: "set", key: "projectNumber", value: e.target.value })}
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              label="Company"
               value={info.company}
               InputProps={{ readOnly: id !== undefined }}
               inputProps={{ maxLength: 100 }}
@@ -331,7 +348,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
-              label="warranty"
+              label="Warranty"
               value={info.warranty}
               InputProps={{ readOnly: id !== undefined }}
               inputProps={{ maxLength: 100 }}
@@ -343,7 +360,16 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
-              label="terms"
+              label="Subject"
+              value={info.subject}
+              InputProps={{ readOnly: id !== undefined }}
+              onChange={(e) => dispatch({ type: "set", key: "subject", value: e.target.value })}
+            />
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              variant="outlined"
+              label="Terms"
               value={info.terms}
               onChange={(e) => dispatch({ type: "set", key: "terms", value: e.target.value })}
               InputProps={{ readOnly: id !== undefined }}
@@ -353,7 +379,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
           <FormControl fullWidth margin="normal">
             <TextField
               variant="outlined"
-              label="delivery"
+              label="Delivery"
               value={info.delivery}
               onChange={(e) => dispatch({ type: "set", key: "delivery", value: e.target.value })}
               InputProps={{ readOnly: id !== undefined }}

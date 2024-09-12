@@ -112,8 +112,15 @@ title,
   }
 }
 
-.notesTable td {
-  padding: 10px 5px;
+.notesTable {
+  td {
+    padding: 10px 5px;
+
+    &:first-child {
+      min-width: 60px;
+      vertical-align: top;
+    }
+  }
 }
 
 .footer {
@@ -128,6 +135,10 @@ title,
 
   & > div:first-child {
     line-height: 1.4rem;
+  }
+
+  & > div:last-child {
+    direction: rtl;
   }
 }
 

@@ -63,6 +63,8 @@ const resolvers = {
         select: {
           id: true,
           user: true,
+          projectNumber: true,
+          subject: true,
           address: true,
           note: true,
           company: true,
@@ -216,6 +218,8 @@ const resolvers = {
       const result = await app.prismaClient.order.create({
         data: {
           user: app.user.name,
+          projectNumber: args.input.projectNumber,
+          subject: args.input.subject,
           address: args.input.address,
           note: args.input.note,
           company: args.input.company,
@@ -241,6 +245,8 @@ const resolvers = {
       const result = await app.prismaClient.order.create({
         data: {
           user: args.user,
+          projectNumber: args.input.projectNumber,
+          subject: args.input.subject,
           address: args.input.address,
           note: args.input.note,
           company: args.input.company,

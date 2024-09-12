@@ -72,14 +72,14 @@ result = await prismaClient.client.createMany({
     },
     {
       id: 3,
-      user: "zainab",
+      user: "zina",
       namePrefix: "Ms.",
       firstName: "Zainab",
       phone: "0955666777",
-      avatar: "/uploads/avatars/zainab.jpg",
+      avatar: "/uploads/avatars/zina.jpg",
       birthDate: new Date(1992, 3, 1),
       isMale: false,
-      email: "zainab@hotmail.com",
+      email: "zaina@hotmail.com",
     },
   ],
 });
@@ -2006,6 +2006,7 @@ console.log("product on clients review seed result: ", result);
 result = await prismaClient.order.create({
   data: {
     user: "lord.mayas",
+    projectNumber: 101,
     address: "Zahera-Damascus-Syria",
     isDraft: false,
     status: "ACCEPTED",
@@ -2039,6 +2040,7 @@ console.log("order seed result: ", result);
 result = await prismaClient.order.create({
   data: {
     user: "zaherati",
+    projectNumber: 102,
     address: "Muhajreen-Damascus-Syria",
     isDraft: true,
     status: "PENDING",

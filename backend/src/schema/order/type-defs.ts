@@ -19,7 +19,7 @@ const typeDefs = `#graphql
 
     type Order {
 		id: Int!
-		projectNumber: Int!
+		projectNumber: String
 		subject: String
 		address: String!
 		note: String
@@ -38,7 +38,7 @@ const typeDefs = `#graphql
 
 	type OrderBasic {
 		id: Int!
-		projectNumber: Int!
+		projectNumber: String
 		status: String
 		isRead: Boolean
 		isOfferRequest: Boolean
@@ -57,7 +57,7 @@ const typeDefs = `#graphql
 		productId: Int!
 		count: Int!
 		totalPrice: Float
-		projectNumber: Int!
+		projectNumber: String
 		subject: String
 		address: String!
 		note: String
@@ -70,7 +70,7 @@ const typeDefs = `#graphql
 	}
 
 	input OrderCreate {
-		projectNumber: Int!
+		projectNumber: String
 		subject: String
 		address: String!
 		note: String

@@ -127,7 +127,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
               <td>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</td>
               <td>{info.phone as string}</td>
               <td>{!isArabic ? "Reference #:" : "رقم المشروع:"}</td>
-              <td>{info.projectNumber as number}</td>
+              <td>{info.projectNumber as string}</td>
             </tr>
           </tbody>
         </table>

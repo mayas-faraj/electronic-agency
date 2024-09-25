@@ -2006,7 +2006,7 @@ console.log("product on clients review seed result: ", result);
 result = await prismaClient.order.create({
   data: {
     user: "lord.mayas",
-    projectNumber: 101,
+    projectNumber: "101",
     address: "Zahera-Damascus-Syria",
     isDraft: false,
     status: "ACCEPTED",
@@ -2040,7 +2040,7 @@ console.log("order seed result: ", result);
 result = await prismaClient.order.create({
   data: {
     user: "zaherati",
-    projectNumber: 102,
+    projectNumber: "102",
     address: "Muhajreen-Damascus-Syria",
     isDraft: true,
     status: "PENDING",

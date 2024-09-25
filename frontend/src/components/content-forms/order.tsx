@@ -31,7 +31,7 @@ import RoleContext from "../role-context";
 
 const initialInfo = {
   orderId: 0,
-  projectNumber: 1,
+  projectNumber: "",
   subject: "",
   address: "",
   note: "",
@@ -92,9 +92,11 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   const orderCommand =
     id !== undefined
       ? `mutation { updateOrderStatus(id: ${id}, status: "${info.status}") { id status } }`
-      : `mutation { createOrder(user: "${info.clientUser}", input: {projectNumber: ${info.projectNumber}, subject: "${info.subject}", address: "${info.address}", note: "${(
+      : `mutation { createOrder(user: "${info.clientUser}", input: {projectNumber: "${info.projectNumber}", subject: "${info.subject}", address: "${info.address}", note: "${(
           info.note as string
-        ).replace(/[\u0000-\u001F\u007F-\u009F]/g, "")}", company: "${info.company}", delivery: "${info.delivery}", warranty: "${info.warranty}", terms: "${
+        )
+          // eslint-disable-next-line no-control-regex
+          .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")}", company: "${info.company}", delivery: "${info.delivery}", warranty: "${info.warranty}", terms: "${
           info.terms
         }", products: [${products.map(
           (orderProduct) => `{
@@ -330,8 +332,6 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               label="Project Number"
               value={info.projectNumber}
               InputProps={{ readOnly: id !== undefined }}
-              inputProps={{ min: 0 }}
-              type="number"
               onChange={(e) => dispatch({ type: "set", key: "projectNumber", value: e.target.value })}
             />
           </FormControl>

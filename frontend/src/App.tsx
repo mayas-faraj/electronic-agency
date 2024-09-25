@@ -15,7 +15,7 @@ import getServerData from "./libs/server-data";
 interface Profile {
   id: number;
   user: string;
-  userRoles: {
+  userRoles?: {
     roleId: number;
     role: {
       name: string;
@@ -44,7 +44,7 @@ function App() {
 
   React.useEffect(() => {
     // profile has changed
-    setPrivileges(getPrivileges(profile.userRoles.map((userRole) => userRole.role.name)));
+    setPrivileges(getPrivileges(profile.userRoles?.map((userRole) => userRole.role.name) ?? []));
   }, [profile]);
 
   // lazy load pages

@@ -14,7 +14,7 @@ import { AccountCircle, AdminPanelSettings, Category, ListAlt, RoomPreferences, 
 
 const Header: FunctionComponent = () => {
   // privileges
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // component states
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -30,16 +30,16 @@ const Header: FunctionComponent = () => {
     icon: JSX.Element;
   }
 
-  const hidenMenuCondition = !privileges.updateClient && (privileges.createOrder || privileges.createTicket);
+  const hidenMenuCondition = !profile.privileges.updateClient && (profile.privileges.createOrder || profile.privileges.createTicket);
 
   const links: ILink[] = [];
-  if (privileges.readAdmin) links.push({ title: "Admins", to: "/admins", icon: <AdminPanelSettings /> });
-  if (privileges.readClient && !hidenMenuCondition) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
-  if (privileges.readCategory && !hidenMenuCondition) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
-  if (privileges.readProduct && !hidenMenuCondition) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
-  if (privileges.readAdvertisement) links.push({ title: "Advertisements", to: "/advertisements", icon: <BurstModeRounded /> });
-  if (privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
-  if (privileges.readTicket) links.push({ title: "Tickets", to: "/tickets", icon: <RoomPreferences /> });
+  if (profile.privileges.readAdmin) links.push({ title: "Admins", to: "/admins", icon: <AdminPanelSettings /> });
+  if (profile.privileges.readClient && !hidenMenuCondition) links.push({ title: "Clients", to: "/clients", icon: <AccountCircle /> });
+  if (profile.privileges.readCategory && !hidenMenuCondition) links.push({ title: "Categories", to: "/categories", icon: <Category /> });
+  if (profile.privileges.readProduct && !hidenMenuCondition) links.push({ title: "Products", to: "/products", icon: <Redeem /> });
+  if (profile.privileges.readAdvertisement) links.push({ title: "Advertisements", to: "/advertisements", icon: <BurstModeRounded /> });
+  if (profile.privileges.readOrder) links.push({ title: "Orders", to: "/orders", icon: <ListAlt /> });
+  if (profile.privileges.readTicket) links.push({ title: "Tickets", to: "/tickets", icon: <RoomPreferences /> });
 
   // event handlers
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -96,13 +96,13 @@ const Header: FunctionComponent = () => {
           <Link to={link.to}>{link.title}</Link>
         </MenuItem>
       ))}
-      {privileges.readOrder && (
+      {profile.privileges.readOrder && (
         <MenuItem>
           <OrderNotificationIcon />
           Orders
         </MenuItem>
       )}
-      {privileges.readTicket && (
+      {profile.privileges.readTicket && (
         <MenuItem>
           <TicketNotificationIcon />
           Ticket
@@ -134,8 +134,8 @@ const Header: FunctionComponent = () => {
                 </Link>
               ))}
             </div>
-            {privileges.readOrder && <OrderNotificationIcon />}
-            {privileges.readTicket && <TicketNotificationIcon />}
+            {profile.privileges.readOrder && <OrderNotificationIcon />}
+            {profile.privileges.readTicket && <TicketNotificationIcon />}
             <IconButton size="large" edge="end" onClick={handleProfileMenuOpen} color="inherit">
               <AccountCircle />
             </IconButton>

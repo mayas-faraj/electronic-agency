@@ -24,7 +24,7 @@ const Advertisements: FunctionComponent = () => {
   const [lastOrder, setLastOrder] = React.useState(0);
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // productItem schema
   const tableHeader: ITableHeader[] = [
@@ -52,7 +52,7 @@ const Advertisements: FunctionComponent = () => {
   // render
   return (
     <div>
-      {privileges.createAdvertisement && (
+      {profile.privileges.createAdvertisement && (
         <ContentForm
           name="ads"
           title="Create new ads"
@@ -69,10 +69,10 @@ const Advertisements: FunctionComponent = () => {
       <ContentTable
         name="advertisement"
         headers={tableHeader}
-        canCreate={privileges.createAdvertisement}
-        canDelete={privileges.deleteAdvertisement}
-        canRead={privileges.readAdvertisement}
-        canUpdate={privileges.updateAdvertisement}
+        canCreate={profile.privileges.createAdvertisement}
+        canDelete={profile.privileges.deleteAdvertisement}
+        canRead={profile.privileges.readAdvertisement}
+        canUpdate={profile.privileges.updateAdvertisement}
         hasSnColumn={true}
         data={advertisements.map((ads, index) => ({
           image: <img src={data["site-url"] + ads.imageUrl} alt={"ads"} />,

@@ -104,8 +104,8 @@ function App() {
 
   let routes = loginRoutes;
   if (StorageManager.hasToken()) {
-    if (!privileges.updateClient && privileges.createTicket) routes = ticketRoutes;
-    else if (!privileges.updateClient && privileges.createOrder) routes = orderRoutes;
+    if (!profile.privileges.updateClient && profile.privileges.createTicket) routes = ticketRoutes;
+    else if (!profile.privileges.updateClient && profile.privileges.createOrder) routes = orderRoutes;
     else routes = allRoutes;
   } else routes = loginRoutes;
 
@@ -131,7 +131,7 @@ function App() {
   // render
   return (
     <Suspense fallback={<GlimmerPage />}>
-      <ProfileContext.Provider value={privileges}>
+      <ProfileContext.Provider value={profile}>
         <ThemeProvider theme={theme}>
           <RouterProvider router={router} />
         </ThemeProvider>

@@ -35,7 +35,7 @@ const Admins: FunctionComponent = () => {
   const [keyword, setKeyword] = React.useState("");
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // admin schema
   const tableHeader: ITableHeader[] = [
@@ -86,10 +86,10 @@ const Admins: FunctionComponent = () => {
       <ContentTable
         name="backend user"
         headers={tableHeader}
-        canCreate={privileges.createAdmin}
-        canDelete={privileges.deleteAdmin}
-        canRead={privileges.readAdmin}
-        canUpdate={privileges.updateAdmin}
+        canCreate={profile.privileges.createAdmin}
+        canDelete={profile.privileges.deleteAdmin}
+        canRead={profile.privileges.readAdmin}
+        canUpdate={profile.privileges.updateAdmin}
         hasSnColumn={true}
         addNewLink="/add-admin"
         isAddNewRight={true}

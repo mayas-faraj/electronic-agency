@@ -26,7 +26,7 @@ const Categories: FunctionComponent = () => {
     const [viewId, setViewId] = React.useState(0);
 
     // context
-    const privileges = React.useContext(ProfileContext);
+    const profile = React.useContext(ProfileContext);
 
     // category schema
     const tableHeader: ITableHeader[] = [
@@ -55,10 +55,10 @@ const Categories: FunctionComponent = () => {
                 name="category"
                 headers={tableHeader}
                 addNewLink="/add-category"
-                canCreate={privileges.createCategory}
-                canDelete={privileges.deleteCategory}
-                canRead={privileges.readCategory}
-                canUpdate={privileges.updateCategory}
+                canCreate={profile.privileges.createCategory}
+                canDelete={profile.privileges.deleteCategory}
+                canRead={profile.privileges.readCategory}
+                canUpdate={profile.privileges.updateCategory}
                 data={
                     categories.map(category => ({
                         name: category.name,

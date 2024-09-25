@@ -41,7 +41,7 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCoun
   const [count, setCount] = React.useState(1);
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // product schema
   const tableHeader: ITableHeader[] = [
@@ -101,10 +101,10 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCoun
       <ContentTable
         name="product"
         headers={tableHeader}
-        canCreate={privileges.createProduct}
-        canDelete={privileges.deleteProduct}
-        canRead={privileges.readProduct}
-        canUpdate={privileges.updateProduct}
+        canCreate={profile.privileges.createProduct}
+        canDelete={profile.privileges.deleteProduct}
+        canRead={profile.privileges.readProduct}
+        canUpdate={profile.privileges.updateProduct}
         hasSnColumn={true}
         addNewLink={!isSelectable ? "/add-product" : undefined}
         isAddNewRight={true}

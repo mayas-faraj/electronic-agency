@@ -33,7 +33,7 @@ const Orders: FunctionComponent = () => {
   const [openId, setOpenId] = React.useState(0);
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // order schema
   const tableHeader: ITableHeader[] = [
@@ -64,10 +64,10 @@ const Orders: FunctionComponent = () => {
       <ContentTable
         name="order"
         headers={tableHeader}
-        canCreate={privileges.createOrder}
-        canDelete={privileges.deleteOrder}
-        canRead={privileges.readOrder}
-        canUpdate={privileges.updateOrder}
+        canCreate={profile.privileges.createOrder}
+        canDelete={profile.privileges.deleteOrder}
+        canRead={profile.privileges.readOrder}
+        canUpdate={profile.privileges.updateOrder}
         addNewLink="/add-order"
         data={orders.map((order) => ({
           image: <img src={data["site-url"] + order.products[0]?.product.image} alt={order.products[0]?.product.name} />,

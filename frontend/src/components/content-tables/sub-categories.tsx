@@ -29,7 +29,7 @@ const SubCategories: FunctionComponent<{categoryId: number}> = ({ categoryId }) 
     const [viewId, setViewId] = React.useState(0);
 
     // context
-    const privileges = React.useContext(ProfileContext);
+    const profile = React.useContext(ProfileContext);
 
     // category schema
     const tableHeader: ITableHeader[] = [
@@ -58,10 +58,10 @@ const SubCategories: FunctionComponent<{categoryId: number}> = ({ categoryId }) 
                 name="sub-category"
                 headers={tableHeader}
                 addNewLink={"/add-sub-category/" + categoryId.toString()} 
-                canCreate={privileges.createCategory}
-                canDelete={privileges.deleteCategory}
-                canRead={privileges.readCategory}
-                canUpdate={privileges.updateCategory}
+                canCreate={profile.privileges.createCategory}
+                canDelete={profile.privileges.deleteCategory}
+                canRead={profile.privileges.readCategory}
+                canUpdate={profile.privileges.updateCategory}
                 data={
                     subCategories.map(subCategory => ({
                         name: subCategory.name,

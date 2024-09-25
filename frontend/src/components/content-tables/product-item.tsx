@@ -20,7 +20,7 @@ const ProductItems: FunctionComponent<{ productId: number }> = ({ productId }) =
     const [editSn, setEditSn] = React.useState("");
 
     // context
-    const privileges = React.useContext(ProfileContext);
+    const profile = React.useContext(ProfileContext);
 
     // productItem schema
     const tableHeader: ITableHeader[] = [
@@ -52,10 +52,10 @@ const ProductItems: FunctionComponent<{ productId: number }> = ({ productId }) =
             <ContentTable
                 name="productItem"
                 headers={tableHeader}
-                canCreate={privileges.createProductItem}
-                canDelete={privileges.deleteProductItem}
-                canRead={privileges.readProductItem}
-                canUpdate={privileges.updateProductItem}
+                canCreate={profile.privileges.createProductItem}
+                canDelete={profile.privileges.deleteProductItem}
+                canRead={profile.privileges.readProductItem}
+                canUpdate={profile.privileges.updateProductItem}
                 hasSnColumn={true}
                 data={
                     productItems.map(productItem => ({

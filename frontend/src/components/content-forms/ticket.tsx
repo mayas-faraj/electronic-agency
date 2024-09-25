@@ -76,7 +76,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   // component reducer
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
   // component hooks
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
   // component status
   const [viewClient, setViewClient] = React.useState(false);
   const [viewProduct, setViewProduct] = React.useState(false);
@@ -88,12 +88,12 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
 
   let mode: Mode = Mode.Viewer;
 
-  if (privileges.createAdmin) mode = Mode.SuperAdmin;
-  else if (privileges.createTicket && info.initialStatus === "NEW") mode = Mode.TopCallCenter;
-  else if (privileges.updateTicket && (info.initialStatus === "OPEN" || info.initialStatus === "PENDING" || info.initialStatus === "UNRESOLVED")) mode = Mode.CallCenter;
-  else if (privileges.createRepair && info.initialStatus === "IN_PROGRESS") mode = Mode.Technician;
-  else if (privileges.updateRepair && info.initialStatus === "RESOLVED") mode = Mode.Closer;
-  else if (privileges.createFeedback && info.initialStatus === "CLOSED") mode = Mode.Feedback;
+  if (profile.privileges.createAdmin) mode = Mode.SuperAdmin;
+  else if (profile.privileges.createTicket && info.initialStatus === "NEW") mode = Mode.TopCallCenter;
+  else if (profile.privileges.updateTicket && (info.initialStatus === "OPEN" || info.initialStatus === "PENDING" || info.initialStatus === "UNRESOLVED")) mode = Mode.CallCenter;
+  else if (profile.privileges.createRepair && info.initialStatus === "IN_PROGRESS") mode = Mode.Technician;
+  else if (profile.privileges.updateRepair && info.initialStatus === "RESOLVED") mode = Mode.Closer;
+  else if (profile.privileges.createFeedback && info.initialStatus === "CLOSED") mode = Mode.Feedback;
 
   // process form type (create or update)
   const phoneSeperatorIndex = (info.clientPhone as string).indexOf("/");

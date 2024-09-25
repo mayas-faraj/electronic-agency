@@ -2,7 +2,7 @@ import React from "react";
 
 export interface Profile {
   id: number;
-  user: string;
+  name: string;
   userRoles?: {
     roleId: number;
     role: {
@@ -10,6 +10,7 @@ export interface Profile {
     };
   }[];
   centerId?: number;
+  privileges: Privileges;
 }
 
 export interface Privileges {
@@ -101,6 +102,7 @@ type Role = "admin" | "data_viewer" | "sales_man" | "offer_admin" | "top_call_ce
 export const getPrivileges = (roles: string[]): Privileges => {
   let privileges = noPrivileges;
   for (const role of roles) privileges = mergePrivileges(privileges, getPrivilegeOfRole(role as Role));
+  console.log(roles, privileges);
   return privileges;
 };
 
@@ -499,6 +501,13 @@ const mergePrivileges = (privileges1: Privileges, privileges2: Privileges): Priv
   return result;
 };
 
-const ProfileContext = React.createContext<Privileges>(noPrivileges);
-ProfileContext.displayName = "role context";
+export const noProfile: Profile = {
+  id: 0,
+  name: "",
+  privileges: noPrivileges,
+  userRoles: []
+};
+
+const ProfileContext = React.createContext<Profile>(noProfile);
+ProfileContext.displayName = "profile context";
 export default ProfileContext;

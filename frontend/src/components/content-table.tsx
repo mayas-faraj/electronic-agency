@@ -54,7 +54,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // component context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // event handler
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -125,7 +125,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         )}
-        {privileges.updateAdmin && !hidePagination && (
+        {profile.privileges.updateAdmin && !hidePagination && (
           <CsvDownloadButton
             className={styles.button + " " + styles["button--small"]}
             headers={csvHeader.map((header) => header.title)}

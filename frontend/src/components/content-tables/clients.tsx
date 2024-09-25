@@ -47,7 +47,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
   const [keyword, setKeyword] = React.useState("");
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // clients schema
   const tableHeader: ITableHeader[] = [
@@ -102,10 +102,10 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
         addNewLink={"/add-client"}
         isAddNewRight={true}
         headers={tableHeader}
-        canCreate={privileges.createClient}
-        canDelete={privileges.deleteClient}
-        canRead={privileges.readClient}
-        canUpdate={privileges.updateClient}
+        canCreate={profile.privileges.createClient}
+        canDelete={profile.privileges.deleteClient}
+        canRead={profile.privileges.readClient}
+        canUpdate={profile.privileges.updateClient}
         hidePagination={displayOneRow}
         data={clients.map((client) => ({
           company: client.company ?? "<No Company>",

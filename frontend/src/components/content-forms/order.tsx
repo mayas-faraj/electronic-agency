@@ -75,7 +75,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
 
   // component context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // component status
   const [viewClient, setViewClient] = React.useState(false);
@@ -187,7 +187,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
       title="Order Info"
       command={orderCommand}
       onUpdate={(result) => handleSave(result)}
-      isDisabled={!privileges.updateOrder || !privileges.createOrder}
+      isDisabled={!profile.privileges.updateOrder || !profile.privileges.createOrder}
       commandDisabled={id === undefined && (info.orderId !== 0 || products.length === 0 || info.clientUser === "")}
     >
       {id !== undefined && <h2 className="subtitle">Order :{id.toString()}</h2>}

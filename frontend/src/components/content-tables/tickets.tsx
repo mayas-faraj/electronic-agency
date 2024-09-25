@@ -41,7 +41,7 @@ const Tickets: FunctionComponent = () => {
   const [viewNewTicket, setViewNetTicket] = React.useState(false);
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // ticket schema
   const tableHeader: ITableHeader[] = [
@@ -60,10 +60,10 @@ const Tickets: FunctionComponent = () => {
   const action = async () => {
     let queryName = "";
 
-    if (privileges.createAdmin) queryName = "tickets";
-    else if (privileges.createTicket) queryName = "ticketsByAuth";
-    else if (privileges.updateTicket || privileges.updateRepair || privileges.createFeedback) queryName = "ticketsAssignedToAuthGroup";
-    else if (privileges.createRepair) queryName = "ticketsAssignedToAuthUser";
+    if (profile.privileges.createAdmin) queryName = "tickets";
+    else if (profile.privileges.createTicket) queryName = "ticketsByAuth";
+    else if (profile.privileges.updateTicket || profile.privileges.updateRepair || profile.privileges.createFeedback) queryName = "ticketsAssignedToAuthGroup";
+    else if (profile.privileges.createRepair) queryName = "ticketsAssignedToAuthUser";
     else return;
 
     const ticketsResponse = await getServerData(`query { ${queryName} {id user title status createdAt openAt priority asset } }`, true);
@@ -93,7 +93,7 @@ const Tickets: FunctionComponent = () => {
   // render
   return (
     <>
-      {privileges.createTicket && (
+      {profile.privileges.createTicket && (
         <Button variant="contained" className="button" onClick={() => setViewNetTicket(true)}>
           <AddCircle />
           Add New
@@ -102,19 +102,19 @@ const Tickets: FunctionComponent = () => {
       <ContentTable
         name="ticket"
         headers={tableHeader}
-        canCreate={privileges.createTicket}
-        canDelete={privileges.deleteTicket}
-        canRead={privileges.readTicket}
-        canUpdate={privileges.updateTicket}
+        canCreate={profile.privileges.createTicket}
+        canDelete={profile.privileges.deleteTicket}
+        canRead={profile.privileges.readTicket}
+        canUpdate={profile.privileges.updateTicket}
         data={tickets
           .filter(
             (ticket) =>
-              privileges.createAdmin ||
-              privileges.createTicket ||
-              privileges.updateTicket ||
-              privileges.createRepair ||
-              (privileges.updateRepair && ticket.status === "RESOLVED") ||
-              (privileges.createFeedback && ticket.status === "CLOSED")
+              profile.privileges.createAdmin ||
+              profile.privileges.createTicket ||
+              profile.privileges.updateTicket ||
+              profile.privileges.createRepair ||
+              (profile.privileges.updateRepair && ticket.status === "RESOLVED") ||
+              (profile.privileges.createFeedback && ticket.status === "CLOSED")
           )
           .map((ticket) => ({
             createdAt: new Date(ticket.createdAt).toLocaleDateString(),
@@ -131,7 +131,7 @@ const Tickets: FunctionComponent = () => {
             status: ticket.status.toLowerCase().replace("_", " "),
             open: (
               <Button variant="text" color="info" onClick={() => setOpenId(ticket.id)}>
-                {privileges.updateTicket ? <Edit /> : <Visibility />}
+                {profile.privileges.updateTicket ? <Edit /> : <Visibility />}
               </Button>
             ),
             delete: (

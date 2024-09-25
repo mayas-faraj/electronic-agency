@@ -22,7 +22,7 @@ const Centers: FunctionComponent<{ parentId: number }> = ({ parentId }) => {
   const [editId, setEditId] = React.useState(0);
 
   // context
-  const privileges = React.useContext(ProfileContext);
+  const profile = React.useContext(ProfileContext);
 
   // center schema
   const tableHeader: ITableHeader[] = [
@@ -49,10 +49,10 @@ const Centers: FunctionComponent<{ parentId: number }> = ({ parentId }) => {
         name="center"
         headers={tableHeader}
         addNewLink={`/add-center${parentId !== 0 ? `/${parentId}` : ""}`}
-        canCreate={privileges.createAdmin}
-        canDelete={privileges.deleteAdmin}
-        canRead={privileges.readAdmin}
-        canUpdate={privileges.updateAdmin}
+        canCreate={profile.privileges.createAdmin}
+        canDelete={profile.privileges.deleteAdmin}
+        canRead={profile.privileges.readAdmin}
+        canUpdate={profile.privileges.updateAdmin}
         data={centers.map((center) => ({
           name: center.name,
           subcenter: (

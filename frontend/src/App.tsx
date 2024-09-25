@@ -22,17 +22,17 @@ function App() {
     const action = async () => {
       // seting profile
       const result = await getServerData("query { userByAuth { id user userRoles { roleId role { name } } centerId } }");
-      setProfile(result.data.userByAuth);
+      setProfile({
+        id: result.data.userByAuth.id,
+        name: result.data.userByAuth.user,
+        centerId: result.data.userByAuth.centerId,
+        privileges: getPrivileges(result.data.userByAuth.userRoles?.map((userRole: any) => userRole.role.name) ?? [])
+      });
     };
 
     // cheking token
     if (StorageManager.hasToken()) action();
-  }, []);
-
-  React.useEffect(() => {
-    // profile has changed
-    setPrivileges(getPrivileges(profile.userRoles?.map((userRole) => userRole.role.name) ?? []));
-  }, [profile]);
+  }, [profile.userRoles]);
 
   // lazy load pages
   const LoginPage = React.lazy(() => import("./pages/login"));

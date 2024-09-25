@@ -102,7 +102,6 @@ type Role = "admin" | "data_viewer" | "sales_man" | "offer_admin" | "top_call_ce
 export const getPrivileges = (roles: string[]): Privileges => {
   let privileges = noPrivileges;
   for (const role of roles) privileges = mergePrivileges(privileges, getPrivilegeOfRole(role as Role));
-  console.log(roles, privileges);
   return privileges;
 };
 

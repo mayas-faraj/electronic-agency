@@ -6,7 +6,7 @@ import CenterForm from "../content-forms/center";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import { Link } from "react-router-dom";
 
 // types
@@ -22,7 +22,7 @@ const Centers: FunctionComponent<{ parentId: number }> = ({ parentId }) => {
   const [editId, setEditId] = React.useState(0);
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // center schema
   const tableHeader: ITableHeader[] = [

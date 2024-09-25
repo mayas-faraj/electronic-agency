@@ -487,6 +487,6 @@ const mergePrivileges = (privileges1: Privileges, privileges2: Privileges): Priv
   return result;
 };
 
-const RoleContext = React.createContext<Privileges>(noPrivileges);
-RoleContext.displayName = "role context";
-export default RoleContext;
+const ProfileContext = React.createContext<Privileges>(noPrivileges);
+ProfileContext.displayName = "role context";
+export default ProfileContext;

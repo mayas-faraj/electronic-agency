@@ -8,7 +8,7 @@ import getServerData from "../../libs/server-data";
 import data from "../../data.json";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import { Link } from "react-router-dom";
 
 // types
@@ -26,7 +26,7 @@ const Categories: FunctionComponent = () => {
     const [viewId, setViewId] = React.useState(0);
 
     // context
-    const privileges = React.useContext(RoleContext);
+    const privileges = React.useContext(ProfileContext);
 
     // category schema
     const tableHeader: ITableHeader[] = [

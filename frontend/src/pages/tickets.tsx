@@ -1,10 +1,10 @@
 import React from "react";
 import Page from "../components/page";
 import Tickets from "../components/content-tables/tickets";
-import RoleContext from "../components/role-context";
+import ProfileContext from "../components/profile-context";
 
 const TicketsPage = () => {
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   return (
     <Page title="Tickets" hideBack={true}>

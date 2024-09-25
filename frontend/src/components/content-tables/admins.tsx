@@ -5,7 +5,7 @@ import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import AdminForm from "../content-forms/admin";
 import AdminView from "../views/admin";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import getServerData from "../../libs/server-data";
 import Password from "../content-forms/password";
 import { Link } from "react-router-dom";
@@ -35,7 +35,7 @@ const Admins: FunctionComponent = () => {
   const [keyword, setKeyword] = React.useState("");
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // admin schema
   const tableHeader: ITableHeader[] = [

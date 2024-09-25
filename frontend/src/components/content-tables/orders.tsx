@@ -5,7 +5,7 @@ import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import OrderForm from "../content-forms/order";
 import getServerData from "../../libs/server-data";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import data from "../../data.json";
 
 // types
@@ -33,7 +33,7 @@ const Orders: FunctionComponent = () => {
   const [openId, setOpenId] = React.useState(0);
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // order schema
   const tableHeader: ITableHeader[] = [

@@ -2,7 +2,7 @@ import React, { FunctionComponent } from "react";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import data from "../../data.json";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import ImageUpload from "../image-upload";
@@ -24,7 +24,7 @@ const Advertisements: FunctionComponent = () => {
   const [lastOrder, setLastOrder] = React.useState(0);
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // productItem schema
   const tableHeader: ITableHeader[] = [

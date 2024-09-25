@@ -4,7 +4,7 @@ import { CheckCircle, Search, Visibility } from "@mui/icons-material";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
 import ClientView from "../views/client";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import getServerData from "../../libs/server-data";
 
 // types
@@ -47,7 +47,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
   const [keyword, setKeyword] = React.useState("");
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // clients schema
   const tableHeader: ITableHeader[] = [

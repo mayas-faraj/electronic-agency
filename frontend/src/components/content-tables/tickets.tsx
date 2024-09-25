@@ -3,7 +3,7 @@ import { Button, Modal } from "@mui/material";
 import { AddCircle, Edit, Visibility } from "@mui/icons-material";
 import TicketForm from "../content-forms/ticket";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import getServerData from "../../libs/server-data";
 import LogoMin from "../../assets/imgs/logo-min.png";
 import data from "../../data.json";
@@ -41,7 +41,7 @@ const Tickets: FunctionComponent = () => {
   const [viewNewTicket, setViewNetTicket] = React.useState(false);
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // ticket schema
   const tableHeader: ITableHeader[] = [

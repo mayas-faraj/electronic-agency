@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RoleContext, { noPrivileges, type Privileges, getPrivileges } from "./components/role-context";
+import ProfileContext, { noPrivileges, type Privileges, getPrivileges } from "./components/profile-context";
 import GlimmerPage from "./pages/glimmer";
 import NotFoundPage from "./pages/404";
 import "@fontsource/roboto/300.css";
@@ -123,7 +123,7 @@ function App() {
   } else routes = loginRoutes;
 
   const router = createBrowserRouter(routes, {
-    basename: "/alardh-alsalba"
+    basename: "alardh-alsalba"
   });
 
   // mui theme
@@ -144,11 +144,11 @@ function App() {
   // render
   return (
     <Suspense fallback={<GlimmerPage />}>
-      <RoleContext.Provider value={privileges}>
+      <ProfileContext.Provider value={privileges}>
         <ThemeProvider theme={theme}>
           <RouterProvider router={router} />
         </ThemeProvider>
-      </RoleContext.Provider>
+      </ProfileContext.Provider>
     </Suspense>
   );
 }

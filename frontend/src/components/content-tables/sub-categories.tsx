@@ -8,7 +8,7 @@ import getServerData from "../../libs/server-data";
 import data from "../../data.json";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 
 // types
 interface ISubCategory {
@@ -29,7 +29,7 @@ const SubCategories: FunctionComponent<{categoryId: number}> = ({ categoryId }) 
     const [viewId, setViewId] = React.useState(0);
 
     // context
-    const privileges = React.useContext(RoleContext);
+    const privileges = React.useContext(ProfileContext);
 
     // category schema
     const tableHeader: ITableHeader[] = [

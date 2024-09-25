@@ -4,7 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import getServerData from "../../libs/server-data";
 import Management, { ManagementType, Operation } from "../management";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import ProductItem from "../content-forms/product-item";
 
 // types
@@ -20,7 +20,7 @@ const ProductItems: FunctionComponent<{ productId: number }> = ({ productId }) =
     const [editSn, setEditSn] = React.useState("");
 
     // context
-    const privileges = React.useContext(RoleContext);
+    const privileges = React.useContext(ProfileContext);
 
     // productItem schema
     const tableHeader: ITableHeader[] = [

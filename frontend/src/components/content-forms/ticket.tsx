@@ -6,7 +6,7 @@ import ProductView from "../views/product";
 import ClientSelect from "../content-tables/clients";
 import ProductSelect from "../content-tables/products";
 import getServerData from "../../libs/server-data";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 
 const initialInfo = {
   address: "",
@@ -76,7 +76,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   // component reducer
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
   // component hooks
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
   // component status
   const [viewClient, setViewClient] = React.useState(false);
   const [viewProduct, setViewProduct] = React.useState(false);

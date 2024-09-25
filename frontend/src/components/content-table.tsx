@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import RoleContext from "./role-context";
+import ProfileContext from "./profile-context";
 import CsvDownloadButton from "react-json-to-csv";
 import Content from "./content";
 import styles from "../styles/content-table.module.scss";
@@ -54,7 +54,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   // component context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // event handler
   const handleChangePage = (event: unknown, newPage: number) => {

@@ -8,7 +8,7 @@ import ProductItems from "../content-tables/product-item";
 import ProductForm from "../content-forms/product";
 import ProductView from "../views/product";
 import data from "../../data.json";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 import getServerData from "../../libs/server-data";
 
 // types
@@ -41,7 +41,7 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCoun
   const [count, setCount] = React.useState(1);
 
   // context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // product schema
   const tableHeader: ITableHeader[] = [

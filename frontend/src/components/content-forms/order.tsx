@@ -27,7 +27,7 @@ import ProductSelect from "../content-tables/products";
 import Receipt from "./receipt";
 import getServerData from "../../libs/server-data";
 import data from "../../data.json";
-import RoleContext from "../role-context";
+import ProfileContext from "../profile-context";
 
 const initialInfo = {
   orderId: 0,
@@ -75,7 +75,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
   const [info, dispatch] = React.useReducer(reducer, initialInfo);
 
   // component context
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // component status
   const [viewClient, setViewClient] = React.useState(false);

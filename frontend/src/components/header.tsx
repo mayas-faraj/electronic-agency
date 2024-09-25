@@ -7,14 +7,14 @@ import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { TicketNotificationIcon, OrderNotificationIcon } from "./notification-icon";
 import logoImage from "../assets/imgs/logo.png";
-import RoleContext from "./role-context";
+import ProfileContext from "./profile-context";
 import { Divider, IconButton } from "@mui/material";
 import styles from "../styles/header.module.scss";
 import { AccountCircle, AdminPanelSettings, Category, ListAlt, RoomPreferences, Redeem, BurstModeRounded } from "@mui/icons-material";
 
 const Header: FunctionComponent = () => {
   // privileges
-  const privileges = React.useContext(RoleContext);
+  const privileges = React.useContext(ProfileContext);
 
   // component states
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);

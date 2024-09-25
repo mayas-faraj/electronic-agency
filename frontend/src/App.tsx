@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ProfileContext, { noPrivileges, type Privileges, getPrivileges, Profile } from "./components/profile-context";
+import ProfileContext, { getPrivileges, Profile, noProfile } from "./components/profile-context";
 import GlimmerPage from "./pages/glimmer";
 import NotFoundPage from "./pages/404";
 import "@fontsource/roboto/300.css";
@@ -14,8 +14,7 @@ import getServerData from "./libs/server-data";
 
 function App() {
   // privileges state
-  const [profile, setProfile] = React.useState<Profile>({ id: 0, user: "", userRoles: [] });
-  const [privileges, setPrivileges] = React.useState<Privileges>(noPrivileges);
+  const [profile, setProfile] = React.useState<Profile>(noProfile);
 
   // side effects to load profile and privileges
   React.useEffect(() => {

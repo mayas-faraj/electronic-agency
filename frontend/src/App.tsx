@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ProfileContext, { noPrivileges, type Privileges, getPrivileges } from "./components/profile-context";
+import ProfileContext, { noPrivileges, type Privileges, getPrivileges, Profile } from "./components/profile-context";
 import GlimmerPage from "./pages/glimmer";
 import NotFoundPage from "./pages/404";
 import "@fontsource/roboto/300.css";
@@ -11,18 +11,6 @@ import "@fontsource/roboto/700.css";
 import MainCover from "./components/main-cover";
 import StorageManager from "./libs/storage-manager";
 import getServerData from "./libs/server-data";
-
-interface Profile {
-  id: number;
-  user: string;
-  userRoles?: {
-    roleId: number;
-    role: {
-      name: string;
-    };
-  }[];
-  centerId?: number;
-}
 
 function App() {
   // privileges state
@@ -123,7 +111,7 @@ function App() {
   } else routes = loginRoutes;
 
   const router = createBrowserRouter(routes, {
-    basename: "alardh-alsalba"
+    basename: "/alardh-alsalba"
   });
 
   // mui theme

@@ -1,5 +1,17 @@
 import React from "react";
 
+export interface Profile {
+  id: number;
+  user: string;
+  userRoles?: {
+    roleId: number;
+    role: {
+      name: string;
+    };
+  }[];
+  centerId?: number;
+}
+
 export interface Privileges {
   createAdmin: boolean;
   readAdmin: boolean;

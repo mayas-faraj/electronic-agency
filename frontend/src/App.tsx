@@ -21,12 +21,15 @@ function App() {
     // on app load
     const action = async () => {
       // seting profile
-      const result = await getServerData("query { userByAuth { id user userRoles { roleId role { name } } centerId } }");
+      const result = await getServerData("query { userByAuth { id user userRoles { roleId role { name } } centerId center { name } } }");
+      const privileges = getPrivileges(result.data.userByAuth.userRoles?.map((userRole: any) => userRole.role.name) ?? []);
+      if (result.data.userByAuth.centerId === 1 || result.data.userByAuth.centerId === 2) privileges.createTicket = true;
       setProfile({
         id: result.data.userByAuth.id,
         name: result.data.userByAuth.user,
         centerId: result.data.userByAuth.centerId,
-        privileges: getPrivileges(result.data.userByAuth.userRoles?.map((userRole: any) => userRole.role.name) ?? [])
+        center: { name: result.data.userByAuth.center?.name ?? "<no center>" },
+        privileges
       });
     };
 

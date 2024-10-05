@@ -10,6 +10,9 @@ export interface Profile {
     };
   }[];
   centerId?: number;
+  center?: {
+    name: string;
+  };
   privileges: Privileges;
 }
 
@@ -351,7 +354,7 @@ const getPrivilegeOfRole = (role: Role): Privileges => {
         readOffer: false,
         updateOffer: false,
         deleteOffer: false,
-        createTicket: true,
+        createTicket: false,
         readTicket: true,
         updateTicket: true,
         deleteTicket: false,

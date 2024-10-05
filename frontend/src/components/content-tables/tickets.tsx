@@ -61,7 +61,7 @@ const Tickets: FunctionComponent = () => {
     let queryName = "";
 
     if (profile.privileges.createAdmin) queryName = "tickets";
-    else if (profile.privileges.createTicket) queryName = "ticketsByAuth";
+    else if (profile.privileges.createTicket && !profile.privileges.updateTicket) queryName = "ticketsByAuth";
     else if (profile.privileges.updateTicket || profile.privileges.updateRepair || profile.privileges.createFeedback) queryName = "ticketsAssignedToAuthGroup";
     else if (profile.privileges.createRepair) queryName = "ticketsAssignedToAuthUser";
     else return;

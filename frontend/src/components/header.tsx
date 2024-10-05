@@ -30,7 +30,7 @@ const Header: FunctionComponent = () => {
     icon: JSX.Element;
   }
 
-  const hidenMenuCondition = !profile.privileges.updateClient && (profile.privileges.createOrder || profile.privileges.createTicket);
+  const hidenMenuCondition = !profile.privileges.updateClient && (profile.privileges.createOrder || profile.privileges.createTicket || profile.privileges.updateTicket);
 
   const links: ILink[] = [];
   if (profile.privileges.readAdmin) links.push({ title: "Admins", to: "/admins", icon: <AdminPanelSettings /> });

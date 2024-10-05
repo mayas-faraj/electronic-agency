@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 import React, { FunctionComponent } from "react";
 import {
   FormControl,
@@ -229,7 +230,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               inputProps={{ maxLength: 500 }}
               label="Client Address"
               value={info.address}
-              onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "address", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
             />
           </FormControl>
         </div>
@@ -332,7 +333,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               label="Project Number"
               value={info.projectNumber}
               InputProps={{ readOnly: id !== undefined }}
-              onChange={(e) => dispatch({ type: "set", key: "projectNumber", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "projectNumber", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
             />
           </FormControl>
           <FormControl fullWidth margin="normal">
@@ -342,7 +343,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               value={info.company}
               InputProps={{ readOnly: id !== undefined }}
               inputProps={{ maxLength: 100 }}
-              onChange={(e) => dispatch({ type: "set", key: "company", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "company", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
             />
           </FormControl>
           <FormControl fullWidth margin="normal">
@@ -352,7 +353,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               value={info.warranty}
               InputProps={{ readOnly: id !== undefined }}
               inputProps={{ maxLength: 100 }}
-              onChange={(e) => dispatch({ type: "set", key: "warranty", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "warranty", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
             />
           </FormControl>
         </div>
@@ -363,7 +364,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               label="Subject"
               value={info.subject}
               InputProps={{ readOnly: id !== undefined }}
-              onChange={(e) => dispatch({ type: "set", key: "subject", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "subject", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
             />
           </FormControl>
           <FormControl fullWidth margin="normal">
@@ -371,7 +372,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               variant="outlined"
               label="Terms"
               value={info.terms}
-              onChange={(e) => dispatch({ type: "set", key: "terms", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "terms", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
               InputProps={{ readOnly: id !== undefined }}
               inputProps={{ maxLength: 500 }}
             />
@@ -381,7 +382,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
               variant="outlined"
               label="Delivery"
               value={info.delivery}
-              onChange={(e) => dispatch({ type: "set", key: "delivery", value: e.target.value })}
+              onChange={(e) => dispatch({ type: "set", key: "delivery", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
               InputProps={{ readOnly: id !== undefined }}
               inputProps={{ maxLength: 100 }}
             />
@@ -397,7 +398,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
           rows={5}
           label="Note"
           value={info.note}
-          onChange={(e) => dispatch({ type: "set", key: "note", value: e.target.value })}
+          onChange={(e) => dispatch({ type: "set", key: "note", value: e.target.value.replace(/[\u0000-\u001F\u007F-\u009F]/g, "") })}
         />
       </FormControl>
       {id !== undefined && (

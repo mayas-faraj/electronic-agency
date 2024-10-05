@@ -88,6 +88,11 @@ const resolvers = {
           user: true,
           isDisabled: true,
           centerId: true,
+          center: {
+            select: {
+              name: true,
+            },
+          },
           userRoles: {
             select: {
               roleId: true,

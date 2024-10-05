@@ -25,6 +25,7 @@ const typeDefs = `#graphql
 		updatedAt: String
 		lastLoginAt: String
 		userRoles: [UserRole]
+		center: Center
 	}
 
 	type UserBasic {

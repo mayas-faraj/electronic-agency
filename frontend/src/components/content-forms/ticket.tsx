@@ -24,6 +24,7 @@ const initialInfo = {
   clientFirstName: "",
   clientLastName: "",
   currentCenter: "",
+  currentTargetType: "GROUP",
   center: "",
   createdAt: "",
   createdBy: "",
@@ -87,10 +88,14 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   const [communications, setCommunications] = React.useState<Communication[]>([]);
 
   let mode: Mode = Mode.Viewer;
-
   if (profile.privileges.createAdmin) mode = Mode.SuperAdmin;
   else if (profile.privileges.createTicket && info.initialStatus === "NEW") mode = Mode.TopCallCenter;
-  else if (profile.privileges.updateTicket && (info.initialStatus === "OPEN" || info.initialStatus === "PENDING" || info.initialStatus === "UNRESOLVED")) mode = Mode.CallCenter;
+  else if (
+    profile.privileges.updateTicket &&
+    (profile.center?.name === info.currentCenter || info.initialStatus === "UNRESOLVED") &&
+    (info.initialStatus === "OPEN" || info.initialStatus === "PENDING" || info.initialStatus === "UNRESOLVED")
+  )
+    mode = Mode.CallCenter;
   else if (profile.privileges.createRepair && info.initialStatus === "IN_PROGRESS") mode = Mode.Technician;
   else if (profile.privileges.updateRepair && info.initialStatus === "RESOLVED") mode = Mode.Closer;
   else if (profile.privileges.createFeedback && info.initialStatus === "CLOSED") mode = Mode.Feedback;
@@ -189,6 +194,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
     dispatch({ type: "set", key: "initialStatus", value: initialInfo.status });
     dispatch({ type: "set", key: "status", value: initialInfo.status });
     dispatch({ type: "set", key: "currentCenter", value: initialInfo.currentCenter });
+    dispatch({ type: "set", key: "currentTargetType", value: initialInfo.currentTargetType });
     dispatch({ type: "set", key: "center", value: initialInfo.center });
     dispatch({ type: "set", key: "solution", value: initialInfo.solution });
 
@@ -226,6 +232,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
         }
 
         dispatch({ type: "set", key: "currentCenter", value: result.data.ticket.assignments?.toReversed().at(0)?.assignTo ?? "" });
+        dispatch({ type: "set", key: "currentTargetType", value: result.data.ticket.assignments?.toReversed().at(0)?.targetType ?? "" });
         dispatch({ type: "set", key: "center", value: result.data.ticket.assignments?.toReversed().at(0)?.assignTo ?? "" });
 
         if (result.data.ticket.user != null) {
@@ -355,7 +362,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
           <TextField
             variant="outlined"
             InputProps={{ readOnly: id !== undefined }}
-            label={`Current ${targetType === "GROUP" ? "Center" : "Techincal"}`}
+            label={`Current ${info.currentTargetType === "GROUP" ? "Center" : "Techincal"}`}
             value={info.currentCenter}
           />
         </FormControl>

@@ -107,7 +107,15 @@ function App() {
 
   let routes = loginRoutes;
   if (StorageManager.hasToken()) {
-    if (!profile.privileges.updateClient && profile.privileges.createTicket) routes = ticketRoutes;
+    if (
+      !profile.privileges.updateClient &&
+      (profile.privileges.createTicket ||
+        profile.privileges.updateTicket ||
+        profile.privileges.createRepair ||
+        profile.privileges.createFeedback ||
+        profile.privileges.updateRepair)
+    )
+      routes = ticketRoutes;
     else if (!profile.privileges.updateClient && profile.privileges.createOrder) routes = orderRoutes;
     else routes = allRoutes;
   } else routes = loginRoutes;

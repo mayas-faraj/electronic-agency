@@ -7,7 +7,7 @@
 first stage, we will create a non-verified user with the basic info, the phone is required, the request schema take this shape:
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createClient(input: {phone: \"0933112233\", email: \"master@nomail.com\", namePrefix: \"Ms.\", firstName: \"Rita\", lastName: \"Yazbek\"}) {id user phone email firstName lastName namePrefix }}"}' http://localhost:4000/graphql | jq
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { createClient(input: {phone: \"0933112233\", email: \"master@nomail.com\", namePrefix: \"Ms.\", firstName: \"Rita\", lastName: \"Yazbek\", phone2: \"0923232323\", address: \"Damascus-Muhajreen\", address2: \"Damascus-Mazzeh\", company: \"Samanet\" }) {id user phone phone2 address address2 company email firstName lastName namePrefix }}"}' http://localhost:4000/graphql | jq
 ```
 
 if the operation success, the result is:
@@ -16,10 +16,14 @@ if the operation success, the result is:
 {
   "data": {
     "createClient": {
-      "id": 10,
-      "user": "master490",
-      "phone": "0933112237",
-      "email": "master@nomail2.com",
+      "id": 9,
+      "user": "master",
+      "phone": "0933112233",
+      "phone2": "0923232323",
+      "address": "Damascus-Muhajreen",
+      "address2": "Damascus-Mazzeh",
+      "company": "Samanet",
+      "email": "master@nomail.com",
       "firstName": "Rita",
       "lastName": "Yazbek",
       "namePrefix": "Ms."
@@ -49,7 +53,7 @@ if the client already exists (same phone, email) the server return this value
 after login, you can use this quest to get the profile info.
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clientByAuth {id user phone email firstName lastName namePrefix birthDate isMale createdAt }} "}' http://localhost:4000/graphql | jq
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { clientByAuth {id user phone phone2 address address2 company email firstName lastName namePrefix birthDate isMale createdAt }} "}' http://localhost:4000/graphql | jq
 ```
 
 the result for this request is:
@@ -57,17 +61,21 @@ the result for this request is:
 ```json
 {
   "data": {
-    "client": {
-      "id": 2,
-      "user": "zaherati",
-      "phone": "0911223344",
-      "email": "katsh88@hotmail.com",
-      "firstName": "Zaher",
-      "lastName": "Zaher",
-      "namePrefix": "Mr.",
-      "birthDate": "591656400000",
-      "isMale": true,
-      "createdAt": "1683503682330"
+    "clientByAuth": {
+      "id": 3,
+      "user": "zainab",
+      "phone": "0955666777",
+      "phone2": null,
+      "address": null,
+      "address2": null,
+      "company": null,
+      "email": "zainab@hotmail.com",
+      "firstName": "Zainab",
+      "lastName": null,
+      "namePrefix": "Ms.",
+      "birthDate": "702079200000",
+      "isMale": false,
+      "createdAt": "1726147103831"
     }
   }
 }
@@ -76,7 +84,7 @@ the result for this request is:
 to update the user profile for current user, send this request:
 
 ```bash
- curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateClientByAuth(input: {phone: \"0933000001\", email: \"master3@nomail.com\", namePrefix: \"Ms.\", firstName: \"Ramia\", lastName: \"Sulimana\", avatar: \"ramia.jpg\", birthDate: \"1988-12-4\"}) {id user phone email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000/graphql | jq
+ curl -H 'Content-Type: application/json' -X POST -d '{"query": "mutation { updateClientByAuth(input: {phone: \"0933000001\", phone2: \"0910101010\", address: \"Damascus-Jaramana\", address2: \"Damascus-Barzeh\", company: \"Samapay\", email: \"master3@nomail.com\", namePrefix: \"Ms.\", firstName: \"Ramia\", lastName: \"Sulimana\", avatar: \"ramia.jpg\", birthDate: \"1988-12-4\"}) {id user phone phone2 address address2 company email firstName lastName namePrefix birthDate isMale}}"}' http://localhost:4000/graphql | jq
 ```
 
 the result:
@@ -85,10 +93,14 @@ the result:
 {
   "data": {
     "updateClientByAuth": {
-      "id": 10,
-      "user": "master490",
+      "id": 3,
+      "user": "zainab",
       "phone": "0933000001",
-      "email": "master@nomail-new.com",
+      "phone2": "0910101010",
+      "address": "Damascus-Jaramana",
+      "address2": "Damascus-Barzeh",
+      "company": "Samapay",
+      "email": "master3@nomail.com",
       "firstName": "Ramia",
       "lastName": "Sulimana",
       "namePrefix": "Ms.",
@@ -168,7 +180,7 @@ if the phone number that entered not belong to any user, the server return this 
 to verify code, we should send the user id and the code the the backend using the request:
 
 ```bash
-curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { verifyClient(clientId: 3, codeText: \"1988\") { jwt success }}"}' http://localhost:4000/graphql | jq
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { verifyClient(clientId: 3, codeText: \"1988\") { token success message isTechnical }}"}' http://localhost:4000/graphql | jq
 ```
 
 if the user has code the the code is valid, the server retrive this result:
@@ -177,8 +189,10 @@ if the user has code the the code is valid, the server retrive this result:
 {
   "data": {
     "verifyClient": {
-      "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsIm5hbSI6Im1hc3RlcjQ5MCIsInJvbCI6IiIsImlhdCI6MTY4NTE4NDkyOX0.dLN9l7Z3aWBDgrW1aXkb1kXK6gXo0fA7VL8OuArhE1w",
-      "success": true
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiemFpbmFiIiwic3ViIjoiWmFpbmFiIG51bGwiLCJyb2xlcyI6WyJTVUJTQ1JJQkVSIl0sImF1ZCI6ImVhIiwiaWF0IjoxNzI4MjIyMjgwfQ.TH2toxCtJLYC1UonaKEjI88hww7bOLbElFiyUZPJepo",
+      "success": true,
+      "message": "",
+      "isTechnical": false
     }
   }
 }
@@ -190,8 +204,10 @@ if ths code is valid, or user id is not exists, the server retrive this result:
 {
   "data": {
     "verifyClient": {
-      "jwt": "",
-      "success": false
+      "token": "",
+      "success": false,
+      "message": "password error",
+      "isTechnical": false
     }
   }
 }

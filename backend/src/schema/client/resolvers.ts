@@ -287,7 +287,7 @@ const resolvers = {
       // read current user
       const user = await app.prismaClient.client.findUnique({
         where: {
-          id: args.id,
+          user: app.user.name
         },
         select: {
           phone: true,

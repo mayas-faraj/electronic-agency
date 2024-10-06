@@ -33,6 +33,7 @@ const resolvers = {
           birthDate: true,
           isMale: true,
           isDisabled: true,
+          isTechnical: true,
         },
         where: {
           AND: [
@@ -151,6 +152,7 @@ const resolvers = {
           user: true,
           firstName: true,
           lastName: true,
+          isTechnical: true,
         },
       });
 
@@ -164,6 +166,7 @@ const resolvers = {
             lastLoginAt: new Date(),
           },
         });
+        
         return {
           token: generateJwtToken({
             name: result.user,
@@ -263,6 +266,7 @@ const resolvers = {
               : undefined,
           isMale: args.input.isMale,
           isDisabled: args.input.isDisabled,
+          isTechnical: args.input.isTechnical,
         },
       });
 
@@ -341,6 +345,7 @@ const resolvers = {
           lastName: true,
           isMale: true,
           isDisabled: true,
+          isTechnical: true,
         },
       });
 

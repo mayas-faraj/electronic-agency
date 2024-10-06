@@ -37,6 +37,7 @@ const typeDefs = `#graphql
 		token: String!
 		success: Boolean!
 		message: String!
+		isTechnical: Boolean
 	}
 
 	type BatchResult {

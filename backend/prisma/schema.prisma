@@ -34,6 +34,7 @@ model Client {
   isMale      Boolean   @default(true) @map("is_male") @db.TinyInt
   isDisabled  Boolean   @default(false) @map("is_disabled") @db.TinyInt
   isVerified  Boolean   @default(false) @map("is_verified") @db.TinyInt
+  isTechnical Boolean   @default(false)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   lastLoginAt DateTime? @map("last_login_at")

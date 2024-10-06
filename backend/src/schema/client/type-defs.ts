@@ -34,6 +34,7 @@ const typeDefs = `#graphql
 		birthDate: String
 		isMale: Boolean
 		isDisabled: Boolean
+		isTechnical: Boolean
 		createdAt: String
 		updatedAt: String
 		lastLoginAt: String
@@ -56,6 +57,7 @@ const typeDefs = `#graphql
 		birthDate: String
 		isMale: Boolean
 		isDisabled: Boolean
+		isTechnical: Boolean
 	}
 
 	input ClientInput {
@@ -72,6 +74,7 @@ const typeDefs = `#graphql
 		birthDate: String
 		isMale: Boolean
 		isDisabled: Boolean
+		isTechnical: Boolean
 	}
 
 	type Code {

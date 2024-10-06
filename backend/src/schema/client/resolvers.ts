@@ -176,8 +176,15 @@ const resolvers = {
           }),
           success: true,
           message: "",
+          isTechnical: result.isTechnical,
         };
-      } else return { jwt: "", success: false, message: "password error" };
+      } else
+        return {
+          token: "",
+          success: false,
+          message: "password error",
+          isTechnical: false,
+        };
     },
   },
   Mutation: {

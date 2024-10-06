@@ -20,6 +20,7 @@ interface IClient {
   firstName: string;
   lastName: string;
   isDisabled: boolean;
+  isTechnical: boolean;
 }
 
 interface IClientsType {
@@ -59,6 +60,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
   if (isSelectable) tableHeader.push({ key: "select", title: "Select" });
   else {
     tableHeader.push({ key: "isDisabled", title: "Disable", type: HeaderType.UPDATE });
+    tableHeader.push({ key: "isTechnical", title: "Technical", type: HeaderType.UPDATE });
     tableHeader.push({ key: "view", title: "More Info", type: HeaderType.SPECIAL });
     tableHeader.push({ key: "delete", title: "Delete", type: HeaderType.DELETE });
   }
@@ -66,7 +68,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
   // on load
   const action = React.useCallback(async () => {
     const result = await getServerData(
-      `query { clients(filter: {keyword: "${keyword}", showDisabled: true}) { id user phone phone2 address address2 company email firstName lastName isDisabled }}`
+      `query { clients(filter: {keyword: "${keyword}", showDisabled: true}) { id user phone phone2 address address2 company email firstName lastName isDisabled isTechnical }}`
     );
     if (displayOneRow) {
       if (result.data.clients?.length === 1) setClients([result.data.clients[0]]);
@@ -120,6 +122,15 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
               onUpdate={() => action()}
             />
           ),
+          isTechnical: (
+            <Management
+              type={ManagementType.switch}
+              operation={Operation.update}
+              command={`mutation { updateClient(id: ${client.id}, input: {isTechnical: ${!client.isTechnical}})  {id}}`}
+              initialValue={client.isTechnical}
+              onUpdate={() => action()}
+            />
+          ),
           view: (
             <Button variant="text" color="info" onClick={() => setViewUser(client.user)}>
               <Visibility />
@@ -140,18 +151,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
                 variant="text"
                 color="info"
                 onClick={() =>
-                  onUpdate(
-                    client.id,
-                    client.email,
-                    client.phone,
-                    client.user,
-                    client.firstName,
-                    client.lastName,
-                    client.company,
-                    client.phone2,
-                    client.address,
-                    client.address2
-                  )
+                  onUpdate(client.id, client.email, client.phone, client.user, client.firstName, client.lastName, client.company, client.phone2, client.address, client.address2)
                 }
               >
                 <CheckCircle />

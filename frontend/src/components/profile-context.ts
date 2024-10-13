@@ -326,7 +326,7 @@ const getPrivilegeOfRole = (role: Role): Privileges => {
         readAdmin: false,
         updateAdmin: false,
         deleteAdmin: false,
-        createClient: false,
+        createClient: true,
         readClient: true,
         updateClient: false,
         deleteClient: false,

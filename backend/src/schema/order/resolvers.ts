@@ -174,7 +174,28 @@ const resolvers = {
         },
       });
 
-      return result;
+      console.dir(
+        result.map((order) => ({
+          id: order.id,
+          status: order.status,
+          isOfferRequest: order.isOfferRequest,
+          createdAt: order.createdAt,
+          count: order.products.reduce((pv, cv) => pv + cv.count, 0),
+          totalPrice: order.products.reduce((pv, cv) => pv + cv.count, 0),
+          product: order.products[0],
+        })),
+        { depth: null }
+      );
+
+      return result.map((order) => ({
+        id: order.id,
+        status: order.status,
+        isOfferRequest: order.isOfferRequest,
+        createdAt: order.createdAt,
+        count: order.products.reduce((pv, cv) => pv + cv.count, 0),
+        totalPrice: order.products.reduce((pv, cv) => pv + (cv.price ?? 0), 0),
+        product: order.products[0].product,
+      }));
     },
     ordersUnreadCount: async (parent: any, args: any, app: AppContext) => {
       // check permissions

@@ -2,7 +2,7 @@ const typeDefs = `#graphql
 	extend type Query {
         orders(filter: StatusFilter): [OrderBasic]
 				order(id: Int!): Order
-				ordersByAuth(isDraft: Boolean): [OrderBasic]
+				ordersByAuth(isDraft: Boolean): [OrderOneProduct]
 				ordersCount: AggregateResult
 				ordersUnreadCount: AggregateResult
     }
@@ -44,6 +44,16 @@ const typeDefs = `#graphql
 		isOfferRequest: Boolean
 		createdAt: String
 		products: [OrderProduct]
+	}
+
+	type OrderOneProduct {
+		id: Int!
+		status: String
+		isOfferRequest: Boolean
+		createdAt: String
+		product: ProductBasic!
+		count: Int!
+		totalPrice: Float!
 	}
 
 	type OrderProduct {

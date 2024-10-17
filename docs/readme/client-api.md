@@ -698,6 +698,37 @@ if the serial number that entered is not related to any product, the server will
 }
 ```
 
+
+to search for product items:
+
+```bash
+curl -H 'Content-Type: application/json' -X POST -d '{"query": "query { productItems(snList: [\"241784198\"]) { createdAt product {id name nameTranslated model image description descriptionTranslated price}}}"}' http://localhost:4000/graphql | jq
+```
+
+if the serial number was already exists in the database, the server returns the related product info:
+
+```json
+{
+  "data": {
+    "productItems": [
+      {
+        "createdAt": "1726147103856",
+        "product": {
+          "id": 1,
+          "name": "GUD18T/A-SE",
+          "nameTranslated": "GUD18T/A-SE",
+          "model": "ET01002250",
+          "image": "/uploads/products/p1.png",
+          "description": "GREE Cassette Split, 8-way, Eco-Inverter, Heat pump, R410a, T3, Nominal Capacity: 1.5Ton.",
+          "descriptionTranslated": "سبليت كري السقفي، 8 اتجاهات، انفيرتر، تبريد وتدفئة، غاز 410a، السعة: 1.5 طن",
+          "price": 1100
+        }
+      }
+    ]
+  }
+}
+```
+
 ---
 
 ## product item

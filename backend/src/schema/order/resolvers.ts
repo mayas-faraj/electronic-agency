@@ -312,6 +312,23 @@ const resolvers = {
 
       return result;
     },
+    deleteOrderByAuth: async (parent: any, args: any, app: AppContext) => {
+      // check permissions
+      const order = await app.prismaClient.order.findUnique({
+        where: { id: args.id },
+        select: { user: true },
+      });
+
+      if (order?.user === app.user.name) {
+        const result = await app.prismaClient.order.delete({
+          where: {
+            id: args.id,
+          },
+        });
+
+        return result;
+      } else throw new Error("User is not own order");
+    },
     createOfferByAuth: async (parent: any, args: any, app: AppContext) => {
       // check permissions
 

@@ -12,6 +12,7 @@ const typeDefs = `#graphql
 		createOrder(user: String!, input: OrderCreate!): OrderBasic
 				updateOrderStatus(id: Int!, status: String!): OrderBasic
 				deleteOrder(id: Int!): OrderBasic
+				deleteOrderByAuth(id: Int!): OrderBasic
 				createOfferByAuth(input: OfferInput!): OfferBasic
 				updateOfferByAuth(id: Int!, input: OfferUpdate!): OfferBasic
 				deleteOffer(id: Int!): OfferBasic

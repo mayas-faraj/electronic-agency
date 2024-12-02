@@ -47,6 +47,7 @@ const resolvers = {
               OR: [
                 { user: filter.searchFilter(args.filter?.keyword) },
                 { phone: filter.searchFilter(args.filter?.keyword) },
+                { phone2: filter.searchFilter(args.filter?.keyword) },
                 { firstName: filter.searchFilter(args.filter?.keyword) },
                 { lastName: filter.searchFilter(args.filter?.keyword) },
               ],

@@ -49,11 +49,10 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
 
   const totalPrice = products.reduce((acc, orderProduct) => acc + orderProduct.price * orderProduct.count, 0);
   const offerPrice = info.isDiscountPercent ? totalPrice * (1 - parseInt(info.offerDiscount as string) / 100) : totalPrice - parseInt(info.offerDiscount as string);
-  console.log(info.isDiscountPercent, info.offerDiscount);
   const print = () => {
     if (htmlRef.current === null) return;
 
-    html2canvas(htmlRef.current).then((canvas) => {
+    html2canvas(htmlRef.current, {scale: 4}).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "portrait",

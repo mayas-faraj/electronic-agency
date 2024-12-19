@@ -111,22 +111,16 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         <table className={styles.schemaTable}>
           <tbody>
             <tr>
-              <td>{!isArabic ? "Compay:" : "السادة:"}</td>
-              <td>{info.company as string}</td>
-              <td>{!isArabic ? "Offer Date:" : "تاريخ التقديم:"}</td>
-              <td>{new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
+              <td><strong>{!isArabic ? "Compay:" : "السادة:"}</strong> {info.company as string}</td>
+              <td><strong>{!isArabic ? "Offer Date:" : "تاريخ التقديم:"}</strong> {new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
             </tr>
             <tr>
-              <td>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</td>
-              <td>{`${info.firstName}${info.lastName && " "}${info.lastName}`}</td>
-              <td>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</td>
-              <td>{new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}</td>
+              <td><strong>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</strong> {`${info.firstName}${info.lastName && " "}${info.lastName}`}</td>
+              <td><strong>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</strong> {new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}</td>
             </tr>
             <tr>
-              <td>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</td>
-              <td>{info.phone as string}</td>
-              <td>{!isArabic ? "Reference #:" : "رقم المشروع:"}</td>
-              <td>{info.projectNumber as string}</td>
+              <td><strong>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</strong> {info.phone as string}</td>
+              <td><strong>{!isArabic ? "Reference #:" : "رقم المشروع:"}</strong> {info.projectNumber as string}</td>
             </tr>
           </tbody>
         </table>

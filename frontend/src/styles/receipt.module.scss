@@ -34,25 +34,18 @@
   table-layout: fixed;
 }
 
-.schemaTable td:nth-child(odd),
 p,
 title,
 .notes {
   font-weight: bold;
 }
 
-.schemaTable td:nth-child(1),
-.schemaTable td:nth-child(3) {
-  width: 15%;
+.schemaTable td:nth-child(1) {
+  width: 80%;
 }
 
 .schemaTable td:nth-child(2) {
-  width: 55%;
-}
-
-.schemaTable td:nth-child(4) {
-  width: 15%;
-  text-align: end;
+  width: 20%;
 }
 
 .productsTable td,

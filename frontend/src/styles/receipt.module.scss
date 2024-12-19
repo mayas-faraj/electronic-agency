@@ -87,7 +87,11 @@ title,
 
 .productsTable td {
   border-bottom: 1px solid;
-  text-align: center;
+  text-align: start;
+}
+
+.productsTable th {
+  text-align: start;
 }
 
 .summaryRow {

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Button, Modal } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Modal, Select } from "@mui/material";
 import { AddCircle, Edit, Visibility } from "@mui/icons-material";
 import TicketForm from "../content-forms/ticket";
 import ContentTable, { HeaderType, ITableHeader } from "../content-table";
@@ -33,12 +33,17 @@ interface Ticket {
   };
 }
 
+const priorityList = ["CRITICAL", "HIGH", "NORMAL", "LOW"];
+const statusList = ["NEW", "OPEN", "PENDING", "IN_PROGRESS", "RESOLVED", "UNRESOLVED", "FEEDBACK", "CLOSED", "REOPEN"];
 // main component
 const Tickets: FunctionComponent = () => {
   // ticket state
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
   const [openId, setOpenId] = React.useState(0);
   const [viewNewTicket, setViewNetTicket] = React.useState(false);
+  const [priority, setPriority] = React.useState("");
+  const [status, setStatus] = React.useState("");
+  const [isCreatedBySubscriber, setCreatedBySubscriber] = React.useState("");
 
   // context
   const profile = React.useContext(ProfileContext);
@@ -65,8 +70,11 @@ const Tickets: FunctionComponent = () => {
     else if (profile.privileges.updateTicket || profile.privileges.updateRepair || profile.privileges.createFeedback) queryName = "ticketsAssignedToAuthGroup";
     else if (profile.privileges.createRepair) queryName = "ticketsAssignedToAuthUser";
     else return;
-
-    const ticketsResponse = await getServerData(`query { ${queryName} {id user title status createdAt openAt priority asset } }`, true);
+    const filters: string[] = [];
+    if (isCreatedBySubscriber !== "") filters.push(`createdBySubscriber: ${isCreatedBySubscriber !== "0"}`);
+    if (status !== "") filters.push(`status: ${status}`);
+    if (priority !== "") filters.push(`priority: ${priority}`);
+    const ticketsResponse = await getServerData(`query { ${queryName}(ticketFilter: {${filters.join(",")}}) {id user title status createdAt openAt priority asset } }`, true);
     const tickets = ticketsResponse.data[queryName] as Ticket[];
     const assetList = tickets.map((ticket) => ticket.asset);
     const idList = assetList.filter((asset) => asset.startsWith("[product-") && asset.endsWith("]")).map((asset) => parseInt(asset.substring(9, asset.length - 1)));
@@ -88,17 +96,53 @@ const Tickets: FunctionComponent = () => {
   React.useEffect(() => {
     action();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isCreatedBySubscriber, priority, status]);
 
   // render
   return (
     <>
-      {profile.privileges.createTicket && (
-        <Button variant="contained" className="button" onClick={() => setViewNetTicket(true)}>
-          <AddCircle />
-          Add New
-        </Button>
-      )}
+      <div className="columns">
+        <FormControl margin="normal">
+          <InputLabel id="status-label">Status</InputLabel>
+          <Select labelId="status-label" variant="outlined" label="Status" value={status} onChange={(e) => setStatus(e.target.value)}>
+            <MenuItem value="">all</MenuItem>
+            {statusList.map((status) => (
+              <MenuItem key={status} value={status}>
+                {status.toLowerCase()}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl margin="normal">
+          <InputLabel id="priority-label">priority</InputLabel>
+          <Select labelId="priority-label" variant="outlined" label="priority" value={priority} onChange={(e) => setPriority(e.target.value)}>
+            <MenuItem value="">all</MenuItem>
+            {priorityList.map((priority) => (
+              <MenuItem key={priority} value={priority}>
+                {priority.toLowerCase()}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {profile.privileges.createAdmin && (
+          <FormControl margin="normal">
+            <InputLabel id="subscriber-label">Contractor Tickets</InputLabel>
+            <Select labelId="subscriber-label" variant="outlined" label="Contractor Tickets" value={isCreatedBySubscriber} onChange={(e) => setCreatedBySubscriber(e.target.value)}>
+              <MenuItem value="">all</MenuItem>
+              <MenuItem value="1">yes</MenuItem>
+              <MenuItem value="0">no</MenuItem>
+            </Select>
+          </FormControl>
+        )}
+        {profile.privileges.createTicket && (
+          <FormControl margin="normal">
+            <Button variant="contained" className="button" onClick={() => setViewNetTicket(true)}>
+              <AddCircle />
+              Add New
+            </Button>
+          </FormControl>
+        )}
+      </div>
       <ContentTable
         name="ticket"
         headers={tableHeader}

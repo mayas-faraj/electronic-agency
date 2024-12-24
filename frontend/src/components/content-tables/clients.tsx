@@ -60,7 +60,7 @@ const Clients: FunctionComponent<IClientsType> = ({ isSelectable, displayOneRow,
   if (isSelectable) tableHeader.push({ key: "select", title: "Select" });
   else {
     tableHeader.push({ key: "isDisabled", title: "Disable", type: HeaderType.UPDATE });
-    tableHeader.push({ key: "isTechnical", title: "Technical", type: HeaderType.UPDATE });
+    tableHeader.push({ key: "isTechnical", title: "Contractor", type: HeaderType.UPDATE });
     tableHeader.push({ key: "view", title: "More Info", type: HeaderType.SPECIAL });
     tableHeader.push({ key: "delete", title: "Delete", type: HeaderType.DELETE });
   }

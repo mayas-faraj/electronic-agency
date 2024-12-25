@@ -31,7 +31,7 @@ type AdminType = {
   }[];
 };
 
-const availableRoles = ["admin", "data_viewer", "sales_man", "offer_admin", "top_call_center", "call_center", "technician", "closer", "feedback"];
+const availableRoles = ["admin", "data_viewer", "sales_man", "offer_admin", "top_call_center", "call_center", "contractor_manager", "technician", "closer", "feedback"];
 
 const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
   // component reducer
@@ -103,12 +103,7 @@ const Admin: FunctionComponent<IAdminProps> = ({ id, onUpdate }) => {
       onUpdate={() => action()}
     >
       <FormControl fullWidth margin="normal">
-        <TextField
-          variant="outlined"
-          label="Admin User"
-          value={info.user}
-          onChange={(e) => dispatch({ type: "set", key: "user", value: e.target.value })}
-        />
+        <TextField variant="outlined" label="Admin User" value={info.user} onChange={(e) => dispatch({ type: "set", key: "user", value: e.target.value })} />
       </FormControl>
       {id === undefined && (
         <FormControl fullWidth margin="normal">

@@ -92,7 +92,7 @@ const roles = [
   "offer_admin",
   "top_call_center",
   "call_center",
-  "technician",
+  "contractor_manager",
   "closer",
   "feedback",
 ];

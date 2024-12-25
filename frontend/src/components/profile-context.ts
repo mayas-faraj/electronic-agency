@@ -100,7 +100,7 @@ export const noPrivileges: Privileges = {
   createFeedback: false
 };
 
-type Role = "admin" | "data_viewer" | "sales_man" | "offer_admin" | "top_call_center" | "call_center" | "technician" | "closer" | "feedback";
+type Role = "admin" | "data_viewer" | "sales_man" | "offer_admin" | "top_call_center" | "call_center" | "contractor_manager" | "technician" | "closer" | "feedback";
 
 export const getPrivileges = (roles: string[]): Privileges => {
   let privileges = noPrivileges;
@@ -327,6 +327,48 @@ const getPrivilegeOfRole = (role: Role): Privileges => {
         updateAdmin: false,
         deleteAdmin: false,
         createClient: true,
+        readClient: true,
+        updateClient: false,
+        deleteClient: false,
+        createCategory: false,
+        readCategory: false,
+        updateCategory: false,
+        deleteCategory: false,
+        createProduct: false,
+        readProduct: true,
+        updateProduct: false,
+        deleteProduct: false,
+        createProductItem: false,
+        readProductItem: false,
+        updateProductItem: false,
+        deleteProductItem: false,
+        createAdvertisement: false,
+        readAdvertisement: false,
+        updateAdvertisement: false,
+        deleteAdvertisement: false,
+        createOrder: false,
+        readOrder: false,
+        updateOrder: false,
+        deleteOrder: false,
+        createOffer: false,
+        readOffer: false,
+        updateOffer: false,
+        deleteOffer: false,
+        createTicket: false,
+        readTicket: true,
+        updateTicket: true,
+        deleteTicket: false,
+        createRepair: false,
+        updateRepair: false,
+        createFeedback: false
+      };
+    case "contractor_manager":
+      return {
+        createAdmin: false,
+        readAdmin: false,
+        updateAdmin: false,
+        deleteAdmin: false,
+        createClient: false,
         readClient: true,
         updateClient: false,
         deleteClient: false,

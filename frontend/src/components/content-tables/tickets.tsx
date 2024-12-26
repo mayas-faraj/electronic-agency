@@ -65,7 +65,7 @@ const Tickets: FunctionComponent = () => {
   const action = async () => {
     let queryName = "";
 
-    if (profile.privileges.createAdmin) queryName = "tickets";
+    if (profile.privileges.createAdmin || (!profile.privileges.createClient && profile.privileges.readTicket)) queryName = "tickets";
     else if (profile.privileges.createTicket && !profile.privileges.updateTicket) queryName = "ticketsByAuth";
     else if (profile.privileges.updateTicket || profile.privileges.updateRepair || profile.privileges.createFeedback) queryName = "ticketsAssignedToAuthGroup";
     else if (profile.privileges.createRepair) queryName = "ticketsAssignedToAuthUser";
@@ -74,6 +74,7 @@ const Tickets: FunctionComponent = () => {
     if (isCreatedBySubscriber !== "") filters.push(`createdBySubscriber: ${isCreatedBySubscriber !== "0"}`);
     if (status !== "") filters.push(`status: ${status}`);
     if (priority !== "") filters.push(`priority: ${priority}`);
+    if (!profile.privileges.createClient && profile.privileges.readTicket) filters.push("createdBySubscriber: true");
     const ticketsResponse = await getServerData(`query { ${queryName}(ticketFilter: {${filters.join(",")}}) {id user title status createdAt openAt priority asset } }`, true);
     const tickets = ticketsResponse.data[queryName] as Ticket[];
     const assetList = tickets.map((ticket) => ticket.asset);

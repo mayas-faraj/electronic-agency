@@ -151,6 +151,7 @@ const Tickets: FunctionComponent = () => {
         canDelete={profile.privileges.deleteTicket}
         canRead={profile.privileges.readTicket}
         canUpdate={profile.privileges.updateTicket}
+        enableExport={profile.privileges.updateAdmin || (!profile.privileges.createClient && profile.privileges.updateTicket)}
         data={tickets
           .filter(
             (ticket) =>

@@ -39,8 +39,8 @@ const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName
         });
         const result = await response.json();
         if (result.success) {
-          setImageSrc("/" + result.message);
-          onChange("/" + result.message);
+          setImageSrc(result.message);
+          onChange(result.message);
         } else setErrorMessage(result.message);
       } catch (ex) {
         console.log(ex);
@@ -53,7 +53,7 @@ const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName
 
   return (
     <div className={styles.wrapper}>
-      <img className="side-image side-image--product" src={imageSrc ? data["site-url"] + imageSrc : emptyImage} alt={`${formName} is empty`} />
+      <img className="side-image side-image--product" src={imageSrc ? data["media-service-url"] + imageSrc : emptyImage} alt={`${formName} is empty`} />
       <input id={name ?? "file-upload"} accept="image/png, image/jpeg" type="file" hidden={true} onChange={(e) => handleUploadImage(e.target.files![0])} />
       <label htmlFor={name ?? "file-upload"} className="button button--large">
         Upload {isUpload && <HourglassBottom />}

@@ -186,7 +186,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
                 <TextField variant="outlined" multiline={true} rows={5} label="Specification (Arabic)" value={info.specificationTranslated != null ? info.specificationTranslated : ""} onChange={e => dispatch({ type: "set", key: "specificationTranslated", value: e.target.value })} />
             </FormControl>
             <div className="column-double">
-                <ImageUpload name="specificationImage" uploadUrl="/upload-specification" formName="specification" value={info.specificationImage as string} onChange={url => dispatch({ type: "set", key: "specificationImage", value: url })} />
+                <ImageUpload name="specificationImage" uploadUrl="/upload-image" formName="image" value={info.specificationImage as string} onChange={url => dispatch({ type: "set", key: "specificationImage", value: url })} token={StorageManager.get() ?? undefined} />
                 <div>
                 <FormControl fullWidth margin="normal">
                 <TextField variant="outlined" label="Catalog URL" value={info.catalogFile != null ? info.catalogFile : ""} onChange={e => dispatch({ type: "set", key: "catalogFile", value: e.target.value })} />

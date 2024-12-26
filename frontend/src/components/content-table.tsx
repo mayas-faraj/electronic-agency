@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ProfileContext from "./profile-context";
 import CsvDownloadButton from "react-json-to-csv";
 import Content from "./content";
 import styles from "../styles/content-table.module.scss";
@@ -33,6 +32,7 @@ interface IContentTableProps {
   addNewLink?: string;
   isAddNewRight?: boolean;
   hidePagination?: boolean;
+  enableExport?: boolean;
 }
 
 // main component
@@ -47,14 +47,12 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
   addNewLink,
   isAddNewRight,
   hidePagination,
+  enableExport,
   data
 }) => {
   // component state
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // component context
-  const profile = React.useContext(ProfileContext);
 
   // event handler
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -125,7 +123,7 @@ const ContentTable: FunctionComponent<IContentTableProps> = ({
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         )}
-        {profile.privileges.updateAdmin && !hidePagination && (
+        {enableExport && (
           <CsvDownloadButton
             className={styles.button + " " + styles["button--small"]}
             headers={csvHeader.map((header) => header.title)}

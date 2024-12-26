@@ -172,7 +172,7 @@ const resolvers = {
           token: generateJwtToken({
             name: result.user,
             sub: `${result.firstName} ${result.lastName}`,
-            roles: ["SUBSCRIBER"],
+            roles: result.isTechnical ? ["contractor_manager"] : ["subscriber"],
             aud: "ea",
           }),
           success: true,

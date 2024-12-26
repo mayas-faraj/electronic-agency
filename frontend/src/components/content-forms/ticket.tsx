@@ -237,16 +237,16 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
 
         if (result.data.ticket.user != null) {
           const resultUser = await getServerData(`query { clientByPhone(phone: "${result.data.ticket.user}") { id phone email user firstName lastName phone2 address address2 } }`);
-          dispatch({ type: "set", key: "clientPhone", value: resultUser.data.clientByPhone.phone });
+          dispatch({ type: "set", key: "clientPhone", value: resultUser.data.clientByPhone?.phone ?? "<no phone>"});
           dispatch({
             type: "set",
             key: "clientPhone",
-            value: `${resultUser.data.clientByPhone.phone}${resultUser.data.clientByPhone.phone2 ? "/" + resultUser.data.clientByPhone.phone2 : ""}`
+            value: `${resultUser.data.clientByPhone?.phone}${resultUser.data.clientByPhone?.phone2 ? "/" + resultUser.data.clientByPhone.phone2 : ""}`
           });
-          dispatch({ type: "set", key: "clientEmail", value: resultUser.data.clientByPhone.email });
-          dispatch({ type: "set", key: "clientUser", value: resultUser.data.clientByPhone.user });
-          dispatch({ type: "set", key: "clientFirstName", value: resultUser.data.clientByPhone.firstName });
-          dispatch({ type: "set", key: "clientLastName", value: resultUser.data.clientByPhone.lastName });
+          dispatch({ type: "set", key: "clientEmail", value: resultUser.data.clientByPhone?.email ?? "<no value>" });
+          dispatch({ type: "set", key: "clientUser", value: resultUser.data.clientByPhone?.user ?? "<no value>" });
+          dispatch({ type: "set", key: "clientFirstName", value: resultUser.data.clientByPhone?.firstName ?? "<no value>" });
+          dispatch({ type: "set", key: "clientLastName", value: resultUser.data.clientByPhone?.lastName ?? "<no value>" });
         }
 
         setCommunications(result.data.ticket.communications);

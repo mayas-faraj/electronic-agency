@@ -167,7 +167,7 @@ const Tickets: FunctionComponent = () => {
             client: ticket.user,
             image:
               ticket.productItem != null || ticket.product != null ? (
-                <img src={data["site-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)} alt={ticket.productItem?.product?.name ?? ticket.product?.name} />
+                <img src={data["media-service-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)} alt={ticket.productItem?.product?.name ?? ticket.product?.name} />
               ) : (
                 <img src={LogoMin} alt="alardh-alsalba" />
               ),

@@ -65,7 +65,7 @@ const SubCategories: FunctionComponent<{categoryId: number}> = ({ categoryId }) 
                 data={
                     subCategories.map(subCategory => ({
                         name: subCategory.name,
-                        image: <img src={data["site-url"] + subCategory.image} alt={subCategory.name} />,
+                        image: <img src={data["media-service-url"] + subCategory.image} alt={subCategory.name} />,
                         view: <Button variant="text" color="info" onClick={() => setViewId(subCategory.id)}><Visibility /></Button>,
                         edit: <Button variant="text" color="success" onClick={() => setEditId(subCategory.id)}><EditIcon /></Button>,
                         delete: <Management onUpdate={() => action()} type={ManagementType.button} hasConfirmModal={true} operation={Operation.delete} command={`mutation { deleteSubCategory(id: ${subCategory.id})  {id name}}`} />

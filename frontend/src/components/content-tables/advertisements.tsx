@@ -75,7 +75,7 @@ const Advertisements: FunctionComponent = () => {
         canUpdate={profile.privileges.updateAdvertisement}
         hasSnColumn={true}
         data={advertisements.map((ads, index) => ({
-          image: <img src={data["site-url"] + ads.imageUrl} alt={"ads"} />,
+          image: <img src={data["media-service-url"] + ads.imageUrl} alt={"ads"} />,
           createdAt: new Date(parseInt(ads.createdAt)).toLocaleString(),
           orderUp: (
             <Management

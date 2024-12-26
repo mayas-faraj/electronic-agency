@@ -256,7 +256,7 @@ const Order: FunctionComponent<IOrderProps> = ({ id, onUpdate }) => {
             {products.map((orderProduct, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  <img src={`${data["site-url"]}${orderProduct.product.image}`} alt={orderProduct.product.name} />
+                  <img src={`${data["media-service-url"]}${orderProduct.product.image}`} alt={orderProduct.product.name} />
                 </TableCell>
                 <TableCell>{orderProduct.product.name}</TableCell>
                 <TableCell>{orderProduct.count}</TableCell>

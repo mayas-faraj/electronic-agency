@@ -3,6 +3,7 @@ import { FormControl, InputLabel, MenuItem, Switch, TextField, Select, SelectCha
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
 import ImageUpload from "../image-upload";
+import StorageManager from "../../libs/storage-manager";
 
 const initialInfo = {
     subCategoryId: 0,
@@ -134,7 +135,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     return (
         <ContentForm id={id} name="product" title="Create new product" command={productCommand} commandDisabled={info.name === "" || info.nameTranslated === "" || info.model === "" || info.subCategoryId === 0} onUpdate={() => action()}>
             <div className="column-double">
-                <ImageUpload name="image" uploadUrl="/upload-product" formName="product" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} />
+                <ImageUpload name="image" uploadUrl="/upload-image" formName="image" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} token={StorageManager.get() ?? undefined}/>
                 <div>
                     <FormControl fullWidth margin="normal">
                         <TextField variant="outlined" label="Product name" value={info.name} onChange={e => dispatch({ type: "set", key: "name", value: e.target.value })} />

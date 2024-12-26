@@ -62,7 +62,7 @@ const Categories: FunctionComponent = () => {
                 data={
                     categories.map(category => ({
                         name: category.name,
-                        image: <img src={data["site-url"] + category.image} alt={category.name} />,
+                        image: <img src={data["media-service-url"] + category.image} alt={category.name} />,
                         view: <Button variant="text" color="info" onClick={() => setViewId(category.id)}><Visibility /></Button>,
                         subcategory: <Button variant="text" color="primary"><Link to={`/sub-categories/${category.id}`}><Category /></Link></Button>,
                         edit: <Button variant="text" color="success" onClick={() => setEditId(category.id)}><EditIcon /></Button>,

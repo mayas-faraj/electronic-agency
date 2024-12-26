@@ -70,7 +70,7 @@ const Orders: FunctionComponent = () => {
         canUpdate={profile.privileges.updateOrder}
         addNewLink="/add-order"
         data={orders.map((order) => ({
-          image: <img src={data["site-url"] + order.products[0]?.product.image} alt={order.products[0]?.product.name} />,
+          image: <img src={data["media-service-url"] + order.products[0]?.product.image} alt={order.products[0]?.product.name} />,
           products: order.products.map((orderProduct) => `${orderProduct.product.name} (${orderProduct.product.model})`).join("\n"),
           totalCount: order.products.reduce((acc, product) => acc + product.count, 0),
           totalPrice: order.isOfferRequest ? "Offer Request" : order.products.reduce((acc, product) => acc + product.price, 0),

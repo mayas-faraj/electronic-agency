@@ -109,7 +109,7 @@ const Products: FunctionComponent<IProductsType> = ({ isSelectable, isSelectCoun
         addNewLink={!isSelectable ? "/add-product" : undefined}
         isAddNewRight={true}
         data={products.map((product) => ({
-          image: <img src={data["site-url"] + product.image} alt={product.name} />,
+          image: <img src={data["media-service-url"] + product.image} alt={product.name} />,
           name: product.name,
           model: product.model,
           isDisabled:

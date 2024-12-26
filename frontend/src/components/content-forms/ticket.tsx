@@ -65,6 +65,7 @@ enum Mode {
   TopCallCenter,
   CallCenter,
   Technician,
+  ContractorManager,
   Closer,
   Feedback,
   Viewer
@@ -96,6 +97,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
     (info.initialStatus === "OPEN" || info.initialStatus === "PENDING" || info.initialStatus === "UNRESOLVED")
   )
     mode = Mode.CallCenter;
+  else if (!profile.privileges.createClient && profile.privileges.readTicket) mode = Mode.ContractorManager;
   else if (profile.privileges.createRepair && info.initialStatus === "IN_PROGRESS") mode = Mode.Technician;
   else if (profile.privileges.updateRepair && info.initialStatus === "RESOLVED") mode = Mode.Closer;
   else if (profile.privileges.createFeedback && info.initialStatus === "CLOSED") mode = Mode.Feedback;
@@ -118,7 +120,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
       : `mutation { 
           ${mode === Mode.CallCenter ? updateTicketPriorityCommand + " " + createTicketAssignmentCommand : ""}
           ${(mode === Mode.Technician || mode === Mode.Feedback) && info.solution !== "" ? createTicketCommunicationCommand : ""}
-          ${mode === Mode.Technician || mode === Mode.Closer || mode === Mode.Feedback ? updateTicketStatusCommand : ""}
+          ${mode === Mode.Technician || mode === Mode.Closer || mode === Mode.Feedback || mode === Mode.ContractorManager ? updateTicketStatusCommand : ""}
         }`;
 
   // event handlers
@@ -237,7 +239,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
 
         if (result.data.ticket.user != null) {
           const resultUser = await getServerData(`query { clientByPhone(phone: "${result.data.ticket.user}") { id phone email user firstName lastName phone2 address address2 } }`);
-          dispatch({ type: "set", key: "clientPhone", value: resultUser.data.clientByPhone?.phone ?? "<no phone>"});
+          dispatch({ type: "set", key: "clientPhone", value: resultUser.data.clientByPhone?.phone ?? "<no phone>" });
           dispatch({
             type: "set",
             key: "clientPhone",
@@ -416,7 +418,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
               label="Status"
               defaultValue={info.status}
               value={info.status}
-              readOnly={mode !== Mode.Technician && mode !== Mode.Feedback && mode !== Mode.Closer}
+              readOnly={mode !== Mode.Technician && mode !== Mode.Feedback && mode !== Mode.Closer && mode !== Mode.ContractorManager}
               onChange={(e) => dispatch({ type: "set", key: "status", value: e.target.value })}
             >
               {statuses.map((status) => (
@@ -425,6 +427,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
                   value={status}
                   disabled={
                     (mode !== Mode.Technician || (status !== "RESOLVED" && status !== "UNRESOLVED")) &&
+                    (mode !== Mode.ContractorManager || (status !== "CLOSED" && status !== "UNRESOLVED")) &&
                     (mode !== Mode.Closer || status !== "CLOSED") &&
                     (mode !== Mode.Feedback || status !== "FEEDBACK")
                   }

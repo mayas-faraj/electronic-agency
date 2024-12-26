@@ -18,6 +18,7 @@ const initialInfo = {
     specificationTranslated: "",
     specificationImage: "",
     price: "",
+    point: "",
     catalogFile: "",
     isDisabled: false
 };
@@ -40,13 +41,13 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
 
     // process form type (create or update)
     const productCommand = id === undefined ?
-        `mutation { createProduct(input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.replaceAll("\n", "\\n")}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", specificationImage: "${info.specificationImage}", price: ${info.price !== "" ? info.price : null}, catalogFile: "${info.catalogFile}"}) { id name model } }` :
-        `mutation { updateProduct(id: ${id}, input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.trim()}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", specificationImage: "${info.specificationImage}", price: ${info.price !== "" ? info.price : null}, catalogFile: "${info.catalogFile}", isDisabled: ${info.isDisabled}}) { id name model } }`;
+        `mutation { createProduct(input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.replaceAll("\n", "\\n")}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", specificationImage: "${info.specificationImage}", price: ${info.price !== "" ? info.price : null}, point: ${info.point !== "" ? info.point : null}, catalogFile: "${info.catalogFile}"}) { id name model } }` :
+        `mutation { updateProduct(id: ${id}, input: {subCategoryId: ${info.subCategoryId}, name: "${(info.name as string).trim()}", nameTranslated: "${(info.nameTranslated as string).trim()}", model: "${(info.model as string).trim()}", image: "${info.image}", description: "${(info.description as string)?.replaceAll("\n", "\\n")}", descriptionTranslated: "${(info.descriptionTranslated as string)?.trim()}", specification: "${(info.specification as string)?.replaceAll("\n", "\\n")}", specificationTranslated: "${(info.specificationTranslated as string)?.replaceAll("\n", "\\n")}", specificationImage: "${info.specificationImage}", price: ${info.price !== "" ? info.price : null}, point: ${info.point !== "" ? info.point : null}, catalogFile: "${info.catalogFile}", isDisabled: ${info.isDisabled}}) { id name model } }`;
 
     // load data function
     const action = async () => {
         if (id !== undefined) {
-            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage catalogFile price isDisabled} }`);
+            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage catalogFile price point isDisabled} }`);
             dispatch({ type: "set", key: "name", value: result.data.product.name });
             dispatch({ type: "set", key: "nameTranslated", value: result.data.product.nameTranslated });
             dispatch({ type: "set", key: "categoryId", value: result.data.product.subCategory.categoryId });
@@ -59,6 +60,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "specificationTranslated", value: result.data.product.specificationTranslated });
             dispatch({ type: "set", key: "specificationImage", value: result.data.product.specificationImage });
             dispatch({ type: "set", key: "price", value: result.data.product.price });
+            dispatch({ type: "set", key: "point", value: result.data.product.point });
             dispatch({ type: "set", key: "catalogFile", value: result.data.product.catalogFile });
             dispatch({ type: "set", key: "isDisabled", value: result.data.product.isDisabled });
         } else {
@@ -74,6 +76,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "specificationTranslated", value: initialInfo.specificationTranslated });
             dispatch({ type: "set", key: "specificationImage", value: initialInfo.specificationImage });
             dispatch({ type: "set", key: "price", value: initialInfo.price });
+            dispatch({ type: "set", key: "point", value: initialInfo.point });
             dispatch({ type: "set", key: "catalogFile", value: initialInfo.catalogFile });
             dispatch({ type: "set", key: "isDisabled", value: initialInfo.isDisabled });
         }
@@ -93,7 +96,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
     React.useEffect(() => {
         // in edit, load product data
         const loadProduct = async () => {
-            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage price catalogFile isDisabled} }`);
+            const result = await getServerData(`query { product(id: ${id}) {id subCategory { id categoryId } name nameTranslated model image description descriptionTranslated specification specificationTranslated specificationImage price point catalogFile isDisabled} }`);
             dispatch({ type: "set", key: "categoryId", value: result.data.product.subCategory.categoryId });
             dispatch({ type: "set", key: "subCategoryId", value: result.data.product.subCategory.id });
             dispatch({ type: "set", key: "name", value: result.data.product.name });
@@ -106,6 +109,7 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
             dispatch({ type: "set", key: "specificationTranslated", value: result.data.product.specificationTranslated });
             dispatch({ type: "set", key: "specificationImage", value: result.data.product.specificationImage });
             dispatch({ type: "set", key: "price", value: result.data.product.price });
+            dispatch({ type: "set", key: "point", value: result.data.product.point });
             dispatch({ type: "set", key: "catalogFile", value: result.data.product.catalogFile });
             dispatch({ type: "set", key: "isDisabled", value: result.data.product.isDisabled });
         };
@@ -146,9 +150,15 @@ const Product: FunctionComponent<IProductProps> = ({ id, onUpdate }) => {
                     <FormControl fullWidth margin="normal">
                         <TextField variant="outlined" label="Product model" value={info.model} onChange={e => dispatch({ type: "set", key: "model", value: e.target.value })} />
                     </FormControl>
-                    <FormControl fullWidth margin="normal">
-                        <TextField variant="outlined" type="number" label="Price" value={info.price != null ? info.price : ""} onChange={e => dispatch({ type: "set", key: "price", value: e.target.value })} />
-                    </FormControl>
+                    <div className="column-double">
+                        <FormControl fullWidth margin="normal">
+                            <TextField variant="outlined" type="number" label="Price" value={info.price != null ? info.price : ""} onChange={e => dispatch({ type: "set", key: "price", value: e.target.value })} />
+                        </FormControl>
+                        <FormControl fullWidth margin="normal">
+                            <TextField variant="outlined" type="number" label="Point" value={info.point != null ? info.point : ""} onChange={e => dispatch({ type: "set", key: "point", value: e.target.value })} />
+                        </FormControl>
+                    </div>
+
                 </div>
             </div>
             <div className="column-double">

@@ -26,6 +26,7 @@ const resolvers = {
           specificationTranslated: true,
           specificationImage: true,
           price: true,
+          point: true,
           isDisabled: true,
           catalogFile: true,
           subCategory: {
@@ -88,6 +89,7 @@ const resolvers = {
           specificationTranslated: true,
           specificationImage: true,
           price: true,
+          point: true,
           isDisabled: true,
           catalogFile: true,
           subCategory: {
@@ -166,6 +168,7 @@ const resolvers = {
               description: true,
               descriptionTranslated: true,
               price: true,
+              point: true,
               isDisabled: true,
             },
           },
@@ -200,6 +203,7 @@ const resolvers = {
               description: true,
               descriptionTranslated: true,
               price: true,
+              point: true,
               isDisabled: true,
             },
           },
@@ -229,6 +233,7 @@ const resolvers = {
               specification: true,
               specificationTranslated: true,
               price: true,
+              point: true,
               isDisabled: true,
             },
           },
@@ -258,6 +263,7 @@ const resolvers = {
           specificationImage: args.input.specificationImage,
           catalogFile: args.input.catalogFile,
           price: args.input.price,
+          point: args.input.point
         },
       });
 
@@ -285,6 +291,7 @@ const resolvers = {
           specificationImage: args.input.specificationImage,
           catalogFile: args.input.catalogFile,
           price: args.input.price,
+          point: args.input.point,
           isDisabled: args.input.isDisabled,
         },
       });

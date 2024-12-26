@@ -34,6 +34,7 @@ const typeDefs = `#graphql
 		specificationImage: String
 		catalogFile: String
 		price: Float
+		point: Int!
 		isDisabled: Boolean
 		createdAt: String
 		updatedAt: String
@@ -54,6 +55,7 @@ const typeDefs = `#graphql
 		specificationImage: String
 		catalogFile: String,
 		price: Float
+		point: Int!
 		isDisabled: Boolean
 	}
 
@@ -70,6 +72,7 @@ const typeDefs = `#graphql
 		specificationImage: String
 		catalogFile: String
 		price: Float
+		point: Int
 	}
 
 	input ProductUpdate {
@@ -85,6 +88,7 @@ const typeDefs = `#graphql
 		specificationImage: String
 		catalogFile: String
 		price: Float
+		point: Int
 		isDisabled: Boolean
 	}
 

@@ -156,6 +156,7 @@ model Product {
   specificationTranslated String?        @map("specification_translated") @db.LongText
   specificationImage      String?        @db.VarChar(400)
   price                   Float?
+  point                   Int            @default(0)
   catalogFile             String?        @map("catalog_file") @db.VarChar(400)
   isDisabled              Boolean        @default(false) @map("is_disabled") @db.TinyInt
   createdAt               DateTime       @default(now()) @map("created_at")

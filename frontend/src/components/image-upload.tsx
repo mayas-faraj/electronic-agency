@@ -12,9 +12,10 @@ interface IImageUploadProps {
     value: string
     name?: string
     onChange: (url: string) => void
+    token?: string
 }
 
-const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName, value, name, onChange }) => {
+const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName, value, name, token, onChange }) => {
     const [imageSrc, setImageSrc] = React.useState<string>(value);
     const [isUpload, setIsUpload] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -32,9 +33,11 @@ const ImageUpload: FunctionComponent<IImageUploadProps> = ({ uploadUrl, formName
 
                 const formData = new FormData();
                 formData.append(formName, image);
-                const response = await fetch(data["site-url"] + uploadUrl, {
+                const response = await fetch(data["media-service-url"] + uploadUrl, {
                     method: "POST",
-                    body: formData
+                    body: formData,
+                    headers: token !== undefined ? { authorization: `BEARER ${token}`}: undefined
+
                 }); 
                 const result = await response.json();
                 if (result.success) {

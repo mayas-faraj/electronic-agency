@@ -60,6 +60,11 @@ type Communication = {
   createdAt: Date;
 };
 
+type Media = {
+  id: number;
+  src: string;
+};
+
 enum Mode {
   SuperAdmin,
   TopCallCenter,
@@ -87,6 +92,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   const [centers, setCenters] = React.useState<Center[]>([]);
   const [targetType, setTargetType] = React.useState("GROUP");
   const [communications, setCommunications] = React.useState<Communication[]>([]);
+  const [media, setMedia] = React.useState<Media[]>([]);
 
   let mode: Mode = Mode.Viewer;
   if (profile.privileges.createAdmin) mode = Mode.SuperAdmin;
@@ -210,7 +216,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadTicket = async () => {
       const result = await getServerData(
-        `query { ticket(id: ${id}) { id title description status title user asset location { locationName } assignments { assignTo targetType } communications { text user createdAt } priority createdBy createdAt } }`,
+        `query { ticket(id: ${id}) { id title description status title user asset location { locationName } assignments { assignTo targetType } communications { text user createdAt } media { id src } priority createdBy createdAt } }`,
         true
       );
       if (result.data.ticket != null) {
@@ -252,6 +258,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
         }
 
         setCommunications(result.data.ticket.communications);
+        setMedia(result.data.ticket.media);
 
         await loadCenters(getAssignmentGroup(result.data.ticket.assignments?.toReversed()));
       }
@@ -467,6 +474,11 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
           />
         </FormControl>
       )}
+      <div className="images">
+        {media?.map((media) => (
+          <img key={media.id} src={media.src} alt={`ticket media: ${id}`} />
+        ))}
+      </div>
       {communications?.map((communication) => (
         <div className="communication">
           <span>{communication.user}: </span>

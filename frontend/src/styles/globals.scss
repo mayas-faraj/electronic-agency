@@ -202,6 +202,20 @@ td {
   margin: 10px 0;
 }
 
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 20px 0;
+
+  & > img {
+    flex-basis: 150px;
+    flex-grow: 1;
+    height: 150px;
+    border: 1px solid grey;
+}
+}
+
 .columns {
   display: flex;
   flex-wrap: wrap;

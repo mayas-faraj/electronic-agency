@@ -1,5 +1,6 @@
 {
     "backend-url": "http://208.64.33.65:4000/graphql",
     "backend-service-url": "http://208.64.33.65:4006/graphql",
+    "media-service-url": "http://208.64.33.65:5000",
     "site-url": "http://208.64.33.65:4000"
 }

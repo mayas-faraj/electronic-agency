@@ -18,6 +18,7 @@ const initialInfo = {
   productName: "",
   initialStatus: "NEW",
   status: "NEW",
+  type: "",
   clientUser: "",
   clientEmail: "",
   clientPhone: "",
@@ -201,6 +202,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
     dispatch({ type: "set", key: "asset", value: initialInfo.asset });
     dispatch({ type: "set", key: "initialStatus", value: initialInfo.status });
     dispatch({ type: "set", key: "status", value: initialInfo.status });
+    dispatch({ type: "set", key: "type", value: initialInfo.type });
     dispatch({ type: "set", key: "currentCenter", value: initialInfo.currentCenter });
     dispatch({ type: "set", key: "currentTargetType", value: initialInfo.currentTargetType });
     dispatch({ type: "set", key: "center", value: initialInfo.center });
@@ -216,7 +218,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadTicket = async () => {
       const result = await getServerData(
-        `query { ticket(id: ${id}) { id title description status title user asset location { locationName } assignments { assignTo targetType } communications { text user createdAt } media { id src } priority createdBy createdAt } }`,
+        `query { ticket(id: ${id}) { id title description status title user asset type location { locationName } assignments { assignTo targetType } communications { text user createdAt } media { id src } priority createdBy createdAt } }`,
         true
       );
       if (result.data.ticket != null) {
@@ -227,6 +229,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
         dispatch({ type: "set", key: "address", value: result.data.ticket.location?.locationName ?? "" });
         dispatch({ type: "set", key: "initialStatus", value: result.data.ticket.status });
         dispatch({ type: "set", key: "status", value: result.data.ticket.status });
+        dispatch({ type: "set", key: "type", value: result.data.ticket.type });
         dispatch({ type: "set", key: "createdBy", value: result.data.ticket.createdBy });
 
         if (result.data.ticket.asset.startsWith("[product-") && result.data.ticket.asset.endsWith("]")) {
@@ -461,6 +464,9 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField variant="outlined" InputProps={{ readOnly: true }} label="Category" value={info.type === "REPORTING" ? "Maintenance" : "Installation"} />
           </FormControl>
         </div>
       )}

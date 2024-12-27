@@ -379,7 +379,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
           />
         </FormControl>
       )}
-      {((mode === Mode.TopCallCenter && id === undefined) || mode === Mode.CallCenter) && (
+      {(((mode === Mode.SuperAdmin || mode === Mode.TopCallCenter) && id === undefined) || mode === Mode.CallCenter) && (
         <FormControl fullWidth margin="normal">
           <InputLabel id="center-label">{targetType === "GROUP" ? "Centers" : "Technicals"}</InputLabel>
           <Select

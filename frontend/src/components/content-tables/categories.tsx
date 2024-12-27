@@ -40,7 +40,7 @@ const Categories: FunctionComponent = () => {
 
     // on load
     const action = async () => {
-        const result = await getServerData(`query { categories { id name image }}`);
+        const result = await getServerData(`query { categories(filter: {showDisabled: true}) { id name image }}`);
         setCategories(result.data.categories);
     };
 

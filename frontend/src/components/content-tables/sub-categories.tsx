@@ -42,7 +42,7 @@ const SubCategories: FunctionComponent<{categoryId: number}> = ({ categoryId }) 
 
     // on load
     const action = async () => {
-        const result = await getServerData(`query { subCategories (categoryId: ${categoryId}) { id name image }}`);
+        const result = await getServerData(`query { subCategories (categoryId: ${categoryId}, filter: {showDisabled: true}) { id name image }}`);
         setSubCategories(result.data.subCategories);
     };
 

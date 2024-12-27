@@ -3,6 +3,7 @@ import { FormControl, MenuItem, Select, Switch, TextField } from "@mui/material"
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
 import ImageUpload from "../image-upload";
+import StorageManager from "../../libs/storage-manager";
 
 const initialInfo = {
     name: "",
@@ -74,7 +75,7 @@ const SubCategory: FunctionComponent<ISubCategoryProps> = ({ id, categoryId, onU
     return (
         <ContentForm id={id} name="subCategory" title="Create new subCategory" command={subCategoryCommand} commandDisabled={info.name === ""} onUpdate={() => action()}>
             <div className="column-double">
-                <ImageUpload uploadUrl="/upload-category" formName="category" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} />
+                <ImageUpload uploadUrl="/upload-image" formName="image" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} token={StorageManager.get() ?? undefined} />
                 <div>
                     <Select labelId="role-label" variant="outlined" label="Category" defaultValue={info.categoryId} value={info.categoryId} onChange={e => dispatch({ type: "set", key: "categoryId", value: e.target.value })}>
                         {

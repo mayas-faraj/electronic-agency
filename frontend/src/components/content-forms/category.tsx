@@ -3,6 +3,7 @@ import { FormControl, Switch, TextField } from "@mui/material";
 import ContentForm, { reducer } from "../content-form";
 import getServerData from "../../libs/server-data";
 import ImageUpload from "../image-upload";
+import StorageManager from "../../libs/storage-manager";
 
 const initialInfo = {
     name: "",
@@ -59,7 +60,7 @@ const Category: FunctionComponent<ICategoryProps> = ({ id, onUpdate }) => {
     return (
         <ContentForm id={id} name="category" title="Create new category" command={categoryCommand} commandDisabled={info.name === "" || info.nameTranslated === ""} onUpdate={() => action()}>
             <div className="column-double">
-                <ImageUpload uploadUrl="/upload-category" formName="category" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} />
+                <ImageUpload uploadUrl="/upload-image" formName="image" value={info.image as string} onChange={url => dispatch({ type: "set", key: "image", value: url })} token={StorageManager.get() ?? undefined}/>
                 <div>
                     <FormControl fullWidth margin="normal">
                         <TextField variant="outlined" label="Category name" value={info.name} onChange={e => dispatch({ type: "set", key: "name", value: e.target.value })} />

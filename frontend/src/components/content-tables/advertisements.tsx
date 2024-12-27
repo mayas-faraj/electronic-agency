@@ -7,6 +7,7 @@ import data from "../../data.json";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import ImageUpload from "../image-upload";
 import ContentForm from "../content-form";
+import StorageManager from "../../libs/storage-manager";
 
 // types
 interface IAdvertisements {
@@ -56,14 +57,12 @@ const Advertisements: FunctionComponent = () => {
         <ContentForm
           name="ads"
           title="Create new ads"
-          command={`mutation { createAdvertisement(input: {imageUrl: "${image}", imageOrder: ${
-            lastOrder + 1
-          }}) { id imageUrl imageOrder createdAt }}`}
+          command={`mutation { createAdvertisement(input: {imageUrl: "${image}", imageOrder: ${lastOrder + 1}}) { id imageUrl imageOrder createdAt }}`}
           commandDisabled={image === ""}
           commandDisabledMessage="Please upload image the click save button"
           onUpdate={() => action()}
         >
-          <ImageUpload name="image" uploadUrl="/upload-product" formName="product" value={image} onChange={(url) => setImage(url)} />
+          <ImageUpload name="image" uploadUrl="/upload-image" formName="image" value={image} onChange={(url) => setImage(url)} token={StorageManager.get() ?? undefined} />
         </ContentForm>
       )}
       <ContentTable
@@ -84,11 +83,9 @@ const Advertisements: FunctionComponent = () => {
               hasButtonClass={false}
               command={
                 index > 0
-                  ? `mutation { u1:updateAdvertisement(id: ${ads.id}, input: {imageOrder: ${
-                      advertisements[index - 1].imageOrder
-                    }})  {createdAt} u2:updateAdvertisement(id: ${advertisements[index - 1].id}, input: {imageOrder: ${
-                      ads.imageOrder
-                    }})  {createdAt}}`
+                  ? `mutation { u1:updateAdvertisement(id: ${ads.id}, input: {imageOrder: ${advertisements[index - 1].imageOrder}})  {createdAt} u2:updateAdvertisement(id: ${
+                      advertisements[index - 1].id
+                    }, input: {imageOrder: ${ads.imageOrder}})  {createdAt}}`
                   : ""
               }
               onUpdate={action}
@@ -104,11 +101,9 @@ const Advertisements: FunctionComponent = () => {
               hasButtonClass={false}
               command={
                 index < advertisements.length - 1
-                  ? `mutation { u1:updateAdvertisement(id: ${ads.id}, input: {imageOrder: ${
-                      advertisements[index + 1].imageOrder
-                    }})  {createdAt} u2:updateAdvertisement(id: ${advertisements[index + 1].id}, input: {imageOrder: ${
-                      ads.imageOrder
-                    }})  {createdAt}}`
+                  ? `mutation { u1:updateAdvertisement(id: ${ads.id}, input: {imageOrder: ${advertisements[index + 1].imageOrder}})  {createdAt} u2:updateAdvertisement(id: ${
+                      advertisements[index + 1].id
+                    }, input: {imageOrder: ${ads.imageOrder}})  {createdAt}}`
                   : ""
               }
               onUpdate={action}

@@ -112,10 +112,11 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   // process form type (create or update)
   const phoneSeperatorIndex = (info.clientPhone as string).indexOf("/");
   const phone = phoneSeperatorIndex >= 0 ? (info.clientPhone as string).substring(0, phoneSeperatorIndex) : info.clientPhone;
-  const asset = info.asset !== "" ? info.asset : `[product-${info.productId}]`;
+  const productId = info.productId !== 0 ? info.productId : undefined;
+  const productName = info.productName !== "" ? info.productName : undefined;
   const assignToRole = targetType === "GROUP" ? "GROUP" : "technician";
 
-  const createTicketCommand = `createTicket(input: {serviceId: 1, description: "${info.description}", title: "${info.title}", user: "${phone}", asset: "${asset}", location: {  locationName: "${info.address}" }}) { id status }`;
+  const createTicketCommand = `createTicket(input: {serviceId: 1, description: "${info.description}", title: "${info.title}", user: "${phone}", asset: "${info.asset}", productId: ${productId}, productName: "${productName}", location: {  locationName: "${info.address}" }}) { id status }`;
   const updateTicketStatusCommand = `updateTicketStatus: updateTicket(id: ${id}, input: {status: ${info.status}}) { id status }`;
   const updateTicketPriorityCommand = `updateTicketPriority: updateTicket(id: ${id}, input: {priority: ${info.priority}}) { id priority }`;
   const createTicketAssignmentCommand = `createTicketAssignment(input: {ticketId: ${id}, assignTo: "${info.center}", assignToRole: "${assignToRole}", targetType: ${targetType}}) { id createdAt }`;
@@ -162,8 +163,6 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   };
 
   const handleAssetChange = (value: string) => {
-    dispatch({ type: "set", key: "asset", value });
-
     const getProduct = async () => {
       const productResult = await getServerData(`query { productItem(sn: "${value}") { product { id name } } }`);
       if (productResult.data?.productItem?.product != null) {
@@ -183,8 +182,8 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
       }
     };
 
-    if (value.startsWith("[product-") && value.endsWith("]")) dispatch({ type: "set", key: "productId", value: parseInt(value.substring(9, value.length - 1)) });
-    else getProduct();
+    dispatch({ type: "set", key: "asset", value });
+    getProduct();
   };
 
   const handleSave = async (result: any) => {
@@ -200,6 +199,8 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
     dispatch({ type: "set", key: "priority", value: initialInfo.priority });
     dispatch({ type: "set", key: "productId", value: initialInfo.productId });
     dispatch({ type: "set", key: "asset", value: initialInfo.asset });
+    dispatch({ type: "set", key: "productId", value: initialInfo.productId });
+    dispatch({ type: "set", key: "productName", value: initialInfo.productName });
     dispatch({ type: "set", key: "initialStatus", value: initialInfo.status });
     dispatch({ type: "set", key: "status", value: initialInfo.status });
     dispatch({ type: "set", key: "type", value: initialInfo.type });
@@ -218,7 +219,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
   React.useEffect(() => {
     const loadTicket = async () => {
       const result = await getServerData(
-        `query { ticket(id: ${id}) { id title description status title user asset type location { locationName } assignments { assignTo targetType } communications { text user createdAt } media { id src } priority createdBy createdAt } }`,
+        `query { ticket(id: ${id}) { id title description status title user asset productId productName type location { locationName } assignments { assignTo targetType } communications { text user createdAt } media { id src } priority createdBy createdAt } }`,
         true
       );
       if (result.data.ticket != null) {
@@ -232,16 +233,9 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
         dispatch({ type: "set", key: "type", value: result.data.ticket.type });
         dispatch({ type: "set", key: "createdBy", value: result.data.ticket.createdBy });
 
-        if (result.data.ticket.asset.startsWith("[product-") && result.data.ticket.asset.endsWith("]")) {
-          const asset = result.data.ticket.asset;
-          const productId = parseInt(asset.substring(9, asset.length - 1));
-          const productName = await getServerData(`query { product(id: ${productId}) { name }}`);
-          dispatch({ type: "set", key: "productName", value: productName.data.product.name });
-        } else {
-          dispatch({ type: "set", key: "asset", value: result.data.ticket.asset });
-          handleAssetChange(result.data.ticket.asset);
-        }
-
+        dispatch({ type: "set", key: "asset", value: result.data.ticket.asset });
+        dispatch({ type: "set", key: "productId", value: result.data.ticket.productId });
+        dispatch({ type: "set", key: "productName", value: result.data.ticket.productName });
         dispatch({ type: "set", key: "currentCenter", value: result.data.ticket.assignments?.toReversed().at(0)?.assignTo ?? "" });
         dispatch({ type: "set", key: "currentTargetType", value: result.data.ticket.assignments?.toReversed().at(0)?.targetType ?? "" });
         dispatch({ type: "set", key: "center", value: result.data.ticket.assignments?.toReversed().at(0)?.assignTo ?? "" });

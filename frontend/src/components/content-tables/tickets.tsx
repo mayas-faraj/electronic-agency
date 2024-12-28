@@ -18,6 +18,8 @@ interface Ticket {
   createdAt: string;
   openAt: boolean;
   asset: string;
+  productId: number;
+  productName: string;
   priority: string;
   productItem?: {
     product?: {
@@ -75,11 +77,10 @@ const Tickets: FunctionComponent = () => {
     if (status !== "") filters.push(`status: ${status}`);
     if (priority !== "") filters.push(`priority: ${priority}`);
     if (!profile.privileges.createClient && profile.privileges.readTicket) filters.push("createdBySubscriber: true");
-    const ticketsResponse = await getServerData(`query { ${queryName}(ticketFilter: {${filters.join(",")}}) {id user title status createdAt openAt priority asset } }`, true);
+    const ticketsResponse = await getServerData(`query { ${queryName}(ticketFilter: {${filters.join(",")}}) {id user title status createdAt openAt priority asset productId productName } }`, true);
     const tickets = ticketsResponse.data[queryName] as Ticket[];
-    const assetList = tickets.map((ticket) => ticket.asset);
-    const idList = assetList.filter((asset) => asset.startsWith("[product-") && asset.endsWith("]")).map((asset) => parseInt(asset.substring(9, asset.length - 1)));
-    const snList = assetList.filter((asset) => !asset.startsWith("[product-") || !asset.endsWith("]")).map((sn) => `"${sn}"`);
+    const idList = tickets.filter(ticket => ticket.asset === "").map(ticket => ticket.productId);
+    const snList = tickets.filter(ticket => ticket.asset !== "").map(ticket => `"${ticket.asset}"`);
 
     const productsResponse = await getServerData(`query { productItems(snList: [${snList}]) { sn product { name model image } } }`);
     const productsByIdsResponse = await getServerData(`query { productsByIds(idList: [${idList}]) { id name model image }}`);
@@ -87,7 +88,7 @@ const Tickets: FunctionComponent = () => {
     const ticketItems = tickets.map((ticket) => ({
       ...ticket,
       productItem: productsResponse.data.productItems.filter((item: any) => item.sn === ticket.asset)?.at(0),
-      product: productsByIdsResponse.data.productsByIds.filter((item: any) => item.id === parseInt(ticket.asset.substring(9, ticket.asset.length - 1)))?.at(0)
+      product: productsByIdsResponse.data.productsByIds.filter((item: any) => item.id === ticket.productId)?.at(0)
     }));
     setViewNetTicket(false);
     setTickets(ticketItems);

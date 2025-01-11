@@ -7,6 +7,7 @@ import ClientSelect from "../content-tables/clients";
 import ProductSelect from "../content-tables/products";
 import getServerData from "../../libs/server-data";
 import ProfileContext from "../profile-context";
+import data from "../../data.json";
 
 const initialInfo = {
   address: "",
@@ -476,7 +477,7 @@ const Ticket: FunctionComponent<ITicketProps> = ({ id, onUpdate }) => {
       )}
       <div className="images">
         {media?.map((media) => (
-          <img key={media.id} src={media.src} alt={`ticket media: ${id}`} />
+          <img key={media.id} src={`${data["media-service-url"]}${media.src}`} alt={`ticket media: ${id}`} />
         ))}
       </div>
       {communications?.map((communication) => (

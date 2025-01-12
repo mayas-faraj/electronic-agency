@@ -195,6 +195,7 @@ const resolvers = {
     createClient: async (parent: any, args: any, app: AppContext) => {
       // generate user
       let userName = generateName(
+        args.input.phone,
         args.input.email,
         args.input.firstName,
         args.input.lastName

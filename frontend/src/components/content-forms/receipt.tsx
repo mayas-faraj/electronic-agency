@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { CloudDownload, Send } from "@mui/icons-material";
 import { reducer } from "../content-form";
 import logoImage from "../../assets/imgs/logo-receipt.png";
-import greeImage from "../../assets/imgs/gree-logo.jpg";
+import greeImage from "../../assets/imgs/gree-logo.png";
 import getServerData from "../../libs/server-data";
 import html2canvas from "html2canvas";
 import styles from "../../styles/receipt.module.scss";

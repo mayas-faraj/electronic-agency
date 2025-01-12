@@ -122,7 +122,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             </tr>
             <tr>
               <td>
-                <strong>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</strong> {`${info.firstName}${info.lastName && " "}${info.lastName}`}
+                <strong>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</strong> {`${info.firstName}${info.lastName ? ` ${info.lastName}` : ""}`}
               </td>
               <td>
                 <strong>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</strong>{" "}

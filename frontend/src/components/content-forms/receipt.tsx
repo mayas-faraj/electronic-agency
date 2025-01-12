@@ -52,7 +52,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
   const print = () => {
     if (htmlRef.current === null) return;
 
-    html2canvas(htmlRef.current, {scale: 4}).then((canvas) => {
+    html2canvas(htmlRef.current, { scale: 4 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "portrait",
@@ -97,6 +97,8 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
     loadReceipt();
   }, [id, onUpdate]);
 
+  const tdStyle: { direction: "rtl" | "ltr"; textAlign: "start" | "end" } = { direction: "ltr", textAlign: isArabic ? "end" : "start" };
+
   // render component
   return (
     <>
@@ -111,16 +113,29 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
         <table className={styles.schemaTable}>
           <tbody>
             <tr>
-              <td><strong>{!isArabic ? "Compay:" : "السادة:"}</strong> {info.company as string}</td>
-              <td><strong>{!isArabic ? "Offer Date:" : "تاريخ التقديم:"}</strong> {new Date(parseInt(info.createdAt as string)).toLocaleDateString()}</td>
+              <td>
+                <strong>{!isArabic ? "Compay:" : "السادة:"}</strong> {info.company as string}
+              </td>
+              <td>
+                <strong>{!isArabic ? "Offer Date:" : "تاريخ التقديم:"}</strong> {new Date(parseInt(info.createdAt as string)).toLocaleDateString()}
+              </td>
             </tr>
             <tr>
-              <td><strong>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</strong> {`${info.firstName}${info.lastName && " "}${info.lastName}`}</td>
-              <td><strong>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</strong> {new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}</td>
+              <td>
+                <strong>{!isArabic ? "Att:" : "حضرة السيد/ة:"}</strong> {`${info.firstName}${info.lastName && " "}${info.lastName}`}
+              </td>
+              <td>
+                <strong>{!isArabic ? "Expiry Date:" : "تاريخ انتهاء الصلاحية:"}</strong>{" "}
+                {new Date(parseInt(info.createdAt as string) + (info.validationDays as number) * 24 * 60 * 60 * 1000).toLocaleDateString()}
+              </td>
             </tr>
             <tr>
-              <td><strong>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</strong> {info.phone as string}</td>
-              <td><strong>{!isArabic ? "Reference #:" : "رقم المشروع:"}</strong> {info.projectNumber as string}</td>
+              <td>
+                <strong>{!isArabic ? "Mobile:" : "رقم الهاتف:"}</strong> {info.phone as string}
+              </td>
+              <td>
+                <strong>{!isArabic ? "Reference #:" : "رقم المشروع:"}</strong> {info.projectNumber as string}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -143,7 +158,7 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
             {products.map((orderProduct, index) => (
               <tr key={orderProduct.product.name + index.toString()}>
                 <td>{index + 1}</td>
-                <td>{orderProduct.product.model}</td>
+                <td style={tdStyle}>{orderProduct.product.model}</td>
                 <td>{(!isArabic ? orderProduct.product.name : orderProduct.product.nameTranslated) as string}</td>
                 <td>{orderProduct.count as number}</td>
                 <td>{(orderProduct.price as number).toLocaleString("en-US")}</td>

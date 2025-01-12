@@ -32,6 +32,7 @@
 
 .schemaTable {
   table-layout: fixed;
+  font-size: 12px;
 }
 
 p,
@@ -124,7 +125,7 @@ title,
   font-size: 0.7rem;
   position: absolute;
   bottom: 15px;
-  width: calc(100% - 40px);
+  width: 100%;
   direction: ltr;
 
   & > div:first-child {

@@ -263,7 +263,7 @@ const resolvers = {
           specificationImage: args.input.specificationImage,
           catalogFile: args.input.catalogFile,
           price: args.input.price,
-          point: args.input.point
+          point: args.input.point ?? 0
         },
       });
 

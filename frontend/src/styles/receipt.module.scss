@@ -123,10 +123,11 @@ title,
   flex-flow: row wrap;
   color: #27716d;
   font-size: 0.7rem;
-  position: absolute;
   bottom: 15px;
   width: 100%;
   direction: ltr;
+  height: 75px;
+  margin-top: calc(100vh - 320px);
 
   & > div:first-child {
     line-height: 1.2rem;

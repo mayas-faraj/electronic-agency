@@ -56,7 +56,8 @@ const Receipt: FunctionComponent<IReceiptProps> = ({ id, isArabic, onUpdate }) =
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "px"
+        unit: "px",
+        format: "a4"
       });
       pdf.addImage(imgData, "PNG", 20, 20, 400, 566);
       pdf.save("download.pdf");

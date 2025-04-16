@@ -61,12 +61,12 @@ const typeDefs = `#graphql
 	}
 
 	input ClientInput {
-		phone: String
+		phone: String!
 		phone2: String
 		address: String
 		address2: String
 		company: String
-		email: String
+		email: String!
 		avatar: String
 		namePrefix: String
 		firstName: String

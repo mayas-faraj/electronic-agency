@@ -10,6 +10,7 @@ await prismaClient.subCategory.deleteMany();
 await prismaClient.category.deleteMany();
 await prismaClient.client.deleteMany();
 await prismaClient.user.deleteMany();
+await prismaClient.role.deleteMany();
 await prismaClient.center.deleteMany();
 
 // seed centers
@@ -93,6 +94,7 @@ const roles = [
   "top_call_center",
   "call_center",
   "contractor_manager",
+  "technician",
   "closer",
   "feedback",
 ];

@@ -46,7 +46,7 @@ const Tickets: FunctionComponent = () => {
   const [priority, setPriority] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [isCreatedBySubscriber, setCreatedBySubscriber] = React.useState("");
-
+  console.log("isCreatedBySubscriber: ", isCreatedBySubscriber, isCreatedBySubscriber === "", isCreatedBySubscriber.length);
   // context
   const profile = React.useContext(ProfileContext);
 
@@ -76,11 +76,14 @@ const Tickets: FunctionComponent = () => {
     if (isCreatedBySubscriber !== "") filters.push(`createdBySubscriber: ${isCreatedBySubscriber !== "0"}`);
     if (status !== "") filters.push(`status: ${status}`);
     if (priority !== "") filters.push(`priority: ${priority}`);
-    if (!profile.privileges.createClient && profile.privileges.readTicket) filters.push("createdBySubscriber: true");
-    const ticketsResponse = await getServerData(`query { ${queryName}(ticketFilter: {${filters.join(",")}}) {id user title status createdAt openAt priority asset productId productName } }`, true);
+    // if (!profile.privileges.createClient && profile.privileges.readTicket) filters.push("createdBySubscriber: true");
+    const ticketsResponse = await getServerData(
+      `query { ${queryName}(ticketFilter: {${filters.join(",")}}) {id user title status createdAt openAt priority asset productId productName } }`,
+      true
+    );
     const tickets = ticketsResponse.data[queryName] as Ticket[];
-    const idList = tickets.filter(ticket => ticket.asset === "").map(ticket => ticket.productId);
-    const snList = tickets.filter(ticket => ticket.asset !== "").map(ticket => `"${ticket.asset}"`);
+    const idList = tickets.filter((ticket) => ticket.asset === "").map((ticket) => ticket.productId);
+    const snList = tickets.filter((ticket) => ticket.asset !== "").map((ticket) => `"${ticket.asset}"`);
 
     const productsResponse = await getServerData(`query { productItems(snList: [${snList}]) { sn product { name model image } } }`);
     const productsByIdsResponse = await getServerData(`query { productsByIds(idList: [${idList}]) { id name model image }}`);
@@ -168,7 +171,10 @@ const Tickets: FunctionComponent = () => {
             client: ticket.user,
             image:
               ticket.productItem != null || ticket.product != null ? (
-                <img src={data["media-service-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)} alt={ticket.productItem?.product?.name ?? ticket.product?.name} />
+                <img
+                  src={data["media-service-url"] + (ticket.productItem?.product?.image ?? ticket.product?.image)}
+                  alt={ticket.productItem?.product?.name ?? ticket.product?.name}
+                />
               ) : (
                 <img src={LogoMin} alt="alardh-alsalba" />
               ),

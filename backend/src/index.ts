@@ -50,7 +50,11 @@ app.use("/graphql", cors<cors.CorsRequest>(), bodyParser.json(), expressMiddlewa
 }));
 
 // express static file serve
-app.use("/uploads", express.static('uploads'));
+app.get('/uploads/:folder/:file', (req, res) => {
+  const { folder, file } = req.params;
+  const targetUrl = `http://208.64.33.65:5000/uploads/${folder}/${file}`;
+  res.redirect(302, targetUrl);
+});
 
 // server has been started
 await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
